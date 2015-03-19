@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Common
 {
@@ -81,6 +82,21 @@ namespace Common
             user.LoggedIn = false;
 
             return LogoutError.None;   
+        }
+
+        public PurchaseResult CreatePurchaseOrder(String username, String password, int quantity)
+        {
+            // get available offers
+            var numOffers = SalesOrders.Sum((SalesOrder order) => order.Count);
+            var surplus = numOffers - quantity;
+
+            var availableDiginotes =
+                (from salesOrder in SalesOrders
+                    join user in Users.Values on salesOrder.Seller.Username equals user.Username
+                    select user)
+                    .SelectMany(user => user.Diginotes.ToList());
+
+            return PurchaseResult.Fulfilled;
         }
     }
 }
