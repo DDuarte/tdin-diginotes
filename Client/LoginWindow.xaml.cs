@@ -1,5 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation.Peers;
+using System.Windows.Automation.Provider;
+using System.Windows.Input;
 
 namespace Client
 {
@@ -43,6 +46,17 @@ namespace Client
 
             CircularProgressBar.Visibility = Visibility.Hidden;
             ErrorLabel.Content = error;
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var peer = new ButtonAutomationPeer(LoginButton);
+                var invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
+                if (invokeProv != null)
+                    invokeProv.Invoke();
+            }
         }
     }
 }
