@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Diginote Common")]
-[assembly: AssemblyDescription("Diginote Exchange System Common")]
+[assembly: AssemblyTitle("Diginote Remotes")]
+[assembly: AssemblyDescription("Diginote Exchange System Remotes")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TDIN - FEUP")]
 [assembly: AssemblyProduct("DES")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3bad8fc7-a987-4769-8cbe-0e926d0d5d59")]
+[assembly: Guid("7d1cc890-090a-4136-bdd7-57fb33ec1ed1")]
 
 // Version information for an assembly consists of the following four values:
 //

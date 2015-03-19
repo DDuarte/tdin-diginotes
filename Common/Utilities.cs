@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Common
 {
-    class Utilities
+    public static class Utilities
     {
         public static String ComputeHash(String val)
         {

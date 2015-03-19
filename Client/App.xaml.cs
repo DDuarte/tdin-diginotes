@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Remoting;
 using System.Windows;
 using Common;
+using Remotes;
 
 namespace Client
 {
