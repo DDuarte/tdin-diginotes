@@ -17,6 +17,11 @@ namespace Common
         public readonly List<PurchaseOrder> PurchaseOrders = new List<PurchaseOrder>();
         public readonly List<SalesOrder> SalesOrders = new List<SalesOrder>();
 
+        public override object InitializeLifetimeService()
+        {
+            return null; // infinite
+        }
+
         public RegisterError Register(String username, String password)
         {
             if (String.IsNullOrWhiteSpace(username))
@@ -44,6 +49,8 @@ namespace Common
 
         public LoginError Login(String username, String password)
         {
+            Console.WriteLine("Login from {0}!", username);
+
             User user;
             if (!Users.TryGetValue(username, out user))
                 return LoginError.UnexistingUser;

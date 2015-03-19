@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Security.Cryptography;
 
 namespace Common
 {
@@ -14,9 +12,8 @@ namespace Common
 
         public User(String username, String password)
         {
-            var encrypt = SHA256.Create();
             Username = username;
-            PasswordHash = Encoding.UTF8.GetString(encrypt.ComputeHash(Encoding.UTF8.GetBytes(password)));
+            PasswordHash = Utilities.ComputeHash(password);
         }
 
         public bool AddDiginote(Diginote diginote) 

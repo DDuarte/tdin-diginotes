@@ -3,12 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Login" Height="300" Width="300">
     <Grid Background="#FF046380">
-        <Button Content="Login" HorizontalAlignment="Left" Margin="44,139,0,0" VerticalAlignment="Top" Width="97" Background="#FF002F2F" Foreground="#FFE6E2AF"/>
+        <Button Content="Login" HorizontalAlignment="Left" Margin="44,139,0,0" VerticalAlignment="Top" Width="97" Background="#FF002F2F" Foreground="#FFE6E2AF" Click="Button_Click"/>
         <Button Content="Register" HorizontalAlignment="Left" Margin="146,139,0,0" VerticalAlignment="Top" Width="86" Background="#FF002F2F" Foreground="#FFE6E2AF"/>
         <Label Content="Username" HorizontalAlignment="Left" Margin="44,77,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA"/>
         <Label Content="Password" HorizontalAlignment="Left" Margin="44,108,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="112,80,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <PasswordBox HorizontalAlignment="Left" Height="23" Margin="112,111,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="UsernameTextBox" HorizontalAlignment="Left" Height="23" Margin="112,80,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" Height="23" Margin="112,111,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="Diginotes Market" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold" Foreground="#FFEFECCA"/>
 
     </Grid>

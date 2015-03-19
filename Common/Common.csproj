@@ -46,6 +46,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseOrder.cs" />
     <Compile Include="RegisterError.cs" />
+    <Compile Include="RemoteNew.cs" />
     <Compile Include="SalesOrder.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Utilities.cs" />

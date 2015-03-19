@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Runtime.Remoting;
 using System.Windows;
+using Common;
 
 namespace Client
 {
@@ -13,5 +9,21 @@ namespace Client
     /// </summary>
     public partial class App : Application
     {
+        public readonly IDigiMarket TheDigiMarket;
+
+        public new static App Current
+        {
+            get
+            {
+                return Application.Current as App;
+            } 
+        }
+
+        public App()
+        {
+            RemotingConfiguration.Configure("Client.exe.config", false);
+
+            TheDigiMarket = RemoteNew.New<IDigiMarket>();
+        }
     }
 }
