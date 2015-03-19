@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Diginote.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="LoginError.cs" />
     <Compile Include="LogoutError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
