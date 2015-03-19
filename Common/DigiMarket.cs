@@ -3,7 +3,14 @@ using System.Collections.Generic;
 
 namespace Common
 {
-    public class DigiMarket : MarshalByRefObject
+    public interface IDigiMarket
+    {
+        RegisterError Register(String username, String password);
+        LoginError Login(String username, String password);
+        LogoutError Logout(String username, String password);
+    }
+
+    public class DigiMarket : MarshalByRefObject, IDigiMarket
     {
         public readonly decimal Quotation = 1;
         public readonly Dictionary<String, User> Users = new Dictionary<string, User>();
