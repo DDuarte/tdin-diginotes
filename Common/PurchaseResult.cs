@@ -6,4 +6,10 @@
         PartiallyFullfilled,
         Error
     }
+
+    public enum SalesResult
+    {
+        Fulfilled,
+        Error
+    }
 }

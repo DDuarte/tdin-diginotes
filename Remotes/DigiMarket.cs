@@ -10,8 +10,11 @@ namespace Remotes
         RegisterError Register(String username, String password);
         LoginError Login(String username, String password);
         LogoutError Logout(String username, String password);
+        PurchaseResult CreatePurchaseOrder(String username, String password, int quantity);
+        SalesResult CreateSalesOrder(String username, String password, int quantity);
     }
 
+    // ReSharper disable once UnusedMember.Global
     public class DigiMarket : MarshalByRefObject, IDigiMarket
     {
         public readonly decimal Quotation = 1;
@@ -148,7 +151,17 @@ namespace Remotes
                     select user)
                     .SelectMany(user => user.Diginotes.ToList());
 
+            throw new NotImplementedException();
+
             return PurchaseResult.Fulfilled;
+        }
+
+        public SalesResult CreateSalesOrder(string username, string password, int quantity)
+        {
+            Logger.Log("CreateSalesOrder", "attempt: username={0} password={1} quantity={2}",
+                username, password, quantity);
+
+            throw new NotImplementedException();
         }
     }
 }
