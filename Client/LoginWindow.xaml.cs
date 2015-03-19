@@ -4,13 +4,17 @@ using System.Windows;
 namespace Client
 {
     /// <summary>
-    /// Interaction logic for Login.xaml
+    /// Interaction logic for LoginWindow.xaml
     /// </summary>
-    public partial class Login : Window
+    public partial class LoginWindow : Window
     {
-        public Login()
+        public LoginWindow()
         {
             InitializeComponent();
+
+            UsernameTextBox.Focus();
+            CircularProgressBar.Visibility = Visibility.Hidden;
+            ErrorLabel.Content = string.Empty;
         }
 
         private async void LoginButton_OnClick_Click(object sender, RoutedEventArgs e)
