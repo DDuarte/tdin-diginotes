@@ -143,11 +143,14 @@ namespace Remotes
 
             // insert login logic here
 
+            var requestingUser = Users[username];
+
             // get available offers
             var numOffers = SalesOrders.Where((SalesOrder order) => !order.Fulfilled).Sum((SalesOrder order) => order.Count);
 
             if (numOffers == 0)
             {
+                PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, false));
                 return PurchaseResult.Unfulfilled;
             }
 
@@ -159,7 +162,6 @@ namespace Remotes
                     select user)
                     .SelectMany(user => user.Diginotes.ToList());
 
-            var requestingUser = Users[username];
             // purchase order is totally fulfilled
             if (surplus <= 0)
             {
