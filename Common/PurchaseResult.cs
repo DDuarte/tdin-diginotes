@@ -4,6 +4,7 @@
     {
         Fulfilled,
         PartiallyFullfilled,
+        Unfulfilled,
         Error
     }
 

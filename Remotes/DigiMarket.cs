@@ -141,9 +141,17 @@ namespace Remotes
             Logger.Log("CreatePurchaseOrder", "attempt: username={0} password={1} quantity={2}",
                 username, password, quantity);
 
+            // insert login logic here
+
             // get available offers
-            var numOffers = SalesOrders.Sum((SalesOrder order) => order.Count);
-            var surplus = numOffers - quantity;
+            var numOffers = SalesOrders.Where((SalesOrder order) => !order.Fulfilled).Sum((SalesOrder order) => order.Count);
+
+            if (numOffers == 0)
+            {
+                return PurchaseResult.Unfulfilled;
+            }
+
+            var surplus = quantity - numOffers;
 
             var availableDiginotes =
                 (from salesOrder in SalesOrders
@@ -151,9 +159,38 @@ namespace Remotes
                     select user)
                     .SelectMany(user => user.Diginotes.ToList());
 
-            throw new NotImplementedException();
+            var requestingUser = Users[username];
+            // purchase order is totally fulfilled
+            if (surplus <= 0)
+            {
 
-            return PurchaseResult.Fulfilled;
+                // transfer diginotes
+                var chosenDiginotes = availableDiginotes.Take(quantity);
+
+                foreach (var chosenDiginote in chosenDiginotes)
+                {
+                    requestingUser.AddDiginote(chosenDiginote);
+                    Users.Values.Where((User u) => u.Diginotes.Contains(chosenDiginote)).Select((User u) => u.RemoveDiginote(chosenDiginote));
+                }
+
+                PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, true));
+                return PurchaseResult.Fulfilled;
+            }
+            else // the order is partially fulfilled
+            {
+                // transfer diginotes
+                var chosenDiginotes = availableDiginotes.Take(numOffers);
+
+                foreach (var chosenDiginote in chosenDiginotes)
+                {
+                    requestingUser.AddDiginote(chosenDiginote);
+                    Users.Values.Where((User u) => u.Diginotes.Contains(chosenDiginote)).Select((User u) => u.RemoveDiginote(chosenDiginote));
+                }
+
+                PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, true)); // fulfilled
+                PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus, false)); // unfulfiled
+                return PurchaseResult.PartiallyFullfilled;
+            }
         }
 
         public SalesResult CreateSalesOrder(string username, string password, int quantity)
