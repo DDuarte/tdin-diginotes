@@ -6,11 +6,11 @@
         public User Buyer { get; private set; }
         public bool FulFilled { get; set; }
 
-        public PurchaseOrder(User buyer, int count)
+        public PurchaseOrder(User buyer, int count, bool fulfilled = false)
         {
             Buyer = buyer;
             Count = count;
-            FulFilled = false;
+            FulFilled = fulfilled;
         }
     }
 }

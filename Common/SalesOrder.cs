@@ -8,11 +8,11 @@ namespace Common
         public User Seller { get; private set; }
         public bool Fulfilled { get; set; }
 
-        public SalesOrder(User seller, int count)
+        public SalesOrder(User seller, int count, bool fulfilled = false)
         {
             Count = count;
             Seller = seller;
-            Fulfilled = false;
+            Fulfilled = fulfilled;
         }
     }
 }
