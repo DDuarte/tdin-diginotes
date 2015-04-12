@@ -1,22 +1,26 @@
 ﻿using System;
+using OpenNETCF.ORM;
 
 namespace Common
 {
+    [Entity(KeyScheme.Identity)]
     public class Diginote : MarshalByRefObject
     {
-        private static uint _counter;
-        public uint Serial { get; set; }
+        [Field(IsPrimaryKey = true)]
+        public Guid Id { get; private set; }
+
+        [Field]
         public int Value { get; set; }
 
         public Diginote()
         {
-            Serial = _counter++;
+            Id = Guid.NewGuid();
             Value = 1;
         }
 
         public override int GetHashCode()
         {
-            return Serial.GetHashCode();
+            return Id.GetHashCode();
         }
 
     }

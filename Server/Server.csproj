@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenNETCF.ORM">
+      <HintPath>..\References\OpenNETCF.ORM.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenNETCF.ORM.SqlCe">
+      <HintPath>..\References\OpenNETCF.ORM.SqlCe.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
@@ -45,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStoreHelper.cs" />
+    <Compile Include="DigiMarket.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
