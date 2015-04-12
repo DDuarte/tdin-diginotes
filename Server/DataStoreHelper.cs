@@ -3,7 +3,7 @@ using OpenNETCF.ORM;
 
 namespace Server
 {
-    public class DataStoreHelper
+    public static class DataStoreHelper
     {
         private const string DBFilename = "store.sdf";
 
@@ -11,10 +11,11 @@ namespace Server
         {
             IDataStore store = new SqlCeDataStore(DBFilename);
 
+            store.AddType<User>();
             store.AddType<Diginote>();
             store.AddType<PurchaseOrder>();
             store.AddType<SalesOrder>();
-            store.AddType<User>();
+            store.AddType<DigiMarket>();
 
             if (!store.StoreExists)
                 store.CreateStore();

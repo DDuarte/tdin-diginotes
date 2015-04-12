@@ -7,21 +7,21 @@ namespace Common
     public class Diginote : MarshalByRefObject
     {
         [Field(IsPrimaryKey = true)]
-        public Guid Id { get; private set; }
+        public int Id { get; private set; }
 
         [Field]
         public int Value { get; set; }
 
+        [Field]
+        public int UserGuid { get; set; }
+
         public Diginote()
         {
-            Id = Guid.NewGuid();
-            Value = 1;
         }
 
         public override int GetHashCode()
         {
             return Id.GetHashCode();
         }
-
     }
 }

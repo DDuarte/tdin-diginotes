@@ -52,8 +52,8 @@ namespace Client
         {
             if (e.Key == Key.Enter)
             {
-                var peer = new ButtonAutomationPeer(LoginButton);
-                var invokeProv = peer.GetPattern(PatternInterface.Invoke) as IInvokeProvider;
+                var peer = UIElementAutomationPeer.CreatePeerForElement(LoginButton);
+                var invokeProv = (IInvokeProvider) peer.GetPattern(PatternInterface.Invoke);
                 if (invokeProv != null)
                     invokeProv.Invoke();
             }

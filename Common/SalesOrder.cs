@@ -7,7 +7,7 @@ namespace Common
     public class SalesOrder : MarshalByRefObject
     {
         [Field(IsPrimaryKey = true)]
-        public Guid Id { get; private set; }
+        public int Id { get; private set; }
 
         [Field(FieldName = "Cnt")]
         public int Count { get; private set; }
@@ -18,10 +18,14 @@ namespace Common
 
         public SalesOrder(User seller, int count, bool fulfilled = false)
         {
-            Id = Guid.NewGuid();
+            Id = -1;
             Count = count;
             Seller = seller;
             Fulfilled = fulfilled;
+        }
+
+        public SalesOrder()
+        {
         }
 
         public override int GetHashCode()
