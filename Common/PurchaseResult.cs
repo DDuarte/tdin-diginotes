@@ -7,10 +7,4 @@
         Unfulfilled,
         Error
     }
-
-    public enum SalesResult
-    {
-        Fulfilled,
-        Error
-    }
 }
