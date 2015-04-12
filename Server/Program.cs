@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.Remoting;
-using OpenNETCF.ORM;
 
 namespace Server
 {
@@ -10,8 +8,6 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            var store = DataStoreHelper.GetDataStore();
-
             RemotingConfiguration.Configure("Server.exe.config", false);
             SetUpConsole();
 

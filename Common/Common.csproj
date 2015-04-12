@@ -30,21 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenNETCF.Extensions">
-      <HintPath>..\References\OpenNETCF.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenNETCF.ORM">
-      <HintPath>..\References\OpenNETCF.ORM.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenNETCF.ORM.SqlCe">
-      <HintPath>..\References\OpenNETCF.ORM.SqlCe.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\System.Data.SqlServerCe.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,7 +49,6 @@
     <Compile Include="RegisterError.cs" />
     <Compile Include="RemoteNew.cs" />
     <Compile Include="SalesOrder.cs" />
-    <Compile Include="SalesResult.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>

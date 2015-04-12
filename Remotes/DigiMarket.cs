@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common;
-using Remotes;
 
-namespace Server
+namespace Remotes
 {
+    public interface IDigiMarket
+    {
+        RegisterError Register(String username, String password);
+        LoginError Login(String username, String password);
+        LogoutError Logout(String username, String password);
+        PurchaseResult CreatePurchaseOrder(String username, String password, int quantity);
+        SalesResult CreateSalesOrder(String username, String password, int quantity);
+    }
+
     // ReSharper disable once UnusedMember.Global
     public class DigiMarket : MarshalByRefObject, IDigiMarket
     {
@@ -125,7 +133,7 @@ namespace Server
 
             Logger.Log("Logout", "username={0} password={1}", username, password);
 
-            return LogoutError.None;
+            return LogoutError.None;   
         }
 
         public PurchaseResult CreatePurchaseOrder(String username, String password, int quantity)
@@ -150,8 +158,8 @@ namespace Server
 
             var availableDiginotes =
                 (from salesOrder in SalesOrders
-                 join user in Users.Values on salesOrder.Seller.Username equals user.Username
-                 select user)
+                    join user in Users.Values on salesOrder.Seller.Username equals user.Username
+                    select user)
                     .SelectMany(user => user.Diginotes.ToList());
 
             // purchase order is totally fulfilled
@@ -212,7 +220,7 @@ namespace Server
                 //if ()
                 selectedPurchaseOrders.Add(availablePurchaseOrders.ElementAt(i));
 
-                purchaseQuantity += availablePurchaseOrders.ElementAt(i).Count;
+                purchaseQuantity += availablePurchaseOrders.ElementAt(i).Count
             }
 
             // purchase order is totally fulfilled
