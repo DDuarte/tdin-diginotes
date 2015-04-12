@@ -7,26 +7,21 @@ namespace Common
     public class PurchaseOrder
     {
         [Field(IsPrimaryKey = true)]
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
 
         [Field(FieldName = "Cnt")]
         public int Count { get; private set; }
 
         [Reference(typeof(User), "Id")]
         public User Buyer { get; private set; }
-    
         public bool FulFilled { get; set; }
 
         public PurchaseOrder(User buyer, int count, bool fulfilled = false)
         {
-            Id = -1;
+            Id = Guid.NewGuid();
             Buyer = buyer;
             Count = count;
             FulFilled = fulfilled;
-        }
-
-        public PurchaseOrder()
-        {
         }
 
         public override int GetHashCode()

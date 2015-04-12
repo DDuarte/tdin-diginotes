@@ -8,7 +8,7 @@ namespace Common
     public class User : MarshalByRefObject
     {
         [Field(IsPrimaryKey = true)]
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
 
         [Field(RequireUniqueValue = true)]
         public String Username { get; private set; }
@@ -16,7 +16,7 @@ namespace Common
         [Field]
         public String PasswordHash { get; private set; }
 
-        [Reference(typeof(Diginote), "UserGuid")]
+        [Reference(typeof(Diginote), "Serial")]
         public HashSet<Diginote> Diginotes { get; private set; }
 
         [Field]
@@ -24,14 +24,10 @@ namespace Common
 
         public User(String username, String password)
         {
-            Id = 0;
+            Id = Guid.NewGuid();
             Username = username;
             PasswordHash = Utilities.ComputeHash(password);
             Diginotes = new HashSet<Diginote>();
-        }
-
-        public User()
-        {
         }
 
         public bool AddDiginote(Diginote diginote) 

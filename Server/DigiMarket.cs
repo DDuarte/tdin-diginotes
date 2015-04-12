@@ -2,61 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common;
-using OpenNETCF.ORM;
 using Remotes;
 
 namespace Server
 {
     // ReSharper disable once UnusedMember.Global
-    [Entity(KeyScheme.Identity)]
     public class DigiMarket : MarshalByRefObject, IDigiMarket
     {
-        [Field(IsPrimaryKey = true)]
-        public int Id { get; private set; }
+        public readonly decimal Quotation = 1;
 
-        // [Field]
-        public decimal Quotation { get; private set; }
-
-        [Reference(typeof(User), "Id")]
-        public HashSet<User> Users { get; private set; }
-
-        [Reference(typeof(PurchaseOrder), "Id")]
-        public HashSet<PurchaseOrder> PurchaseOrders { get; private set; }
-
-        [Reference(typeof(SalesOrder), "Id")]
-        public HashSet<SalesOrder> SalesOrders { get; private set; }
-
-        public readonly IDataStore Store = DataStoreHelper.GetDataStore();
-
-        public DigiMarket()
+        public readonly Dictionary<String, User> Users = new Dictionary<string, User>()
         {
-            var markets = Store.Select<DigiMarket>();
-            if (!markets.Any())
-            {
-                Quotation = 1;
-                Users = new HashSet<User>();
-                PurchaseOrders = new HashSet<PurchaseOrder>();
-                SalesOrders = new HashSet<SalesOrder>();
-                Store.Insert(this);
-            }
-            else
-            {
-                var market = markets.First();
-                Quotation = market.Quotation;
-                Users = market.Users;
-                PurchaseOrders = market.PurchaseOrders;
-                SalesOrders = market.SalesOrders;
-            }
-        }
+            { "test", new User("test", "test") }
+        };
+
+        public readonly List<PurchaseOrder> PurchaseOrders = new List<PurchaseOrder>();
+        public readonly List<SalesOrder> SalesOrders = new List<SalesOrder>();
 
         public override object InitializeLifetimeService()
         {
             return null; // infinite
-        }
-
-        private User FindUser(string username)
-        {
-            return Users.FirstOrDefault(user => user.Username == username);
         }
 
         public RegisterError Register(String username, String password)
@@ -87,8 +52,8 @@ namespace Server
                 return RegisterError.InvalidPassword;
             }
 
-            var user = FindUser(username);
-            if (user != null)
+            User user;
+            if (Users.TryGetValue(username, out user))
             {
                 Logger.Log("Register", "fail: username={0} password={1} - user exists", username, password);
                 return RegisterError.ExistingUsername;
@@ -96,8 +61,7 @@ namespace Server
 
             user = new User(username, password);
 
-            Users.Add(user);
-            Store.Insert(user);
+            Users.Add(username, user);
 
             Logger.Log("Register", "username={0} password={1}", username, password);
 
@@ -108,8 +72,8 @@ namespace Server
         {
             Logger.Log("Login", "attempt: username={0} password={1}", username, password);
 
-            var user = FindUser(username);
-            if (user == null)
+            User user;
+            if (!Users.TryGetValue(username, out user))
             {
                 Logger.Log("Login", "fail: username={0} password={1} - doesn't exist", username, password);
                 return LoginError.UnexistingUser;
@@ -138,8 +102,8 @@ namespace Server
         {
             Logger.Log("Logout", "attempt: username={0} password={1}", username, password);
 
-            var user = FindUser(username);
-            if (user == null)
+            User user;
+            if (!Users.TryGetValue(username, out user))
             {
                 Logger.Log("Logout", "fail: username={0} password={1} - doesn't exist", username, password);
                 return LogoutError.UnexistingUser;
@@ -171,7 +135,7 @@ namespace Server
 
             // insert login logic here
 
-            var requestingUser = FindUser(username);
+            var requestingUser = Users[username];
 
             // get available offers
             var numOffers = SalesOrders.Where((SalesOrder order) => !order.Fulfilled).Sum((SalesOrder order) => order.Count);
@@ -186,7 +150,7 @@ namespace Server
 
             var availableDiginotes =
                 (from salesOrder in SalesOrders
-                 join user in Users on salesOrder.Seller.Username equals user.Username
+                 join user in Users.Values on salesOrder.Seller.Username equals user.Username
                  select user)
                     .SelectMany(user => user.Diginotes.ToList());
 
@@ -200,7 +164,7 @@ namespace Server
                 foreach (var chosenDiginote in chosenDiginotes)
                 {
                     requestingUser.AddDiginote(chosenDiginote);
-                    Users.Where((User u) => u.Diginotes.Contains(chosenDiginote)).Select((User u) => u.RemoveDiginote(chosenDiginote));
+                    Users.Values.Where((User u) => u.Diginotes.Contains(chosenDiginote)).Select((User u) => u.RemoveDiginote(chosenDiginote));
                 }
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, true));
@@ -214,7 +178,7 @@ namespace Server
                 foreach (var chosenDiginote in chosenDiginotes)
                 {
                     requestingUser.AddDiginote(chosenDiginote);
-                    Users.Where((User u) => u.Diginotes.Contains(chosenDiginote)).Select((User u) => u.RemoveDiginote(chosenDiginote));
+                    Users.Values.Where((User u) => u.Diginotes.Contains(chosenDiginote)).Select((User u) => u.RemoveDiginote(chosenDiginote));
                 }
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, true)); // fulfilled
@@ -229,7 +193,7 @@ namespace Server
                 username, password, quantity);
 
             // insert login logic here
-            var requestingUser = FindUser(username);
+            var requestingUser = Users[username];
 
             // get available offers
             var availablePurchaseOrders = PurchaseOrders.Where((PurchaseOrder order) => !order.FulFilled);
