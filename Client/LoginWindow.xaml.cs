@@ -30,6 +30,11 @@ namespace Client
 
             var error = await Task.Run(() => App.Current.TheDigiMarket.Login(username, password));
 
+            if (error == Common.LoginError.None)
+            {
+                App.Current.Session = new Session(username, password);
+            }
+
             CircularProgressBar.Visibility = Visibility.Hidden;
             ErrorLabel.Content = error;
         }
@@ -43,6 +48,11 @@ namespace Client
             var password = PasswordBox.Password;
 
             var error = await Task.Run(() => App.Current.TheDigiMarket.Register(username, password));
+
+            if (error == Common.RegisterError.None)
+            {
+                App.Current.Session = new Session(username, password);
+            }
 
             CircularProgressBar.Visibility = Visibility.Hidden;
             ErrorLabel.Content = error;
