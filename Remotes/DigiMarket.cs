@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using Common;
 
 namespace Remotes
@@ -136,6 +137,18 @@ namespace Remotes
             return LogoutError.None;   
         }
 
+        public IEnumerable<Diginote> GetDiginotes(String username, String password)
+        {
+            // insert login logic here
+            return Users[username].Diginotes;
+        }
+
+        public int GetBalance(String username, String password)
+        {
+            // insert login logic here
+            return Users[username].Diginotes.Count();
+        }
+
         public PurchaseResult CreatePurchaseOrder(String username, String password, int quantity)
         {
             Logger.Log("CreatePurchaseOrder", "attempt: username={0} password={1} quantity={2}",
@@ -220,7 +233,7 @@ namespace Remotes
                 //if ()
                 selectedPurchaseOrders.Add(availablePurchaseOrders.ElementAt(i));
 
-                purchaseQuantity += availablePurchaseOrders.ElementAt(i).Count
+                purchaseQuantity += availablePurchaseOrders.ElementAt(i).Count;
             }
 
             // purchase order is totally fulfilled
