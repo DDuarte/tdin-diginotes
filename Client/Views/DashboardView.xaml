@@ -32,14 +32,14 @@
         <Label Content="Diginotes Market" HorizontalAlignment="Center" Margin="78,5,233,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold" Foreground="#FFEFECCA" Height="42" Width="206"/>
         <Label Content="Buy" HorizontalAlignment="Left" Margin="93,98,0,0" VerticalAlignment="Top"/>
         <Label Content="Sell" HorizontalAlignment="Left" Margin="303,99,0,0" VerticalAlignment="Top"/>
-        <Image HorizontalAlignment="Left" Height="37" Margin="258,192,0,0" VerticalAlignment="Top" Width="37" Source="BC_Logo_.ico"/>
+        <Image HorizontalAlignment="Left" Height="37" Margin="258,192,0,0" VerticalAlignment="Top" Width="37" Source="Assets/BC_Logo_.ico"/>
         <Label Content="Balance" HorizontalAlignment="Left" Margin="50,176,0,0" VerticalAlignment="Top" Height="25"/>
         <Label Content="500 dg (550 €)" HorizontalAlignment="Left" Margin="63,216,0,0" VerticalAlignment="Top" Width="104"/>
         <Label Content="Quotation" HorizontalAlignment="Left" Margin="303,184,0,0" VerticalAlignment="Top"/>
         <Label x:Name="QuotationLabel" Content="1.50 €" HorizontalAlignment="Left" Margin="315,217,0,0" VerticalAlignment="Top"/>
         <Label Content="Hello," HorizontalAlignment="Left" Margin="377,10,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA"/>
         <Label Content="{Binding Username}" HorizontalAlignment="Left" Margin="417,13,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA" Height="23" Width="48"/>
-        <Image HorizontalAlignment="Left" Height="23" Margin="484,10,0,0" VerticalAlignment="Top" Width="23" Source="lock.png" ToolTip="Logout"/>
-        <Image HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="23" Source="house_go.png" ToolTip="Home"/>
+        <Image HorizontalAlignment="Left" Height="23" Margin="484,10,0,0" VerticalAlignment="Top" Width="23" Source="Assets/lock.png" ToolTip="Logout"/>
+        <Image HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="23" Source="Assets/house_go.png" ToolTip="Home"/>
     </Grid>
 </UserControl>

@@ -49,7 +49,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>BC_Logo_.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\BC_Logo_.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GalaSoft.MvvmLight">
@@ -159,7 +159,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="BC_Logo_.ico" />
+    <Resource Include="Assets\BC_Logo_.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -188,7 +188,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\house_go.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
