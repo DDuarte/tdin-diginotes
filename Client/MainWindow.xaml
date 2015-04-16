@@ -1,11 +1,38 @@
 ﻿<Window x:Class="Client.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525"
-        DataContext="{Binding Main,
-                              Source={StaticResource Locator}}">
-
+        Title="MainWindow" Height="350" Width="525">
     <Grid Background="#FF046380">
-        <ContentControl Content="{Binding CurrentViewModel}" />
+        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="100" Margin="33,59,0,0" Stroke="Black" VerticalAlignment="Top" Width="200">
+            <Rectangle.Effect>
+                <DropShadowEffect/>
+            </Rectangle.Effect>
+        </Rectangle>
+        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="100" Margin="238,59,0,0" Stroke="Black" VerticalAlignment="Top" Width="200">
+            <Rectangle.Effect>
+                <DropShadowEffect/>
+            </Rectangle.Effect>
+        </Rectangle>
+        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="100" Margin="33,164,0,0" Stroke="Black" VerticalAlignment="Top" Width="200">
+            <Rectangle.Effect>
+                <DropShadowEffect/>
+            </Rectangle.Effect>
+        </Rectangle>
+        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="100" Margin="238,164,0,0" Stroke="Black" VerticalAlignment="Top" Width="200">
+            <Rectangle.Effect>
+                <DropShadowEffect/>
+            </Rectangle.Effect>
+        </Rectangle>
+        <Label Content="Diginotes Market" HorizontalAlignment="Center" Margin="78,5,233,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold" Foreground="#FFEFECCA" Height="42" Width="206"/>
+        <Label Content="Buy" HorizontalAlignment="Left" Margin="93,98,0,0" VerticalAlignment="Top"/>
+        <Label Content="Sell" HorizontalAlignment="Left" Margin="303,99,0,0" VerticalAlignment="Top"/>
+        <Image HorizontalAlignment="Left" Height="37" Margin="258,192,0,0" VerticalAlignment="Top" Width="37" Source="BC_Logo_.ico"/>
+        <Label Content="Balance" HorizontalAlignment="Left" Margin="50,176,0,0" VerticalAlignment="Top" Height="25"/>
+        <Label Content="500 dg (550 €)" HorizontalAlignment="Left" Margin="63,216,0,0" VerticalAlignment="Top" Width="104"/>
+        <Label Content="Quotation" HorizontalAlignment="Left" Margin="303,184,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="QuotationLabel" Content="1.50 €" HorizontalAlignment="Left" Margin="315,217,0,0" VerticalAlignment="Top"/>
+        <Label Content="User" HorizontalAlignment="Left" Margin="445,10,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA"/>
+        <Image HorizontalAlignment="Left" Height="23" Margin="484,10,0,0" VerticalAlignment="Top" Width="23" Source="lock.png" ToolTip="Logout"/>
+        <Image HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="23" Source="house_go.png" ToolTip="Home"/>
     </Grid>
 </Window>

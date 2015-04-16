@@ -1,16 +1,8 @@
-﻿<Application x:Class="Client.App" 
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             StartupUri="MainWindow.xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             d1P1:Ignorable="d" 
-             xmlns:d1P1="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:Client.ViewModels"
-             xmlns:views="clr-namespace:Client.Views">
+﻿<Application x:Class="Client.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="LoginWindow.xaml">
     <Application.Resources>
-        <viewModels:ViewModelLocator x:Key="Locator"  />
-        <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
-            <views:LoginView />
-        </DataTemplate>
-        <BooleanToVisibilityConverter  x:Key="btvc" />
+         
     </Application.Resources>
 </Application>
