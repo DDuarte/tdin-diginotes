@@ -1,0 +1,26 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             x:Class="Client.Views.LoginView"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        xmlns:client="clr-namespace:Client"
+        mc:Ignorable="d ignore"
+        DataContext="{Binding Login, Source={StaticResource Locator}}" 
+      Background="#FF046380">
+    <Grid>
+        <Label Content="Diginotes Market" HorizontalAlignment="Center" Margin="78,5,233,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold" Foreground="#FFEFECCA" Height="42" Width="206"/>
+        <Label Content="Error" x:Name="ErrorLabel" VerticalAlignment="Center" Foreground="#FFFFAE00" Height="27" Margin="50,40,46,125" HorizontalAlignment="Center" Width="206" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Viewbox MaxHeight="25" MaxWidth="25"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" Margin="143,40,134,126" >
+            <client:CircularProgressBar Visibility="{Binding AuthenticationInProgress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource btvc }}" x:Name="CircularProgressBar" />
+        </Viewbox>
+        <Label Content="Username" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FFEFECCA" Margin="22,75,0,0" />
+        <TextBox x:Name="UsernameTextBox" HorizontalAlignment="Left" Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" TabIndex="1" Width="172" Height="26" Margin="100,72,0,0"/>
+        <Label Content="Password" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FFEFECCA" Margin="25,107,0,0" />
+        <PasswordBox x:Name="PasswordBox" DataContext="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="2" Margin="100,104,0,0" HorizontalAlignment="Left" Width="172" Height="26" VerticalAlignment="Top" />
+        <Button x:Name="LoginButton" Content="Login" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF002F2F" Foreground="#FFE6E2AF" Command="{Binding Login}" TabIndex="3" Margin="25,143,0,0" Width="128" />
+        <Button Content="Register" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF002F2F" Foreground="#FFE6E2AF" Command="{Binding Register}" TabIndex="4" Margin="158,143,0,0" Width="114" />
+    </Grid>
+</UserControl>
