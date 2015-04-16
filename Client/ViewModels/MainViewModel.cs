@@ -1,5 +1,6 @@
-using System;
+using Client.Utils;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace Client.ViewModels
 {
@@ -18,8 +19,7 @@ namespace Client.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private ViewModelBase _currentViewModel;
-
-        readonly static LoginViewModel _loginViewModel = new LoginViewModel();
+        readonly static ViewModelLocator Locator = new ViewModelLocator();
 
         public ViewModelBase CurrentViewModel
         {
@@ -36,12 +36,33 @@ namespace Client.ViewModels
             }
         }
 
+        private void HandleViewChange(View v)
+        {
+            switch (v)
+            {
+                case View.Login:
+                {
+                    CurrentViewModel = new LoginViewModel();
+                    break; 
+                }
+                case View.Dashboard:
+                {
+                    CurrentViewModel = new DashboardViewModel();
+                    break;
+                }
+                case View.SellOrders:
+                case View.BuyOrders:
+                    return;
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         public MainViewModel()
         {
-            CurrentViewModel = _loginViewModel;
+            CurrentViewModel = new LoginViewModel();
+            Messenger.Default.Register<View>(this, HandleViewChange);
         }
     }
 }

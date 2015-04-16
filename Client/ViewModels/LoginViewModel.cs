@@ -42,14 +42,12 @@ namespace Client.ViewModels
             AuthenticationInProgress = true;
             ErrorMessage = "";
 
-            string username, password;
-
             var error = await Task.Run(() => App.Current.TheDigiMarket.Login(Username, Password));
 
             if (error == LoginError.None)
             {
                 App.Current.Session = new Session(Username, Password);
-                
+                NavigationService.GoTo(View.Dashboard);
             }
 
             AuthenticationInProgress = false;
