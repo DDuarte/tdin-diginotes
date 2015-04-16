@@ -9,15 +9,26 @@ namespace Server
     // ReSharper disable once UnusedMember.Global
     public class DigiMarket : MarshalByRefObject, IDigiMarket
     {
+        private readonly ActionLog _actionLog;
+
         public readonly decimal Quotation = 1;
 
-        public readonly Dictionary<String, User> Users = new Dictionary<string, User>
-        {
-            { "test", new User("test", "test") }
-        };
+        public readonly Dictionary<String, User> Users = new Dictionary<string, User>();
 
         public readonly List<PurchaseOrder> PurchaseOrders = new List<PurchaseOrder>();
         public readonly List<SalesOrder> SalesOrders = new List<SalesOrder>();
+
+        public DigiMarket()
+        {
+            _actionLog = new ActionLog(this);
+        }
+
+        private bool _applyingLogs = true;
+
+        public void ApplyingLogs(bool active)
+        {
+            _applyingLogs = active;
+        }
 
         public override object InitializeLifetimeService()
         {
@@ -62,6 +73,9 @@ namespace Server
             user = new User(username, password);
 
             Users.Add(username, user);
+
+            if (!_applyingLogs)
+                _actionLog.LogAction(new NewUserAction { User = username, Password = password });
 
             Logger.Log("Register", "username={0} password={1}", username, password);
 
