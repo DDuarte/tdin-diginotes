@@ -9,11 +9,7 @@
         DataContext="{Binding Dashboard, Source={StaticResource Locator}}" Height="290.269">
 
     <Grid Background="#FF046380">
-        <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="100" Margin="33,59,0,0" Stroke="Black" VerticalAlignment="Top" Width="200">
-            <Rectangle.Effect>
-                <DropShadowEffect/>
-            </Rectangle.Effect>
-        </Rectangle>
+        <Button Command="{Binding BuyCommand}" HorizontalAlignment="Left" Height="100" Margin="33,59,0,0" VerticalAlignment="Top" Width="200" Background="White"/>
         <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="100" Margin="238,59,0,0" Stroke="Black" VerticalAlignment="Top" Width="200">
             <Rectangle.Effect>
                 <DropShadowEffect/>
@@ -38,7 +34,7 @@
         <Label Content="Quotation" HorizontalAlignment="Left" Margin="303,184,0,0" VerticalAlignment="Top"/>
         <Label x:Name="QuotationLabel" Content="1.50 €" HorizontalAlignment="Left" Margin="315,217,0,0" VerticalAlignment="Top"/>
         <Label Content="Hello," HorizontalAlignment="Left" Margin="377,10,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA"/>
-        <Label Content="{Binding Username}" HorizontalAlignment="Left" Margin="417,13,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA" Height="23" Width="48"/>
+        <Label Content="{Binding Username}" HorizontalAlignment="Left" Margin="412,10,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA" />
         <Image HorizontalAlignment="Left" Height="23" Margin="484,10,0,0" VerticalAlignment="Top" Width="23" Source="Assets/lock.png" ToolTip="Logout"/>
         <Image HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="23" Source="Assets/house_go.png" ToolTip="Home"/>
     </Grid>

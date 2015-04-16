@@ -1,4 +1,7 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Windows.Input;
+using Client.Utils;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
 
 namespace Client.ViewModels
 {
@@ -21,7 +24,14 @@ namespace Client.ViewModels
 
         public DashboardViewModel()
         {
-            
+            BuyCommand = new RelayCommand(BuyCommandExecute, () => true);
+        }
+
+        public ICommand BuyCommand { get; private set; }
+
+        private async void BuyCommandExecute()
+        {
+            NavigationService.GoTo(View.BuyOrders);
         }
 
         public void OnEnter()

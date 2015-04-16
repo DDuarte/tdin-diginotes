@@ -54,24 +54,6 @@ namespace Client.ViewModels
             //ErrorLabel.Content = error;
         }
 
-        /*private async void LoginButton_OnClick_Click(object sender, RoutedEventArgs e)
-        {
-            
-
-            var username = UsernameTextBox.Text;
-            var password = PasswordBox.Password;
-
-            var error = await Task.Run(() => App.Current.TheDigiMarket.Login(username, password));
-
-            if (error == Common.LoginError.None)
-            {
-                App.Current.Session = new Session(username, password);
-            }
-
-            CircularProgressBar.Visibility = Visibility.Hidden;
-            ErrorLabel.Content = error;
-        }*/
-
         public ICommand Register { get; private set; }
 
         private async void RegisterExecute()
@@ -90,26 +72,5 @@ namespace Client.ViewModels
             AuthenticationInProgress = false;
             //ErrorLabel.Content = error;
         }
-
-        /*private async void RegisterButton_Click(object sender, RoutedEventArgs e)
-        {
-            CircularProgressBar.Visibility = Visibility.Visible;
-            ErrorLabel.Content = string.Empty;
-
-            var username = UsernameTextBox.Text;
-            var password = PasswordBox.Password;
-
-            var error = await Task.Run(() => App.Current.TheDigiMarket.Register(username, password));
-
-            if (error == Common.RegisterError.None)
-            {
-                App.Current.Session = new Session(username, password);
-
-            }
-
-            CircularProgressBar.Visibility = Visibility.Hidden;
-            ErrorLabel.Content = error;
-        }*/
-
     }
 }

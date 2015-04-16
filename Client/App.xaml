@@ -16,6 +16,9 @@
         <DataTemplate DataType="{x:Type viewModels:DashboardViewModel}">
             <views:DashboardView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:BuyViewModel}">
+            <views:BuyView />
+        </DataTemplate>
         <BooleanToVisibilityConverter  x:Key="Btvc" />
     </Application.Resources>
 </Application>

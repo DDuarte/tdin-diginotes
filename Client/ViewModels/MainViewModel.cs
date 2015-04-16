@@ -51,8 +51,13 @@ namespace Client.ViewModels
                     CurrentViewModel = Locator.Dashboard;
                     break;
                 }
-                case View.SellOrders:
                 case View.BuyOrders:
+                {
+                    Locator.Buy.OnEnter();
+                    CurrentViewModel = Locator.Buy;
+                    break;
+                }
+                case View.SellOrders:
                     return;
             }
         }
