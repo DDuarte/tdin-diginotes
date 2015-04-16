@@ -208,8 +208,8 @@ namespace Server
             var requestingUser = Users[username];
 
             // get available offers
-            var availablePurchaseOrders = PurchaseOrders.Where((PurchaseOrder order) => !order.FulFilled);
-            var numOffers = availablePurchaseOrders.Sum((PurchaseOrder order) => order.Count);
+            var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled);
+            var numOffers = availablePurchaseOrders.Sum(order => order.Count);
 
             if (numOffers == 0)
             {
