@@ -19,7 +19,7 @@
         <Label Content="Username" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FFEFECCA" Margin="22,75,0,0" />
         <TextBox x:Name="UsernameTextBox" HorizontalAlignment="Left" Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" TabIndex="1" Width="172" Height="26" Margin="100,72,0,0"/>
         <Label Content="Password" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FFEFECCA" Margin="25,107,0,0" />
-        <PasswordBox x:Name="PasswordBox" DataContext="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TabIndex="2" Margin="100,104,0,0" HorizontalAlignment="Left" Width="172" Height="26" VerticalAlignment="Top" />
+        <PasswordBox x:Name="PasswordBox" PasswordChanged="PasswordBox_OnPasswordChanged" TabIndex="2" Margin="100,104,0,0" HorizontalAlignment="Left" Width="172" Height="26" VerticalAlignment="Top" />
         <Button x:Name="LoginButton" Content="Login" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF002F2F" Foreground="#FFE6E2AF" Command="{Binding Login}" TabIndex="3" Margin="25,143,0,0" Width="128" />
         <Button Content="Register" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF002F2F" Foreground="#FFE6E2AF" Command="{Binding Register}" TabIndex="4" Margin="158,143,0,0" Width="114" />
     </Grid>

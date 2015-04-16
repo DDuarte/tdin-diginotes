@@ -15,5 +15,11 @@ namespace Client.Views
         {
             InitializeComponent();
         }
+
+        private void PasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (DataContext != null)
+                ((dynamic)DataContext).Password = ((PasswordBox)sender).Password;
+        }
     }
 }
