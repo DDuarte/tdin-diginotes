@@ -21,6 +21,11 @@ namespace Client.ViewModels
 
         public DashboardViewModel()
         {
+            
+        }
+
+        public void OnEnter()
+        {
             Username = App.Current.Session.Username;
         }
     }

@@ -42,12 +42,13 @@ namespace Client.ViewModels
             {
                 case View.Login:
                 {
-                    CurrentViewModel = new LoginViewModel();
+                    CurrentViewModel = Locator.Login;
                     break; 
                 }
                 case View.Dashboard:
                 {
-                    CurrentViewModel = new DashboardViewModel();
+                    Locator.Dashboard.OnEnter();
+                    CurrentViewModel = Locator.Dashboard;
                     break;
                 }
                 case View.SellOrders:
