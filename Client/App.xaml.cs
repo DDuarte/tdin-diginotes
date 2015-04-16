@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Remoting;
 using System.Windows;
+using Client.Utils;
 using Common;
 using Remotes;
 
