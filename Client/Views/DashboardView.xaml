@@ -1,9 +1,10 @@
-﻿<UserControl x:Class="Client.Views.DashboardView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             x:Class="Client.Views.DashboardView"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
+        xmlns:client="clr-namespace:Client"
         mc:Ignorable="d ignore"
         DataContext="{Binding Dashboard, Source={StaticResource Locator}}" Height="290.269">
 
@@ -36,7 +37,8 @@
         <Label Content="500 dg (550 €)" HorizontalAlignment="Left" Margin="63,216,0,0" VerticalAlignment="Top" Width="104"/>
         <Label Content="Quotation" HorizontalAlignment="Left" Margin="303,184,0,0" VerticalAlignment="Top"/>
         <Label x:Name="QuotationLabel" Content="1.50 €" HorizontalAlignment="Left" Margin="315,217,0,0" VerticalAlignment="Top"/>
-        <Label Content="User" HorizontalAlignment="Left" Margin="445,10,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA"/>
+        <Label Content="Hello," HorizontalAlignment="Left" Margin="377,10,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA"/>
+        <Label Content="{Binding Username}" HorizontalAlignment="Left" Margin="417,13,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA" Height="23" Width="48"/>
         <Image HorizontalAlignment="Left" Height="23" Margin="484,10,0,0" VerticalAlignment="Top" Width="23" Source="lock.png" ToolTip="Logout"/>
         <Image HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="23" Source="house_go.png" ToolTip="Home"/>
     </Grid>

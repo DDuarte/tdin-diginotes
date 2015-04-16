@@ -12,7 +12,7 @@ namespace Client
     public partial class App : Application
     {
         public readonly IDigiMarket TheDigiMarket;
-        public Session Session;
+        public Session Session = new Session("", "");
 
         public new static App Current
         {

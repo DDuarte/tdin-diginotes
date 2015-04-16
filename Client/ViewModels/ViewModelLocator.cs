@@ -59,7 +59,6 @@ namespace Client.ViewModels
             get
             {
                 return _dashboard;
-                
             }
         }
     }
