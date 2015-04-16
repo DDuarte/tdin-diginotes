@@ -19,6 +19,8 @@ namespace Client.ViewModels
     {
         private ViewModelBase _currentViewModel;
 
+        readonly static LoginViewModel _loginViewModel = new LoginViewModel();
+
         public ViewModelBase CurrentViewModel
         {
             get
@@ -39,7 +41,7 @@ namespace Client.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            CurrentViewModel = new LoginViewModel();
+            CurrentViewModel = _loginViewModel;
         }
     }
 }
