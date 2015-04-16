@@ -86,6 +86,18 @@ namespace Server
         {
             Logger.Log("Login", "attempt: username={0} password={1}", username, password);
 
+            if (String.IsNullOrWhiteSpace(username))
+            {
+                Logger.Log("Login", "fail: username={0} password={1} - null or whitespace user", username, password);
+                return LoginError.UnexistingUser;;
+            }
+
+            if (String.IsNullOrWhiteSpace(password))
+            {
+                Logger.Log("Login", "fail: username={0} password={1} - null or whitespace pass", username, password);
+                return LoginError.InvalidPassword;
+            }
+
             User user;
             if (!Users.TryGetValue(username, out user))
             {
