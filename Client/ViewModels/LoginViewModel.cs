@@ -15,9 +15,6 @@ namespace Client.ViewModels
     /// </summary>
     public class LoginViewModel : ViewModelBase
     {
-
-        private readonly ViewModelLocator _viewModelLocator;
-
         // Properties
         public string ErrorMessage { get; set; }
         public string Username { get; set; }
@@ -32,7 +29,6 @@ namespace Client.ViewModels
             AuthenticationInProgress = false;
             Login = new RelayCommand(LoginExecute, () => true);
             Register = new RelayCommand(RegisterExecute, () => true);
-            _viewModelLocator = new ViewModelLocator();
         }
 
         public ICommand Login { get; private set; }

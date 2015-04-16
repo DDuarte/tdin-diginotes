@@ -8,6 +8,14 @@
         mc:Ignorable="d ignore"
         DataContext="{Binding Dashboard, Source={StaticResource Locator}}" Height="290.269">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid Background="#FF046380">
         <Button Command="{Binding BuyCommand}" HorizontalAlignment="Left" Height="100" Margin="33,59,0,0" VerticalAlignment="Top" Width="200" Background="White"/>
         <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="100" Margin="238,59,0,0" Stroke="Black" VerticalAlignment="Top" Width="200">
@@ -28,14 +36,17 @@
         <Label Content="Diginotes Market" HorizontalAlignment="Center" Margin="78,5,233,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold" Foreground="#FFEFECCA" Height="42" Width="206"/>
         <Label Content="Buy" HorizontalAlignment="Left" Margin="93,98,0,0" VerticalAlignment="Top"/>
         <Label Content="Sell" HorizontalAlignment="Left" Margin="303,99,0,0" VerticalAlignment="Top"/>
-        <Image HorizontalAlignment="Left" Height="37" Margin="258,192,0,0" VerticalAlignment="Top" Width="37" Source="Assets/BC_Logo_.ico"/>
+        <Image HorizontalAlignment="Left" Height="37" Margin="258,192,0,0" VerticalAlignment="Top" Width="37" Source="../Assets/BC_Logo_.ico"/>
         <Label Content="Balance" HorizontalAlignment="Left" Margin="50,176,0,0" VerticalAlignment="Top" Height="25"/>
         <Label Content="500 dg (550 €)" HorizontalAlignment="Left" Margin="63,216,0,0" VerticalAlignment="Top" Width="104"/>
         <Label Content="Quotation" HorizontalAlignment="Left" Margin="303,184,0,0" VerticalAlignment="Top"/>
         <Label x:Name="QuotationLabel" Content="1.50 €" HorizontalAlignment="Left" Margin="315,217,0,0" VerticalAlignment="Top"/>
         <Label Content="Hello," HorizontalAlignment="Left" Margin="377,10,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA"/>
         <Label Content="{Binding Username}" HorizontalAlignment="Left" Margin="412,10,0,0" VerticalAlignment="Top" Foreground="#FFEFECCA" />
-        <Image HorizontalAlignment="Left" Height="23" Margin="484,10,0,0" VerticalAlignment="Top" Width="23" Source="Assets/lock.png" ToolTip="Logout"/>
-        <Image HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="23" Source="Assets/house_go.png" ToolTip="Home"/>
+
+        <Button Command="{Binding LogoutCommand}" Height="23" Margin="484,10,0,0" VerticalAlignment="Top" Width="23" Style="{DynamicResource stlFlatButton}">
+            <Image HorizontalAlignment="Left"  Source="../Assets/lock.png" ToolTip="Logout"/>
+        </Button>
+        <Image HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="23" Source="../Assets/house_go.png" ToolTip="Home"/>
     </Grid>
 </UserControl>
