@@ -7,28 +7,45 @@ using GalaSoft.MvvmLight.Command;
 
 namespace Client.ViewModels
 {
-    /// <summary>
-    /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
-    /// </summary>
     public class LoginViewModel : ViewModelBase
     {
-        // Properties
-        public string ErrorMessage { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public bool AuthenticationInProgress { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the LoginViewModel class.
-        /// </summary>
         public LoginViewModel()
         {
             AuthenticationInProgress = false;
             Login = new RelayCommand(LoginExecute, () => true);
             Register = new RelayCommand(RegisterExecute, () => true);
+        }
+
+
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get
+            {
+                return _errorMessage;
+            }
+            set
+            {
+                _errorMessage = value;
+                RaisePropertyChanged("ErrorMessage");
+            }
+        }
+
+        private bool _authenticationInProgress;
+        public bool AuthenticationInProgress
+        {
+            get
+            {
+                return _authenticationInProgress;
+            }
+            set
+            {
+                _authenticationInProgress = value;
+                RaisePropertyChanged("AuthenticationInProgress");
+            }
         }
 
         public ICommand Login { get; private set; }
@@ -45,9 +62,12 @@ namespace Client.ViewModels
                 App.Current.Session = new Session(Username, Password);
                 NavigationService.GoTo(View.Dashboard);
             }
+            else
+            {
+                ErrorMessage = error.ToString();
+            }
 
             AuthenticationInProgress = false;
-            //ErrorLabel.Content = error;
         }
 
         public ICommand Register { get; private set; }
@@ -62,11 +82,13 @@ namespace Client.ViewModels
             if (error == RegisterError.None)
             {
                 App.Current.Session = new Session(Username, Password);
-                //_viewModelLocator.Main.CurrentViewModel = _viewModelLocator.Dashboard;
+            }
+            else
+            {
+                ErrorMessage = error.ToString();
             }
 
             AuthenticationInProgress = false;
-            //ErrorLabel.Content = error;
         }
     }
 }

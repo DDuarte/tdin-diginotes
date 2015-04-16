@@ -13,7 +13,6 @@ namespace Client.ViewModels
             get
             {
                 return _username;
-                
             }
             set
             {

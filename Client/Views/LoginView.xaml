@@ -10,11 +10,11 @@
       Background="#FF046380">
     <Grid>
         <Label Content="Diginotes Market" HorizontalAlignment="Center" Margin="78,5,233,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold" Foreground="#FFEFECCA" Height="42" Width="206"/>
-        <Label Content="Error" x:Name="ErrorLabel" VerticalAlignment="Center" Foreground="#FFFFAE00" Height="27" Margin="50,40,46,125" HorizontalAlignment="Center" Width="206" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Label Content="{Binding ErrorMessage}" VerticalAlignment="Center" Foreground="#FFFFAE00" Height="27" Margin="78,43,233,122" HorizontalAlignment="Center" Width="206" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         <Viewbox MaxHeight="25" MaxWidth="25"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center" Margin="143,40,134,126" >
-            <client:CircularProgressBar Visibility="{Binding AuthenticationInProgress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,Converter={StaticResource Btvc }}" x:Name="CircularProgressBar" />
+            <client:CircularProgressBar Visibility="{Binding AuthenticationInProgress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource Btvc }}" x:Name="CircularProgressBar" />
         </Viewbox>
         <Label Content="Username" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FFEFECCA" Margin="22,75,0,0" />
         <TextBox x:Name="UsernameTextBox" HorizontalAlignment="Left" Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" TabIndex="1" Width="172" Height="26" Margin="100,72,0,0"/>
