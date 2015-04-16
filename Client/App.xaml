@@ -5,9 +5,11 @@
              d1P1:Ignorable="d" 
              xmlns:d1P1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Client.ViewModels"
-             xmlns:views="clr-namespace:Client.Views">
+             xmlns:views="clr-namespace:Client.Views"
+             xmlns:utils="clr-namespace:Client.Utils">
     <Application.Resources>
         <viewModels:ViewModelLocator x:Key="Locator"  />
+        <utils:NavigationService x:Key="Navigation" />
         <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
             <views:LoginView />
         </DataTemplate>
