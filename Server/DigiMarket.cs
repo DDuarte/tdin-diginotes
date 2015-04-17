@@ -166,6 +166,20 @@ namespace Server
             return Users[username].Diginotes.Count();
         }
 
+        public IEnumerable<PurchaseOrder> GetPurchaseOrders(String username, String password)
+        {
+            // insert login logic here
+            var purchaseOrders = PurchaseOrders.Where((p) => p.Buyer == Users[username]);
+            return purchaseOrders;
+        }
+
+        public IEnumerable<SalesOrder> GetSalesOrders(String username, String password)
+        {
+            // insert login logic here
+            var salesOrders = SalesOrders.Where((s) => s.Seller == Users[username]);
+            return salesOrders;
+        } 
+
         public PurchaseResult CreatePurchaseOrder(String username, String password, int quantity)
         {
             Logger.Log("CreatePurchaseOrder", "attempt: username={0} password={1} quantity={2}",
