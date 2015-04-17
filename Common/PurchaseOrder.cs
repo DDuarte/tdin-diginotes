@@ -1,5 +1,8 @@
-﻿namespace Common
+﻿using System;
+
+namespace Common
 {
+    [Serializable]
     public class PurchaseOrder
     {
         public int Count { get; private set; }

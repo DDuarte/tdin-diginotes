@@ -6,12 +6,6 @@ using GalaSoft.MvvmLight.Command;
 
 namespace Client.ViewModels
 {
-    /// <summary>
-    /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
-    /// </summary>
     public class BuyViewModel : ViewModelBase
     {
         private IEnumerable<PurchaseOrder> _purchaseOrders; 
@@ -44,27 +38,59 @@ namespace Client.ViewModels
             }
         }
 
-        public ICommand BuyCommand;
+        private string _buyResultMessage;
+        public string BuyResultMessage
+        {
+            get
+            {
+                return _buyResultMessage;
+            }
+            set
+            {
+                _buyResultMessage = value;
+                RaisePropertyChanged("BuyResultMessage");
+            }
+        }
+
+        private bool _purchaseNotInProgress;
+
+        public bool PurchaseNotInProgress
+        {
+            get
+            {
+                return _purchaseNotInProgress;
+                
+            }
+            set
+            {
+                _purchaseNotInProgress = value;
+                RaisePropertyChanged("PurchaseNotInProgress");
+            }
+        }
+
+        public ICommand BuyCommand { get; private set; }
 
         private void BuyCommandExecute()
         {
+            PurchaseNotInProgress = false;
             var session = App.Current.Session;
             int buyQuantity = int.Parse(BuyQuantity);
             var ret = App.Current.TheDigiMarket.CreatePurchaseOrder(session.Username, session.Password, buyQuantity);
+            PurchaseOrders = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
+            PurchaseNotInProgress = true;
         }
 
         public void OnEnter()
         {
             var session = App.Current.Session;
             PurchaseOrders = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
+            PurchaseNotInProgress = true;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the BuyViewModel class.
-        /// </summary>
         public BuyViewModel()
         {
             BuyCommand  = new RelayCommand(BuyCommandExecute, () => true);
+            PurchaseNotInProgress = true;
         }
     }
 }

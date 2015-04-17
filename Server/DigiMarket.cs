@@ -167,17 +167,17 @@ namespace Server
             return Users[username].Diginotes.Count();
         }
 
-        public IEnumerable<PurchaseOrder> GetPurchaseOrders(String username, String password)
+        public List<PurchaseOrder> GetPurchaseOrders(String username, String password)
         {
             // insert login logic here
-            var purchaseOrders = PurchaseOrders.Where((p) => p.Buyer == Users[username]);
+            var purchaseOrders = PurchaseOrders.Where((p) => p.Buyer == Users[username]).ToList();
             return purchaseOrders;
         }
 
-        public IEnumerable<SalesOrder> GetSalesOrders(String username, String password)
+        public List<SalesOrder> GetSalesOrders(String username, String password)
         {
             // insert login logic here
-            var salesOrders = SalesOrders.Where((s) => s.Seller == Users[username]);
+            var salesOrders = SalesOrders.Where((s) => s.Seller == Users[username]).ToList();
             return salesOrders;
         } 
 

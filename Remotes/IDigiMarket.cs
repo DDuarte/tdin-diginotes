@@ -11,8 +11,8 @@ namespace Remotes
         LogoutError Logout(String username, String password);
         PurchaseResult CreatePurchaseOrder(String username, String password, int quantity);
         SalesResult CreateSalesOrder(String username, String password, int quantity);
-        IEnumerable<PurchaseOrder> GetPurchaseOrders(String username, String password);
-        IEnumerable<SalesOrder> GetSalesOrders(String username, String password);
+        List<PurchaseOrder> GetPurchaseOrders(String username, String password);
+        List<SalesOrder> GetSalesOrders(String username, String password);
 
         void ApplyingLogs(bool active);
     }

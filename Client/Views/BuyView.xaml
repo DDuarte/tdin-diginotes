@@ -45,7 +45,7 @@
                 <Label Content="New Order" HorizontalAlignment="Center" Margin="-1.8,-6.8,75,0" VerticalAlignment="Top" FontWeight="Bold" Foreground="#FFEFECCA" Height="42" Width="130" FontSize="18"/>
                 <Label Content="Quant." HorizontalAlignment="Center" Margin="9,22,135.2,0" VerticalAlignment="Top" FontWeight="Bold" Foreground="#FFEFECCA" Height="27" Width="59" FontSize="14"/>
                 <TextBox Text="{Binding BuyQuantity}" HorizontalAlignment="Left" Height="23" Margin="68,27,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                <Button Content="Create" HorizontalAlignment="Left" Margin="140,55,0,0" VerticalAlignment="Top" Width="48" />
+                <Button IsEnabled="{Binding PurchaseNotInProgress}" Command="{Binding BuyCommand}" Content="Create" HorizontalAlignment="Left" Margin="140,55,0,0" VerticalAlignment="Top" Width="48" />
             </Grid>
         </Border>
     </Grid>
