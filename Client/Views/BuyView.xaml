@@ -15,7 +15,8 @@
 
             <TabControl HorizontalAlignment="Left" Height="244" Margin="9.2,24.2,0,0" VerticalAlignment="Top" Width="251">
                 <TabItem Header="All">
-                    <DataGrid Margin="10,8,10.6,7.2" RenderTransformOrigin="0.494,0.506"/>
+                    <ListBox ItemsSource="{Binding PurchaseOrders}">
+                    </ListBox>
                 </TabItem>
                 <TabItem Header="Open">
                     <DataGrid Margin="10,8,10.6,7.2" RenderTransformOrigin="0.494,0.506"/>
@@ -43,7 +44,7 @@
             <Grid>
                 <Label Content="New Order" HorizontalAlignment="Center" Margin="-1.8,-6.8,75,0" VerticalAlignment="Top" FontWeight="Bold" Foreground="#FFEFECCA" Height="42" Width="130" FontSize="18"/>
                 <Label Content="Quant." HorizontalAlignment="Center" Margin="9,22,135.2,0" VerticalAlignment="Top" FontWeight="Bold" Foreground="#FFEFECCA" Height="27" Width="59" FontSize="14"/>
-                <TextBox HorizontalAlignment="Left" Height="23" Margin="68,27,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+                <TextBox Text="{Binding BuyQuantity}" HorizontalAlignment="Left" Height="23" Margin="68,27,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                 <Button Content="Create" HorizontalAlignment="Left" Margin="140,55,0,0" VerticalAlignment="Top" Width="48" />
             </Grid>
         </Border>

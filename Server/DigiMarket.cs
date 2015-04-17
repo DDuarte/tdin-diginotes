@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Common;
@@ -13,7 +14,7 @@ namespace Server
 
         public readonly decimal Quotation = 1;
 
-        public readonly Dictionary<String, User> Users = new Dictionary<string, User>();
+        public readonly ConcurrentDictionary<String, User> Users = new ConcurrentDictionary<string, User>();
 
         public readonly List<PurchaseOrder> PurchaseOrders = new List<PurchaseOrder>();
         public readonly List<SalesOrder> SalesOrders = new List<SalesOrder>();
@@ -72,7 +73,7 @@ namespace Server
 
             user = new User(username, password);
 
-            Users.Add(username, user);
+            Users.TryAdd(username, user);
 
             if (!_applyingLogs)
                 _actionLog.LogAction(new NewUserAction { User = username, Password = password });
@@ -216,7 +217,8 @@ namespace Server
                 foreach (var chosenDiginote in chosenDiginotes)
                 {
                     requestingUser.AddDiginote(chosenDiginote);
-                    Users.Values.Where(u => u.Diginotes.Contains(chosenDiginote)).Select(u => u.RemoveDiginote(chosenDiginote));
+                    var diginote = chosenDiginote;
+                    Users.Values.Where(u => u.Diginotes.Contains(diginote)).Select(u => u.RemoveDiginote(diginote));
                 }
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, true));
@@ -230,11 +232,12 @@ namespace Server
                 foreach (var chosenDiginote in chosenDiginotes)
                 {
                     requestingUser.AddDiginote(chosenDiginote);
-                    Users.Values.Where(u => u.Diginotes.Contains(chosenDiginote)).Select(u => u.RemoveDiginote(chosenDiginote));
+                    var diginote = chosenDiginote;
+                    Users.Values.Where(u => u.Diginotes.Contains(diginote)).Select(u => u.RemoveDiginote(diginote));
                 }
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, true)); // fulfilled
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus, false)); // unfulfiled
+                PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus)); // unfulfiled
                 return PurchaseResult.PartiallyFullfilled;
             }
         }
