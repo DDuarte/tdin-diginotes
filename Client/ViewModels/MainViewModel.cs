@@ -16,7 +16,7 @@ namespace Client.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : DiginotesViewModelBase
     {
         private ViewModelBase _currentViewModel;
         readonly static ViewModelLocator Locator = new ViewModelLocator();
@@ -69,6 +69,11 @@ namespace Client.ViewModels
         {
             CurrentViewModel = new LoginViewModel();
             Messenger.Default.Register<View>(this, HandleViewChange);
+        }
+
+        public override void OnEnter()
+        {
+            
         }
     }
 }

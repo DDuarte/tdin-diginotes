@@ -6,7 +6,7 @@ using GalaSoft.MvvmLight.Command;
 
 namespace Client.ViewModels
 {
-    public class BuyViewModel : ViewModelBase
+    public class BuyViewModel : DiginotesViewModelBase
     {
         private IEnumerable<PurchaseOrder> _purchaseOrders; 
         public IEnumerable<PurchaseOrder> PurchaseOrders
@@ -80,7 +80,7 @@ namespace Client.ViewModels
             PurchaseNotInProgress = true;
         }
 
-        public void OnEnter()
+        public override void OnEnter()
         {
             var session = App.Current.Session;
             PurchaseOrders = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);

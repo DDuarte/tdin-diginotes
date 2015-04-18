@@ -7,7 +7,7 @@ using GalaSoft.MvvmLight.Command;
 
 namespace Client.ViewModels
 {
-    public class LoginViewModel : ViewModelBase
+    public class LoginViewModel : DiginotesViewModelBase
     {
         public string Username { get; set; }
         public string Password { get; set; }
@@ -89,6 +89,11 @@ namespace Client.ViewModels
             }
 
             AuthenticationInProgress = false;
+        }
+
+        public override void OnEnter()
+        {
+
         }
     }
 }

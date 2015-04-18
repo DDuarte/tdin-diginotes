@@ -5,7 +5,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 
 namespace Client.ViewModels
 {
-    public class DashboardViewModel : ViewModelBase
+    public class DashboardViewModel : DiginotesViewModelBase
     {
         private string _username;
         public string Username
@@ -41,7 +41,7 @@ namespace Client.ViewModels
             NavigationService.GoTo(View.Login);
         }
 
-        public void OnEnter()
+        public override void OnEnter()
         {
             Username = App.Current.Session.Username;
         }
