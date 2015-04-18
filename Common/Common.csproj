@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventDeclarations.cs" />
     <Compile Include="Diginote.cs" />
+    <Compile Include="EventProxy.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LoginError.cs" />
     <Compile Include="LogoutError.cs" />

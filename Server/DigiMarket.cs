@@ -36,6 +36,38 @@ namespace Server
             return null; // infinite
         }
 
+        public event MessageArrivedEvent MessageArrived;
+
+        public void PublishMessage(string message)
+        {
+            SafeInvokeMessageArrived(message);
+        }
+
+        private void SafeInvokeMessageArrived(string message)
+        {
+
+            if (MessageArrived == null)
+                return;         //No Listeners
+
+            MessageArrivedEvent listener = null;
+            var dels = MessageArrived.GetInvocationList();
+
+            foreach (var del in dels)
+            {
+                try
+                {
+                    listener = (MessageArrivedEvent)del;
+                    listener.Invoke(message);
+                }
+                catch (Exception)
+                {
+                    //Could not reach the destination, so remove it
+                    //from the list
+                    MessageArrived -= listener;
+                }
+            }
+        }
+
         public RegisterError Register(String username, String password)
         {
             Logger.Log("Register", "attempt: username={0} password={1}", username, password);

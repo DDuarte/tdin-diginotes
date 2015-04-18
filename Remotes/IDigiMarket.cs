@@ -6,6 +6,14 @@ namespace Remotes
 {
     public interface IDigiMarket
     {
+
+        #region Events
+
+        event MessageArrivedEvent MessageArrived;
+
+        #endregion
+
+        void PublishMessage(string message);
         RegisterError Register(String username, String password);
         LoginError Login(String username, String password);
         LogoutError Logout(String username, String password);
