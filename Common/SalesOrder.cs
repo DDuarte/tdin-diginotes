@@ -2,6 +2,7 @@
 
 namespace Common
 {
+    [Serializable]
     public class SalesOrder : MarshalByRefObject
     {
         public int Count { get; private set; }

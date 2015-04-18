@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    class EventProxy : MarshalByRefObject
+    public class EventProxy : MarshalByRefObject
     {
         #region Event Declarations
 

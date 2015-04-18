@@ -89,6 +89,7 @@
     </ApplicationDefinition>
     <Compile Include="Utils\NavigationService.cs" />
     <Compile Include="Utils\Session.cs" />
+    <Compile Include="Utils\Update.cs" />
     <Compile Include="Utils\View.cs" />
     <Compile Include="ViewModels\BuyViewModel.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />

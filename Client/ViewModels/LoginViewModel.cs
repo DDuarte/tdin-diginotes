@@ -91,6 +91,11 @@ namespace Client.ViewModels
             AuthenticationInProgress = false;
         }
 
+        public override void OnUpdate(Update update)
+        {
+            
+        }
+
         public override void OnEnter()
         {
 

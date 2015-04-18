@@ -71,6 +71,11 @@ namespace Client.ViewModels
             Messenger.Default.Register<View>(this, HandleViewChange);
         }
 
+        public override void OnUpdate(Update update)
+        {
+            
+        }
+
         public override void OnEnter()
         {
             

@@ -41,6 +41,11 @@ namespace Client.ViewModels
             NavigationService.GoTo(View.Login);
         }
 
+        public override void OnUpdate(Update update)
+        {
+
+        }
+
         public override void OnEnter()
         {
             Username = App.Current.Session.Username;

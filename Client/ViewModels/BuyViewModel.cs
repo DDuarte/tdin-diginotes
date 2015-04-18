@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
+using Client.Utils;
 using Common;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -76,8 +77,13 @@ namespace Client.ViewModels
             var session = App.Current.Session;
             int buyQuantity = int.Parse(BuyQuantity);
             var ret = App.Current.TheDigiMarket.CreatePurchaseOrder(session.Username, session.Password, buyQuantity);
-            PurchaseOrders = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
             PurchaseNotInProgress = true;
+        }
+
+        public override void OnUpdate(Update update)
+        {
+            var session = App.Current.Session;
+            PurchaseOrders = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
         }
 
         public override void OnEnter()
