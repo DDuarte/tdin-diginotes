@@ -54,9 +54,10 @@ namespace Client.ViewModels
             AuthenticationInProgress = true;
             ErrorMessage = "";
 
-            var error = await Task.Run(() => App.Current.TheDigiMarket.Login(Username, Password));
+            User user = null;
+            var error = await Task.Run(() => App.Current.TheDigiMarket.Login(Username, Password, out user));
 
-            if (error == LoginError.None)
+            if (error == LoginError.None && user != null)
             {
                 App.Current.Session = new Session(Username, Password);
                 NavigationService.GoTo(View.Dashboard);

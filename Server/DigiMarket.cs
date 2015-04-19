@@ -127,8 +127,9 @@ namespace Server
             return RegisterError.None;
         }
 
-        public LoginError Login(String username, String password)
+        public LoginError Login(String username, String password, out User user)
         {
+            user = null;
             Logger.Log("Login", "attempt: username={0} password={1}", username, password);
 
             if (String.IsNullOrWhiteSpace(username))
@@ -143,7 +144,6 @@ namespace Server
                 return LoginError.InvalidPassword;
             }
 
-            User user;
             if (!Users.TryGetValue(username, out user))
             {
                 Logger.Log("Login", "fail: username={0} password={1} - doesn't exist", username, password);
