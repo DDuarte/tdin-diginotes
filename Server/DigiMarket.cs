@@ -68,49 +68,61 @@ namespace Server
             }
         }
 
-        public RegisterError Register(String username, String password)
+        public RegisterError Register(string name, string username, string password)
         {
-            Logger.Log("Register", "attempt: username={0} password={1}", username, password);
+            Logger.Log("Register", "attempt: name={0} username={1} password={2}", name, username, password);
+
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                Logger.Log("Register", "fail: name={0} username={1} password={2} - null or whitespace username", name, username, password);
+                return RegisterError.InvalidName;
+            }
 
             if (String.IsNullOrWhiteSpace(username))
             {
-                Logger.Log("Register", "fail: username={0} password={1} - null or whitespace user", username, password);
+                Logger.Log("Register", "fail: name={0} username={1} password={2} - null or whitespace user", name, username, password);
                 return RegisterError.InvalidUsername;
             }
 
             if (String.IsNullOrWhiteSpace(password))
             {
-                Logger.Log("Register", "fail: username={0} password={1} - null or whitespace pass", username, password);
+                Logger.Log("Register", "fail: name={0} username={1} password={2} - null or whitespace pass", name, username, password);
                 return RegisterError.InvalidPassword;
+            }
+
+            if (name.Length < 2 || name.Length > 20)
+            {
+                Logger.Log("Register", "fail: name={0} username={1} password={2} - out of bounds username", name, username, password);
+                return RegisterError.InvalidName;
             }
 
             if (username.Length < 2 || username.Length > 20)
             {
-                Logger.Log("Register", "fail: username={0} password={1} - out of bounds user", username, password);
+                Logger.Log("Register", "fail: name={0} username={1} password={2} - out of bounds user", name, username, password);
                 return RegisterError.InvalidUsername;
             }
 
             if (password.Length < 2 || password.Length > 40)
             {
-                Logger.Log("Register", "fail: username={0} password={1} - out of bounds pass", username, password);
+                Logger.Log("Register", "fail: name={0} username={1} password={2} - out of bounds pass", name, username, password);
                 return RegisterError.InvalidPassword;
             }
 
             User user;
             if (Users.TryGetValue(username, out user))
             {
-                Logger.Log("Register", "fail: username={0} password={1} - user exists", username, password);
+                Logger.Log("Register", "fail: name={0} username={1} password={2} - user exists", name, username, password);
                 return RegisterError.ExistingUsername;
             }
 
-            user = new User(username, password);
+            user = new User(name, username, password);
 
             Users.TryAdd(username, user);
 
             if (!_applyingLogs)
-                _actionLog.LogAction(new NewUserAction { User = username, Password = password });
+                _actionLog.LogAction(new NewUserAction { Name = username, User = username, Password = password });
 
-            Logger.Log("Register", "username={0} password={1}", username, password);
+            Logger.Log("Register", "name={0} username={1} password={2}", name, username, password);
 
             return RegisterError.None;
         }

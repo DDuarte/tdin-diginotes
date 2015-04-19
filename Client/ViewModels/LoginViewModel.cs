@@ -19,7 +19,6 @@ namespace Client.ViewModels
             Register = new RelayCommand(RegisterExecute, () => true);
         }
 
-
         private string _errorMessage;
         public string ErrorMessage
         {
@@ -77,7 +76,7 @@ namespace Client.ViewModels
             AuthenticationInProgress = true;
             ErrorMessage = "";
 
-            var error = await Task.Run(() => App.Current.TheDigiMarket.Register(Username, Password));
+            var error = await Task.Run(() => App.Current.TheDigiMarket.Register("NoName", Username, Password));
 
             if (error == RegisterError.None)
             {

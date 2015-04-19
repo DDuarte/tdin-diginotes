@@ -14,7 +14,7 @@ namespace Remotes
         #endregion
 
         void PublishMessage(string message);
-        RegisterError Register(String username, String password);
+        RegisterError Register(string name, string username, string password);
         LoginError Login(String username, String password);
         LogoutError Logout(String username, String password);
         PurchaseResult CreatePurchaseOrder(String username, String password, int quantity);

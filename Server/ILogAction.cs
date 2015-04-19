@@ -20,12 +20,13 @@ namespace Server
 
     public class NewUserAction : ILogAction
     {
+        public string Name { get; set; }
         public string User { get; set; }
         public string Password { get; set; }
 
         public void Apply(IDigiMarket digiMarket)
         {
-            digiMarket.Register(User, Password);
+            digiMarket.Register(Name, User, Password);
         }
     }
 }
