@@ -84,12 +84,11 @@
                   Grid.Row="0"
                   AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" />
+                            <DataGridTextColumn Header="ID"/>
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                            <!--<controls:DataGridNumericUpDownColumn Header="Value" 
+                            <controls:DataGridNumericUpDownColumn Header="Value" 
                                                      Binding="{Binding Value}"
-                                                      StringFormat="C" 
-                                                      Minimum="0" />-->
+                                                      Minimum="0" />
                             <DataGridTextColumn Header="Fulfilled" Binding="{Binding FulFilled}"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
@@ -101,10 +100,10 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" />
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                            <!--<controls:DataGridNumericUpDownColumn Header="Value" 
+                            <controls:DataGridNumericUpDownColumn Header="Value" 
                                                      Binding="{Binding Value}"
                                                       StringFormat="C" 
-                                                      Minimum="0" />-->
+                                                      Minimum="0" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
@@ -115,10 +114,10 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" />
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                            <!--<controls:DataGridNumericUpDownColumn Header="Value" 
+                            <controls:DataGridNumericUpDownColumn Header="Value" 
                                                      Binding="{Binding Value}"
                                                       StringFormat="C" 
-                                                      Minimum="0" />-->
+                                                      Minimum="0" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
