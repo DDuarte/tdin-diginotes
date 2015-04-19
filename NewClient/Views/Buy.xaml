@@ -80,7 +80,22 @@
             <TabControl>
                 <TabItem Header="All">
                     <ListBox ItemsSource="{Binding PurchaseOrders}" SelectedItem="{Binding SelectedPurchaseOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid x:Name="ListBoxItemLayout" Background="Transparent" Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.281*"/>
+                                        <ColumnDefinition Width="0.719*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!--<Image Source="{Binding ImagePath}" Height="100"/> -->
+                                    <StackPanel Margin="5,0,0,0" Grid.Column="1">
+                                        <TextBlock x:Name="id" TextWrapping="Wrap"/>
+                                        <TextBlock x:Name="Count" Margin="0,5,0,0" TextWrapping="Wrap" Text="{Binding Count}" d:LayoutOverrides="Width"/>
+                                        <TextBlock x:Name="Value" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
                 </TabItem>
                 <TabItem Header="Open">

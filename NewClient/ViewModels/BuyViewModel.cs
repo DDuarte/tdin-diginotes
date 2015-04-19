@@ -2,7 +2,6 @@
 using System.Windows.Input;
 using NewClient.Utils;
 using Common;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 namespace NewClient.ViewModels
@@ -68,7 +67,6 @@ namespace NewClient.ViewModels
         }
 
         private bool _purchaseNotInProgress;
-
         public bool PurchaseNotInProgress
         {
             get
