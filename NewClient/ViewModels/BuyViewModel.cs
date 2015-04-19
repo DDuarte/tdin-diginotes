@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using NewClient.Utils;
 using Common;
@@ -22,6 +23,35 @@ namespace NewClient.ViewModels
             }
 
         }
+
+        private IEnumerable<PurchaseOrder> _openPurchaseOrders;
+        public IEnumerable<PurchaseOrder> OpenPurchaseOrders
+        {
+            get
+            {
+                return _openPurchaseOrders;
+                
+            }
+            set
+            {
+                _openPurchaseOrders = value;
+                RaisePropertyChanged("OpenPurchaseOrders");
+            }
+        }
+
+        private IEnumerable<PurchaseOrder> _closedPurchaseOrders;
+        public IEnumerable<PurchaseOrder> ClosedPurchaseOrders
+        {
+            get
+            {
+                return _closedPurchaseOrders;
+            }
+            set
+            {
+                _closedPurchaseOrders = value;
+                RaisePropertyChanged("ClosedPurchaseOrders");
+            }
+        } 
 
         private PurchaseOrder _selectedPurchaseOrder;
         public PurchaseOrder SelectedPurchaseOrder
@@ -96,6 +126,8 @@ namespace NewClient.ViewModels
         {
             var session = App.Current.Session;
             PurchaseOrders = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
+            OpenPurchaseOrders = PurchaseOrders.Where((order) => order.FulFilled == false);
+            ClosedPurchaseOrders = PurchaseOrders.Where((order) => order.FulFilled == true);
         }
 
         public override void OnEnter()
