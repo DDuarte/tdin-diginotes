@@ -109,6 +109,7 @@
     <Compile Include="Utils\Update.cs" />
     <Compile Include="ViewModels\BuyViewModel.cs" />
     <Compile Include="ViewModels\DiginotesViewModelBase.cs" />
+    <Compile Include="ViewModels\InfoViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\Buy.xaml.cs">

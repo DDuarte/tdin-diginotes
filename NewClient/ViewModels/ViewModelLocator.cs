@@ -12,6 +12,7 @@
   See http://www.galasoft.ch/mvvm
 */
 
+using System.Runtime.InteropServices;
 using NewClient.ViewModels;
 using NewClient.Views;
 
@@ -28,6 +29,7 @@ namespace NewClient.ViewModels
         private static readonly LoginViewModel _login = new LoginViewModel();
         //private static readonly DashboardViewModel _dashboard = new DashboardViewModel();
         private static readonly BuyViewModel _buy = new BuyViewModel();
+        private static readonly InfoViewModel _info = new InfoViewModel();
 
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
@@ -63,6 +65,15 @@ namespace NewClient.ViewModels
             get
             {
                 return _buy;
+            }
+        }
+
+        public InfoViewModel Info
+        {
+            get
+            {
+                return _info;
+                
             }
         }
     }

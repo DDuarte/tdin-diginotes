@@ -4,9 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:NewClient.Views"
+             xmlns:viewModels="clr-namespace:NewClient.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance views:InfoViewModel}">
+             d:DataContext="{d:DesignInstance viewModels:InfoViewModel}"
+             DataContext="{Binding Info, Source={StaticResource Locator}}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
