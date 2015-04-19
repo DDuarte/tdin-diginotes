@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
+             DataContext="{Binding Buy, Source={StaticResource Locator}}"
              d:DesignHeight="500" d:DesignWidth="500">
     <UserControl.Resources>
         <ResourceDictionary>

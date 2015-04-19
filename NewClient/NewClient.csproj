@@ -106,8 +106,11 @@
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Session.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="Utils\Update.cs" />
+    <Compile Include="ViewModels\BuyViewModel.cs" />
+    <Compile Include="ViewModels\DiginotesViewModelBase.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\Buy.xaml.cs">
       <DependentUpon>Buy.xaml</DependentUpon>
     </Compile>

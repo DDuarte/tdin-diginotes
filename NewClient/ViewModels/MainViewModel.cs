@@ -1,6 +1,7 @@
 using GalaSoft.MvvmLight;
+using NewClient.Utils;
 
-namespace NewClient.ViewModel
+namespace NewClient.ViewModels
 {
     /// <summary>
     /// This class contains properties that the main View can data bind to.
@@ -14,7 +15,7 @@ namespace NewClient.ViewModel
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : DiginotesViewModelBase
     {
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -29,6 +30,14 @@ namespace NewClient.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
+        }
+
+        public override void OnUpdate(Update update)
+        {
+        }
+
+        public override void OnEnter()
+        {
         }
     }
 }
