@@ -24,6 +24,20 @@ namespace NewClient.ViewModels
 
         }
 
+        private PurchaseOrder _selectedPurchaseOrder;
+        public PurchaseOrder SelectedPurchaseOrder
+        {
+            get
+            {
+                return _selectedPurchaseOrder;
+            }
+            set
+            {
+                _selectedPurchaseOrder = value;
+                RaisePropertyChanged("SelectedPurchaseOrder");
+            }
+        }
+
         private string _buyQuantity;
         public string BuyQuantity
         {

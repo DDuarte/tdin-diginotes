@@ -47,7 +47,7 @@
                 <Label Margin="0 8 0 8" Content="ID" Grid.Column="0" Grid.Row="0"/>
                 <TextBox Grid.Column="1" Grid.Row="0"/>
                 <Label Margin="0 8 0 8" Content="Count" Grid.Column="0" Grid.Row="1"/>
-                <TextBox Grid.Column="1" Grid.Row="1"/>
+                <TextBox Text="{Binding SelectedPurchaseOrder.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1"/>
                 <Label Margin="0 8 0 8" Content="Value" Grid.Column="0" Grid.Row="2"/>
                 <TextBox Grid.Column="1" Grid.Row="2"/>
                 <StackPanel Margin="0 8 0 0" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
@@ -79,7 +79,7 @@
             <Label FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" Margin="0 8 0 8" Content="My Orders"/>
             <TabControl>
                 <TabItem Header="All">
-                    <ListBox ItemsSource="{Binding PurchaseOrders}">
+                    <ListBox ItemsSource="{Binding PurchaseOrders}" SelectedItem="{Binding SelectedPurchaseOrder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         
                     </ListBox>
                 </TabItem>
