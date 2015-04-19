@@ -7,6 +7,7 @@
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:newClient="clr-namespace:NewClient"
              xmlns:views="clr-namespace:NewClient.Views"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance views:RegisterViewModel}">
@@ -50,6 +51,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -82,8 +84,12 @@
 				 x:Name="PasswordBox" PasswordChanged="PasswordBox_OnPasswordChanged"
 				 wpf:TextField.Hint="Password">
         </PasswordBox>
-        
-        <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+
+        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="16 0 8 0" MinHeight="26" Content="{Binding ErrorMessage}" />
+        <controls:ProgressRing  Foreground="{DynamicResource AccentColorBrush}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="16 0 8 0" MinHeight="26" IsActive="{Binding AuthenticationInProgress}" />
+
+
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Margin="0 0 8 8" Content="REGISTER" Command="{Binding Register}"/>
         </StackPanel>
     </Grid>

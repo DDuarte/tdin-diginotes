@@ -183,3 +183,5 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 Client/Assets/*.png
+
+*.sln.DotSettings
