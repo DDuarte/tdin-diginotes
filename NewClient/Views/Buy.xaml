@@ -7,7 +7,7 @@
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
              DataContext="{Binding Buy, Source={StaticResource Locator}}"
-             d:DesignHeight="500" d:DesignWidth="500">
+             d:DesignHeight="500" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,10 +25,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="200" Width="*" />
             <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition MinHeight="25" Height="*"/>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel  Grid.Row="0" Grid.Column="0">
@@ -57,45 +56,25 @@
                 </StackPanel>
             </Grid>
         </StackPanel>
-        <StackPanel Grid.Row="2" Grid.Column="0">
-            <Label FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" Margin="0 8 0 8" Content="New Order"/>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition MinWidth="60" Width="Auto" />
-                    <ColumnDefinition MinWidth="100" Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Label Margin="0 8 0 8" Content="Quantity" Grid.Column="0" Grid.Row="0"/>
-                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding BuyQuantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <StackPanel Margin="0 8 0 0" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Create" Command="{Binding BuyCommand}" />
-                </StackPanel>
-            </Grid>
-        </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
             <Label FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" Margin="0 8 0 8" Content="My Orders"/>
             <TabControl>
                 <TabItem Header="All">
                     <DataGrid ItemsSource="{Binding Path=PurchaseOrders}"
-                  Grid.Row="0"
                   AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID"/>
+                            <DataGridTextColumn Header="Fulfilled" Binding="{Binding FulFilled}"></DataGridTextColumn>
+
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
                             <controls:DataGridNumericUpDownColumn Header="Value" 
                                                      Binding="{Binding Value}"
                                                       Minimum="0" />
-                            <DataGridTextColumn Header="Fulfilled" Binding="{Binding FulFilled}"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Open">
                     <DataGrid ItemsSource="{Binding Path=OpenPurchaseOrders}"
-                  Grid.Row="0"
                   AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" />
@@ -109,19 +88,20 @@
                 </TabItem>
                 <TabItem Header="Closed">
                     <DataGrid ItemsSource="{Binding Path=ClosedPurchaseOrders}"
-                  Grid.Row="0"
                   AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" />
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
                             <controls:DataGridNumericUpDownColumn Header="Value" 
                                                      Binding="{Binding Value}"
-                                                      StringFormat="C" 
                                                       Minimum="0" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
             </TabControl>
+        </StackPanel>
+        <StackPanel Margin="0 8 0 8" Grid.Row="0" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Top">
+            <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" Content="$$ BUY $$" Command="{Binding BuyCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

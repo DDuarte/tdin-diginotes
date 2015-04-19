@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using NewClient.Utils;
 using Common;
 using GalaSoft.MvvmLight.Command;
+using MahApps.Metro.Controls.Dialogs;
+using NewClient.Views;
 
 namespace NewClient.ViewModels
 {
@@ -67,21 +70,6 @@ namespace NewClient.ViewModels
             }
         }
 
-        private string _buyQuantity;
-        public string BuyQuantity
-        {
-            get
-            {
-                return _buyQuantity;
-
-            }
-            set
-            {
-                _buyQuantity = value;
-                RaisePropertyChanged("BuyQuantity");
-            }
-        }
-
         private string _buyResultMessage;
         public string BuyResultMessage
         {
@@ -113,13 +101,26 @@ namespace NewClient.ViewModels
 
         public ICommand BuyCommand { get; private set; }
 
-        private void BuyCommandExecute()
+        private async void BuyCommandExecute()
         {
-            PurchaseNotInProgress = false;
+            var mainWindow = Application.Current.Windows.Count > 0 ?
+                    Application.Current.Windows[0] as MainWindow : null;
+
+            if (mainWindow == null)
+                return;
+
+            var result = await mainWindow.ShowInputAsync("Buy Diginotes", "How many?", new MetroDialogSettings { ColorScheme = MetroDialogColorScheme.Accented, AffirmativeButtonText = "Buy", DefaultText = "1" });
+
+            if (result == null) //user pressed cancel
+                return;
+
+            // PurchaseNotInProgress = false;
             var session = App.Current.Session;
-            int buyQuantity = int.Parse(BuyQuantity);
+            int buyQuantity = int.Parse(result);
             var ret = App.Current.TheDigiMarket.CreatePurchaseOrder(session.Username, session.Password, buyQuantity);
-            PurchaseNotInProgress = true;
+            // PurchaseNotInProgress = true;
+
+            await mainWindow.ShowInputAsync("Buy Diginotes", "Result " + ret);
         }
 
         public override void OnUpdate(Update update)
