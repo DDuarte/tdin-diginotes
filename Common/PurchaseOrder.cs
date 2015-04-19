@@ -9,13 +9,15 @@ namespace Common
         public int Count { get; private set; }
         public User Buyer { get; private set; }
         public bool FulFilled { get; set; }
+        public decimal Value { get; set; }
 
-        public PurchaseOrder(User buyer, int count, bool fulfilled = false)
+        public PurchaseOrder(User buyer, int count, decimal currentQuotation, bool fulfilled = false)
         {
             Id = Guid.NewGuid();
             Buyer = buyer;
             Count = count;
             FulFilled = fulfilled;
+            Value = currentQuotation*count;
         }
 
         public override int GetHashCode()

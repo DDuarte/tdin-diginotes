@@ -239,7 +239,7 @@ namespace Server
 
             if (numOffers == 0)
             {
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity));
+                PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, Quotation));
                 PublishMessage("update");
                 return PurchaseResult.Unfulfilled;
             }
@@ -266,7 +266,7 @@ namespace Server
                     Users.Values.Where(u => u.Diginotes.Contains(diginote)).Select(u => u.RemoveDiginote(diginote));
                 }
 
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, true));
+                PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, Quotation, true));
                 PublishMessage("update");
                 return PurchaseResult.Fulfilled;
             }
@@ -282,10 +282,34 @@ namespace Server
                     Users.Values.Where(u => u.Diginotes.Contains(diginote)).Select(u => u.RemoveDiginote(diginote));
                 }
 
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, true)); // fulfilled
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus)); // unfulfiled
+                PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, Quotation, true)); // fulfilled
+                PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus, Quotation)); // unfulfiled
                 PublishMessage("update");
                 return PurchaseResult.PartiallyFullfilled;
+            }
+        }
+
+        public bool UpdatePurchaseOrder(Guid id, decimal value)
+        {
+            var purchaseOrder = PurchaseOrders.Where((order) => order.Id == id).ToList().FirstOrDefault();
+
+            if (purchaseOrder == null)
+                return false;
+
+            purchaseOrder.Value = value;
+            PublishMessage("update");
+            return true;
+        }
+
+        public void DeletePurchaseOrder(Guid id)
+        {
+            foreach (var order in PurchaseOrders)
+            {
+                if (order.Id == id)
+                {
+                    PurchaseOrders.Remove(order);
+                    PublishMessage("update");
+                }
             }
         }
 
