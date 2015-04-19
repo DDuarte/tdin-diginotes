@@ -32,6 +32,7 @@ namespace Client
 
             EventProxy = new EventProxy();
             EventProxy.MessageArrived += new MessageArrivedEvent(handleMessageArrived);
+            TheDigiMarket.MessageArrived += new MessageArrivedEvent(EventProxy.LocallyHandleMessageArrived);
         }
 
         private void handleMessageArrived(string message)

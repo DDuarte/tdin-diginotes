@@ -240,6 +240,7 @@ namespace Server
             if (numOffers == 0)
             {
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity));
+                PublishMessage("update");
                 return PurchaseResult.Unfulfilled;
             }
 
@@ -266,6 +267,7 @@ namespace Server
                 }
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, true));
+                PublishMessage("update");
                 return PurchaseResult.Fulfilled;
             }
             else // the order is partially fulfilled
@@ -282,6 +284,7 @@ namespace Server
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, true)); // fulfilled
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus)); // unfulfiled
+                PublishMessage("update");
                 return PurchaseResult.PartiallyFullfilled;
             }
         }
