@@ -13,5 +13,10 @@
         <dragablz:TabablzControl.InterTabController>
             <dragablz:InterTabController />
         </dragablz:TabablzControl.InterTabController>
+        <!-- <Viewbox Width="24" Height="24" >
+            <Button Command="{Binding LogoutCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Left">
+                <Image Width="24" Height="24" Source="../Assets/logout13.png" ToolTip="Logout"></Image>
+            </Button> 
+        </Viewbox> -->
     </dragablz:TabablzControl>
 </controls:MetroWindow>

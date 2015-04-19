@@ -1,0 +1,104 @@
+﻿<UserControl x:Class="NewClient.Views.Buy"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.Defaults.xaml" />
+                <ResourceDictionary Source="../Themes/MaterialDesignTheme.PasswordBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="200" Width="*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition MinHeight="25" Height="*"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel  Grid.Row="0" Grid.Column="0">
+            <Label FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" Margin="0 8 0 8" Content="Order Details"></Label>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="60" Width="Auto" />
+                    <ColumnDefinition MinWidth="100" Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label Margin="0 8 0 8" Content="ID" Grid.Column="0" Grid.Row="0"/>
+                <TextBox Grid.Column="1" Grid.Row="0"/>
+                <Label Margin="0 8 0 8" Content="Count" Grid.Column="0" Grid.Row="1"/>
+                <TextBox Grid.Column="1" Grid.Row="1"/>
+                <Label Margin="0 8 0 8" Content="Value" Grid.Column="0" Grid.Row="2"/>
+                <TextBox Grid.Column="1" Grid.Row="2"/>
+                <StackPanel Margin="0 8 0 0" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Cancel" Command="{Binding Cancel}" />
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="8 0 0 0" Content="Edit" Command="{Binding Edit}" />
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="0">
+            <Label FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" Margin="0 8 0 8" Content="New Order"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="60" Width="Auto" />
+                    <ColumnDefinition MinWidth="100" Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label Margin="0 8 0 8" Content="Quantity" Grid.Column="0" Grid.Row="0"/>
+                <TextBox Grid.Column="1" Grid.Row="0"/>
+                <StackPanel Margin="0 8 0 0" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Create" Command="{Binding Create}" />
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+            <Label FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" Margin="0 8 0 8" Content="My Orders"/>
+            <TabControl>
+                <TabItem Header="All">
+                    <ListBox>
+                        <system:DateTime>2011-01-01 12:31:00</system:DateTime>
+                        <system:DateTime>2011-01-01 12:31:00</system:DateTime>
+                        <system:DateTime>2011-01-01 12:31:00</system:DateTime>
+                    </ListBox>
+                </TabItem>
+                <TabItem Header="Open">
+                    <ListBox>
+                        <system:DateTime>2011-01-01 12:31:00</system:DateTime>
+                        <system:DateTime>2011-01-01 12:31:00</system:DateTime>
+                        <system:DateTime>2011-01-01 12:31:00</system:DateTime>
+                    </ListBox>
+                </TabItem>
+                <TabItem Header="Closed">
+                    <ListBox>
+                        <system:DateTime>2011-01-01 12:31:00</system:DateTime>
+                        <system:DateTime>2011-01-01 12:31:00</system:DateTime>
+                        <system:DateTime>2011-01-01 12:31:00</system:DateTime>
+                    </ListBox>
+                </TabItem>
+            </TabControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

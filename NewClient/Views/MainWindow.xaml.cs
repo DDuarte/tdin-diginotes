@@ -19,7 +19,7 @@ namespace NewClient.Views
         public void AfterLogin()
         {
             CreateTab("INFO", new Info());
-            // CreateTab("BUY", new Register());
+            CreateTab("BUY", new Buy());
             // CreateTab("SELL", new Register());
             RemoveTab("LOGIN");
             RemoveTab("REGISTER");
