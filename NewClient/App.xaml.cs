@@ -17,7 +17,7 @@ namespace NewClient
     public partial class App : Application
     {
         public readonly IDigiMarket TheDigiMarket;
-        public Session Session = new Session("", "");
+        public Session Session = new Session(string.Empty, string.Empty, string.Empty);
 
         public new static App Current
         {

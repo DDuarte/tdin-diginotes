@@ -6,8 +6,10 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:newClient="clr-namespace:NewClient"
+             xmlns:views="clr-namespace:NewClient.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance views:LoginViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -47,12 +49,15 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="16 0 8 0">Username</TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="1" wpf:TextField.Hint="Username">
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="16 0 8 0" MinHeight="26" Content="{Binding ErrorMessage}" />
+        
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="16 0 8 0">Username</TextBlock>
+        <TextBox Grid.Row="1" Grid.Column="1" wpf:TextField.Hint="Username">
             <TextBox.Text>
                 <Binding Path="Username" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
@@ -62,14 +67,11 @@
             </TextBox.Text>
         </TextBox>
 
-        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="16 0 8 0">Password</TextBlock>
-        <PasswordBox Grid.Row="1" Grid.Column="1" 
-				 x:Name="PasswordBox"
-				 wpf:TextField.Hint="Password">
-        </PasswordBox>
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="16 0 8 0">Password</TextBlock>
+        <PasswordBox Grid.Row="2" Grid.Column="1" wpf:TextField.Hint="Password" PasswordChanged="PasswordBox_OnPasswordChanged"/>
         
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource MaterialDesignRaisedButton}" Margin="0 0 8 8" Content="LOGIN" />
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource MaterialDesignRaisedButton}" Margin="0 0 8 8" Content="LOGIN" Command="{Binding Login}" />
         </StackPanel>
     </Grid>
 </UserControl>

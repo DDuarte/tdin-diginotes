@@ -1,28 +1,20 @@
-﻿<UserControl x:Class="NewClient.Views.Register"
+﻿<UserControl x:Class="NewClient.Views.Info"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-             xmlns:newClient="clr-namespace:NewClient"
              xmlns:views="clr-namespace:NewClient.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance views:RegisterViewModel}">
+             d:DataContext="{d:DesignInstance views:InfoViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
-                <ResourceDictionary Source="../Themes/MaterialDesignTheme.PasswordBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                <Setter Property="Margin" Value="0 8 0 8" />
-            </Style>
-            <Style TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource MaterialDesignPasswordBox}">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="Margin" Value="0 8 0 8" />
             </Style>
@@ -44,47 +36,49 @@
     <Grid Margin="16">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="16 0 8 0">Name</TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="1" 
-				 wpf:TextField.Hint="Name">
-            <TextBox.Text>
-                <Binding Path="Name" UpdateSourceTrigger="PropertyChanged">
-                    <Binding.ValidationRules>
-                        <newClient:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox.Text>
-        </TextBox>
-
-        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="16 0 8 0">Username</TextBlock>
-        <TextBox Grid.Row="1" Grid.Column="1" wpf:TextField.Hint="Username">
-            <TextBox.Text>
-                <Binding Path="Username" UpdateSourceTrigger="PropertyChanged">
-                    <Binding.ValidationRules>
-                        <newClient:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox.Text>
-        </TextBox>
-
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="16 0 8 0">Password</TextBlock>
-        <PasswordBox Grid.Row="2" Grid.Column="1" 
-				 x:Name="PasswordBox" PasswordChanged="PasswordBox_OnPasswordChanged"
-				 wpf:TextField.Hint="Password">
-        </PasswordBox>
-        
-        <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource MaterialDesignRaisedLightButton}" Margin="0 0 8 8" Content="REGISTER" Command="{Binding Register}"/>
+        <Viewbox Grid.Row="0" Grid.Column="0">
+            <Canvas Width="24" Height="24">
+                <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" Fill="Red" />
+            </Canvas>
+        </Viewbox>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+            <Label  Content="Welcome, " />
+            <Label  Content="{Binding Session.Name}" />
         </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="3">
+            <Viewbox Width="24" Height="24">
+                <Button Command="{Binding LogoutCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Left">
+                    <Image Width="24" Height="24" Source="../Assets/logout13.png" ToolTip="Logout"></Image>
+                </Button>
+            </Viewbox>
+        </StackPanel>
+        <Viewbox Grid.Row="2" Grid.Column="0">
+            <Image Width="24" Height="24" Source="../Assets/paper-bill.png"></Image>
+        </Viewbox>
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+            <Label  Content="Quotation: " />
+            <Label  Content="{Binding Session.Name}" />
+        </StackPanel>
+        <Viewbox Grid.Row="3" Grid.Column="0">
+            <Image Width="24" Height="24" Source="../Assets/dollar179.png"></Image>
+        </Viewbox>
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+            <Label  Content="Balance: " />
+            <Label  Content="{Binding Session.Name}" />
+        </StackPanel>
+
+        <Image Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Source="../Assets/business183.png"></Image>
     </Grid>
 </UserControl>
