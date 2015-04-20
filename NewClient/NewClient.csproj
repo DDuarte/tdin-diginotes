@@ -103,6 +103,7 @@
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="Utils\NullToBoolValueConverter.cs" />
     <Compile Include="ViewModels\BuyViewModel.cs" />
     <Compile Include="ViewModels\DiginotesViewModelBase.cs" />
     <Compile Include="ViewModels\InfoViewModel.cs" />

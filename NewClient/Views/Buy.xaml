@@ -51,8 +51,8 @@
                 <Label Margin="0 8 0 8" Content="Value" Grid.Column="0" Grid.Row="2"/>
                 <TextBox Text="{Binding SelectedPurchaseOrder.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
                 <StackPanel Margin="0 8 0 0" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Delete" Command="{Binding DeleteCommand}" />
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="8 0 0 0" Content="Edit" Command="{Binding EditCommand}" />
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Delete" Command="{Binding DeleteCommand}" IsEnabled="{Binding SelectedPurchaseOrder, Converter={StaticResource NullToBoolValueConverter}, ConverterParameter=True}"/>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="8 0 0 0" Content="Edit" Command="{Binding EditCommand}" IsEnabled="{Binding SelectedPurchaseOrder, Converter={StaticResource NullToBoolValueConverter}, ConverterParameter=True}"/>
                 </StackPanel>
             </Grid>
         </StackPanel>

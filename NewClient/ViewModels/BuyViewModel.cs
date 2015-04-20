@@ -152,6 +152,7 @@ namespace NewClient.ViewModels
             var session = App.Current.Session;
             PurchaseOrders = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
             PurchaseNotInProgress = true;
+            SelectedPurchaseOrder = null;
         }
 
         public BuyViewModel()
