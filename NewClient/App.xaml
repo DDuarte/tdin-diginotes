@@ -63,7 +63,7 @@
         <ResourceDictionary>
           <!-- include your terciary pallette -->
           <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.DeepPurple.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Blue.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <!-- include a single terciary accent color (and the associated forecolour) -->
             <SolidColorBrush x:Key="TerciaryAccentBrush" Color="{StaticResource Accent200}" />

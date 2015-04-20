@@ -46,7 +46,7 @@
             <RowDefinition Height="3*"/>
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
-        <controls:Tile Width="Auto" Height="Auto" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Title="Welcome" TiltFactor="0" Count="{Binding Session.Name}" Foreground="{StaticResource TerciaryAccentForegroundBrush}" Background="{StaticResource TerciaryAccentBrush}"/>
+        <controls:Tile HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Width="Auto" Height="Auto" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Title="Welcome" TiltFactor="0" Count="{Binding Session.Name}" Foreground="{StaticResource TerciaryAccentForegroundBrush}" Background="{StaticResource TerciaryAccentBrush}"/>
         <controls:Tile Width="Auto" Height="Auto" Grid.Row="1" Grid.Column="0" Title="Quotation" TiltFactor="0" Count="1 €" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Background="{StaticResource PrimaryHueMidBrush}"/>
         <controls:Tile Width="Auto" Height="Auto" Grid.Row="1" Grid.Column="1" Title="Balance"   TiltFactor="0" Count="{Binding Session.Balance}" Foreground="{StaticResource PrimaryHueDarkForegroundBrush}" Background="{StaticResource PrimaryHueDarkBrush}"/>
         <controls:Tile Width="Auto" Height="Auto" Grid.Row="2" Grid.Column="0" Title="Add Funds" TiltFactor="0" ToolTip="Use Sparingly" Command="{Binding AddFundsCommand}" Foreground="{StaticResource PrimaryHueLightForegroundBrush}" Background="{StaticResource PrimaryHueLightBrush}">
