@@ -14,6 +14,7 @@ namespace NewClient.ViewModels
         {
             LogoutCommand = new RelayCommand(LogoutExecute, () => true);
             AddFundsCommand = new RelayCommand(AddFundsExecute, () => true);
+            ShowQuotation = new RelayCommand(ShowQuotationExecute, () => true);
             Session = App.Current.Session;
         }
 
@@ -34,9 +35,20 @@ namespace NewClient.ViewModels
             App.Current.TheDigiMarket.AddFunds(App.Current.Session.Username, App.Current.Session.Password, 10);
         }
 
+        private void ShowQuotationExecute()
+        {
+            var mainWindow = Application.Current.Windows.Count > 0 ?
+                    Application.Current.Windows[0] as MainWindow : null;
+
+            if (mainWindow != null)
+                mainWindow.ShowChartTab();
+        }
+
         public ICommand LogoutCommand { get; private set; }
 
         public ICommand AddFundsCommand { get; private set; }
+
+        public ICommand ShowQuotation { get; private set; }
 
         public override void OnUpdate(Update update)
         {

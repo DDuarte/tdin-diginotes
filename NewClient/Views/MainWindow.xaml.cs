@@ -16,6 +16,12 @@ namespace NewClient.Views
             CreateTab("REGISTER", new Register());
         }
 
+        public void ShowChartTab()
+        {
+            RemoveTab("CHARTS");
+            TabablzControl.SelectedItem = CreateTab("CHARTS", new DiginoteChart());
+        }
+
         public void AfterLogin()
         {
             CreateTab("INFO", new Info());
@@ -36,7 +42,7 @@ namespace NewClient.Views
             TabablzControl.SelectedIndex = 0;
         }
 
-        private void CreateTab(string header, FrameworkElement control)
+        private TabItem CreateTab(string header, FrameworkElement control)
         {
             /* <TabItem Header="REGISTER">
                 <views:Register Margin="8" />
@@ -46,6 +52,7 @@ namespace NewClient.Views
             var tabItem = new TabItem { Header = header, Content = control };
 
             TabablzControl.Items.Add(tabItem);
+            return tabItem;
         }
 
         private void RemoveTab(string header)
