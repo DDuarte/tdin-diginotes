@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeAnnotations.cs" />
     <Compile Include="EventDeclarations.cs" />
     <Compile Include="Diginote.cs" />
     <Compile Include="EventProxy.cs" />
