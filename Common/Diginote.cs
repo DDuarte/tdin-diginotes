@@ -4,12 +4,13 @@ namespace Common
 {
     public class Diginote : MarshalByRefObject
     {
-        public Guid Id { get; private set; }
+        private static int _lastId;
+        public int Id { get; private set; }
         public int Value { get; set; }
 
         public Diginote()
         {
-            Id = Guid.NewGuid();
+            Id = _lastId++;
             Value = 1;
         }
 
