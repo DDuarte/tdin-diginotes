@@ -289,9 +289,10 @@ namespace Server
             }
         }
 
-        public bool UpdatePurchaseOrder(Guid id, decimal value)
+        public bool UpdatePurchaseOrder(string username, string password, int id, decimal value)
         {
-            var purchaseOrder = PurchaseOrders.Where((order) => order.Id == id).ToList().FirstOrDefault();
+            // insert login logic
+            var purchaseOrder = PurchaseOrders.Where((order) => order.Id == id && order.Buyer == Users[username]).ToList().FirstOrDefault();
 
             if (purchaseOrder == null)
                 return false;
@@ -301,8 +302,9 @@ namespace Server
             return true;
         }
 
-        public void DeletePurchaseOrder(Guid id)
+        public void DeletePurchaseOrder(string username, string password, int id)
         {
+            // insert login logic
             foreach (var order in PurchaseOrders)
             {
                 if (order.Id == id)
