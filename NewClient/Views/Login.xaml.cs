@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Common;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
@@ -11,7 +10,7 @@ namespace NewClient.Views
     /// <summary>
     /// Interaction logic for Login.xaml
     /// </summary>
-    public partial class Login : UserControl
+    public partial class Login
     {
         public Login()
         {
@@ -67,11 +66,11 @@ namespace NewClient.Views
             AuthenticationInProgress = true;
             ErrorMessage = "";
 
-            User user = null;
-            var error = await Task.Run(() => App.Current.TheDigiMarket.Login(Username, Password, out user));
+            var result = await Task.Run(() => App.Current.TheDigiMarket.Login(Username, Password));
 
-            if (error == LoginError.None && user != null)
+            if (result)
             {
+                var user = result.Value;
                 App.Current.Session = new Session(user.Name, user.Username, Password, user.Balance);
 
                 var mainWindow = Application.Current.Windows.Count > 0 ?
@@ -82,7 +81,7 @@ namespace NewClient.Views
             }
             else
             {
-                ErrorMessage = error.ToString();
+                ErrorMessage = result.Error.ToString();
             }
 
             AuthenticationInProgress = false;

@@ -13,18 +13,54 @@ namespace Remotes
         #endregion
 
         void PublishMessage(Update update);
-        RegisterError Register(string name, string username, string password);
-        LoginError Login(String username, String password, out User user);
-        LogoutError Logout(String username, String password);
-        PurchaseResult CreatePurchaseOrder(String username, String password, int quantity);
+        Result<User> Register(string name, string username, string password);
+        Result<User> Login(string username, string password);
+        Result<User> Logout(string username, string password);
+        PurchaseResult CreatePurchaseOrder(string username, string password, int quantity);
         bool UpdatePurchaseOrder(string username, string password, int id, decimal value);
         void DeletePurchaseOrder(string username, string password, int id);
-        SalesResult CreateSalesOrder(String username, String password, int quantity);
-        List<PurchaseOrder> GetPurchaseOrders(String username, String password);
-        List<SalesOrder> GetSalesOrders(String username, String password);
+        SalesResult CreateSalesOrder(string username, string password, int quantity);
+        Result<List<PurchaseOrder>> GetPurchaseOrders(string username, string password);
+        Result<List<SalesOrder>> GetSalesOrders(string username, string password);
         bool AddFunds(string username, string password, decimal euros);
-        decimal GetBalance(string username, string password);
+        Result<decimal> GetBalance(string username, string password);
 
         void ApplyingLogs(bool active);
+    }
+
+    public enum DigiMarketError
+    {
+        None,
+        AlreadyLoggedIn,
+        ExistingUsername,
+        InvalidName,
+        InvalidPassword,
+        InvalidUsername,
+        NotLoggedIn,
+        UnexistingUser
+    }
+
+    [Serializable]
+    public class Result<T> : MarshalByRefObject
+    {
+        public T Value { get; private set; }
+        public DigiMarketError Error { get; private set; }
+
+        public Result(DigiMarketError error)
+        {
+            Value = default(T);
+            Error = error;
+        }
+
+        public Result(T value)
+        {
+            Value = value;
+            Error = DigiMarketError.None;
+        }
+
+        public static implicit operator bool(Result<T> r)
+        {
+            return r.Error == DigiMarketError.None;
+        }
     }
 }

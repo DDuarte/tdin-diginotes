@@ -57,7 +57,9 @@ namespace NewClient.ViewModels
                 case Update.General:
                     break;
                 case Update.Balance:
-                    Session.Balance = App.Current.TheDigiMarket.GetBalance(Session.Username, Session.Password);
+                    var result = App.Current.TheDigiMarket.GetBalance(Session.Username, Session.Password);
+                    if (result)
+                        Session.Balance = result.Value;
                     break;
             }
         }

@@ -29,7 +29,7 @@ namespace NewClient.ViewModels
             set
             {
                 _salesOrders = value;
-                RaisePropertyChanged("SalesOrders");
+                RaisePropertyChanged();
             }
 
         }
@@ -45,7 +45,7 @@ namespace NewClient.ViewModels
             set
             {
                 _openSalesOrders = value;
-                RaisePropertyChanged("OpenSalesOrders");
+                RaisePropertyChanged();
             }
         }
 
@@ -59,7 +59,7 @@ namespace NewClient.ViewModels
             set
             {
                 _closedSalesOrders = value;
-                RaisePropertyChanged("ClosedSalesOrders");
+                RaisePropertyChanged();
             }
         }
 
@@ -73,7 +73,7 @@ namespace NewClient.ViewModels
             set
             {
                 _selectedSalesOrder = value;
-                RaisePropertyChanged("SelectedSalesOrder");
+                RaisePropertyChanged();
             }
         }
 
@@ -87,7 +87,7 @@ namespace NewClient.ViewModels
             set
             {
                 _salesResultMessage = value;
-                RaisePropertyChanged("SalesResultMessage");
+                RaisePropertyChanged();
             }
         }
 
@@ -102,7 +102,7 @@ namespace NewClient.ViewModels
             set
             {
                 _saleNotInProgress = value;
-                RaisePropertyChanged("SaleNotInProgress");
+                RaisePropertyChanged();
             }
         }
 
@@ -150,15 +150,24 @@ namespace NewClient.ViewModels
         public override void OnUpdate(Update update)
         {
             var session = App.Current.Session;
-            SalesOrders = App.Current.TheDigiMarket.GetSalesOrders(session.Username, session.Password);
-            OpenSalesOrders = SalesOrders.Where((order) => order.Fulfilled == false);
-            ClosedSalesOrders = SalesOrders.Where((order) => order.Fulfilled == true);
+
+            var result = App.Current.TheDigiMarket.GetSalesOrders(session.Username, session.Password);
+
+            if (!result)
+                return;
+
+            SalesOrders = result.Value;
+            OpenSalesOrders = SalesOrders.Where(order => order.Fulfilled == false);
+            ClosedSalesOrders = SalesOrders.Where(order => order.Fulfilled);
         }
 
         public override void OnEnter()
         {
             var session = App.Current.Session;
-            SalesOrders = App.Current.TheDigiMarket.GetSalesOrders(session.Username, session.Password);
+
+            var result = App.Current.TheDigiMarket.GetSalesOrders(session.Username, session.Password);
+
+            SalesOrders = result.Value;
             SaleNotInProgress = true;
         }
     }

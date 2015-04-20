@@ -1,10 +1,7 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Common;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
@@ -77,11 +74,11 @@ namespace NewClient.Views
             AuthenticationInProgress = true;
             ErrorMessage = "";
 
-            var error = await Task.Run(() => App.Current.TheDigiMarket.Register(Name, Username, Password));
+            var result = await Task.Run(() => App.Current.TheDigiMarket.Register(Name, Username, Password));
 
-            if (error == RegisterError.None)
+            if (result)
             {
-                App.Current.Session = new Session(Name, Username, Password, 0);
+                App.Current.Session = new Session(result.Value.Name, result.Value.Username, Password, 0);
 
                 var mainWindow = Application.Current.Windows.Count > 0 ?
                     Application.Current.Windows[0] as MainWindow : null;
@@ -91,7 +88,7 @@ namespace NewClient.Views
             }
             else
             {
-                ErrorMessage = error.ToString();
+                ErrorMessage = result.Error.ToString();
             }
 
             AuthenticationInProgress = false;

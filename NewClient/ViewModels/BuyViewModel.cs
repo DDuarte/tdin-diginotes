@@ -142,7 +142,12 @@ namespace NewClient.ViewModels
         public override void OnUpdate(Update update)
         {
             var session = App.Current.Session;
-            PurchaseOrders = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
+
+            var result = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
+            if (!result)
+                return;
+
+            PurchaseOrders = result.Value;
             OpenPurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled);
             ClosedPurchaseOrders = PurchaseOrders.Where(order => order.FulFilled);
         }
@@ -150,7 +155,12 @@ namespace NewClient.ViewModels
         public override void OnEnter()
         {
             var session = App.Current.Session;
-            PurchaseOrders = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
+
+            var result = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
+            if (!result)
+                return;
+
+            PurchaseOrders = result.Value;
             PurchaseNotInProgress = true;
             SelectedPurchaseOrder = null;
         }
