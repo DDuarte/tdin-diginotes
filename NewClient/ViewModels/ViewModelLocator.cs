@@ -30,6 +30,7 @@ namespace NewClient.ViewModels
         //private static readonly DashboardViewModel _dashboard = new DashboardViewModel();
         private static readonly BuyViewModel _buy = new BuyViewModel();
         private static readonly InfoViewModel _info = new InfoViewModel();
+        private static readonly SellViewModel _sell = new SellViewModel();
 
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
@@ -73,6 +74,15 @@ namespace NewClient.ViewModels
             get
             {
                 return _info;
+                
+            }
+        }
+
+        public SellViewModel Sell
+        {
+            get
+            {
+                return _sell;
                 
             }
         }

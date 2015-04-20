@@ -26,7 +26,7 @@ namespace NewClient.Views
         {
             CreateTab("INFO", new Info());
             CreateTab("BUY", new Buy());
-            // CreateTab("SELL", new Register());
+            CreateTab("SELL", new Sell());
             RemoveTab("LOGIN");
             RemoveTab("REGISTER");
             TabablzControl.SelectedIndex = 0;
