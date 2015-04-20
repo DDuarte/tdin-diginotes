@@ -1,6 +1,6 @@
-﻿using NewClient.Utils;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
+﻿using Common;
 
 namespace NewClient.ViewModels
 {

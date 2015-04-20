@@ -81,7 +81,7 @@ namespace NewClient.Views
 
             if (error == RegisterError.None)
             {
-                App.Current.Session = new Session(Name, Username, Password);
+                App.Current.Session = new Session(Name, Username, Password, 0);
 
                 var mainWindow = Application.Current.Windows.Count > 0 ?
                     Application.Current.Windows[0] as MainWindow : null;

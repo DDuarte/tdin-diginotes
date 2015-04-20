@@ -70,15 +70,17 @@
             <Image Width="24" Height="24" Source="../Assets/paper-bill.png"></Image>
         </Viewbox>
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-            <Label  Content="Quotation: " />
-            <Label  Content="{Binding Session.Name}" />
+            <Label VerticalAlignment="Center" Content="Quotation: " />
+            <Label VerticalAlignment="Center" Content="{Binding Session.Name}" />
         </StackPanel>
         <Viewbox Grid.Row="3" Grid.Column="0">
             <Image Width="24" Height="24" Source="../Assets/dollar179.png"></Image>
         </Viewbox>
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
-            <Label  Content="Balance: " />
-            <Label  Content="{Binding Session.Name}" />
+            <Label Content="Balance: " VerticalAlignment="Center" />
+            <Label Content="{Binding Session.Balance}" VerticalAlignment="Center" />
+            <Label Content="€" VerticalAlignment="Center" />
+            <Button Margin="10 0 0 0" Content="Add Funds" VerticalAlignment="Center" ToolTip="Use Sparingly" Style="{StaticResource MaterialDesignRaisedLightButton}" Command="{Binding AddFundsCommand}"/>
         </StackPanel>
 
         <Image Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Source="../Assets/business183.png"></Image>

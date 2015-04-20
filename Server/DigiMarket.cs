@@ -26,6 +26,32 @@ namespace Server
 
         private bool _applyingLogs = true;
 
+        public bool AddFunds(string username, string password, decimal euros)
+        {
+            Logger.Log("AddFunds", "attempt: user={0} euros={1}", username, euros);
+
+            // insert login logic here
+
+            Users[username].AddFunds(euros);
+            PublishMessage(Update.Balance);
+
+            Logger.Log("AddFunds", "user={0} euros={1}", username, euros);
+
+            return true;
+        }
+
+        public decimal GetBalance(string username, string password)
+        {
+            Logger.Log("GetBalance", "attempt: user={0}", username);
+
+            // insert login logic here
+
+            var balance = Users[username].Balance;
+            Logger.Log("GetBalance", "user={0}", username);
+
+            return balance;
+        }
+
         public void ApplyingLogs(bool active)
         {
             _applyingLogs = active;
@@ -38,16 +64,16 @@ namespace Server
 
         public event MessageArrivedEvent MessageArrived;
 
-        public void PublishMessage(string message)
+        public void PublishMessage(Update update)
         {
-            SafeInvokeMessageArrived(message);
+            SafeInvokeMessageArrived(update);
         }
 
-        private void SafeInvokeMessageArrived(string message)
+        private void SafeInvokeMessageArrived(Update update)
         {
 
             if (MessageArrived == null)
-                return;         //No Listeners
+                return; // no listeners
 
             MessageArrivedEvent listener = null;
             var dels = MessageArrived.GetInvocationList();
@@ -57,7 +83,7 @@ namespace Server
                 try
                 {
                     listener = (MessageArrivedEvent)del;
-                    listener.Invoke(message);
+                    listener.Invoke(update);
                 }
                 catch (Exception)
                 {
@@ -205,12 +231,6 @@ namespace Server
             return Users[username].Diginotes;
         }
 
-        public int GetBalance(String username, String password)
-        {
-            // insert login logic here
-            return Users[username].Diginotes.Count();
-        }
-
         public List<PurchaseOrder> GetPurchaseOrders(String username, String password)
         {
             // insert login logic here
@@ -240,7 +260,7 @@ namespace Server
             if (numOffers == 0)
             {
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, Quotation));
-                PublishMessage("update");
+                PublishMessage(Update.General);
                 return PurchaseResult.Unfulfilled;
             }
 
@@ -267,7 +287,7 @@ namespace Server
                 }
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, Quotation, true));
-                PublishMessage("update");
+                PublishMessage(Update.General);
                 return PurchaseResult.Fulfilled;
             }
             else // the order is partially fulfilled
@@ -284,7 +304,7 @@ namespace Server
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, Quotation, true)); // fulfilled
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus, Quotation)); // unfulfiled
-                PublishMessage("update");
+                PublishMessage(Update.General);
                 return PurchaseResult.PartiallyFullfilled;
             }
         }
@@ -298,7 +318,7 @@ namespace Server
                 return false;
 
             purchaseOrder.Value = value;
-            PublishMessage("update");
+            PublishMessage(Update.General);
             return true;
         }
 
@@ -310,7 +330,7 @@ namespace Server
                 if (order.Id == id)
                 {
                     PurchaseOrders.Remove(order);
-                    PublishMessage("update");
+                    PublishMessage(Update.General);
                 }
             }
         }

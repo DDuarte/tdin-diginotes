@@ -1,5 +1,5 @@
+using Common;
 using GalaSoft.MvvmLight;
-using NewClient.Utils;
 
 namespace NewClient.ViewModels
 {

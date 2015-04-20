@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using Common;
 using GalaSoft.MvvmLight.Messaging;
-using NewClient.Utils;
 using Remotes;
 
 namespace NewClient
@@ -19,8 +18,8 @@ namespace NewClient
     public partial class App : Application
     {
         public readonly IDigiMarket TheDigiMarket;
-        public Session Session = new Session(string.Empty, string.Empty, string.Empty);
-        public EventProxy EventProxy;
+        public Session Session = new Session(string.Empty, string.Empty, string.Empty, 0);
+        public readonly EventProxy EventProxy;
 
         public new static App Current
         {
@@ -37,14 +36,13 @@ namespace NewClient
             TheDigiMarket = RemoteNew.New<IDigiMarket>();
 
             EventProxy = new EventProxy();
-            EventProxy.MessageArrived += new MessageArrivedEvent(handleMessageArrived);
-            TheDigiMarket.MessageArrived += new MessageArrivedEvent(EventProxy.LocallyHandleMessageArrived);
+            EventProxy.MessageArrived += HandleMessageArrived;
+            TheDigiMarket.MessageArrived += EventProxy.LocallyHandleMessageArrived;
         }
 
-        private void handleMessageArrived(string message)
+        private void HandleMessageArrived(Update update)
         {
-            if (message == "update")
-                Messenger.Default.Send(Update.General);
+            Messenger.Default.Send(update);
         }
     }
 }

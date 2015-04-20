@@ -52,6 +52,7 @@
     <Compile Include="RemoteNew.cs" />
     <Compile Include="SalesOrder.cs" />
     <Compile Include="SalesResult.cs" />
+    <Compile Include="Update.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>

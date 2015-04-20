@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using NewClient.Utils;
 using Common;
 using GalaSoft.MvvmLight.Command;
 using MahApps.Metro.Controls.Dialogs;

@@ -9,6 +9,7 @@ namespace NewClient
         private string _name;
         private string _username;
         private string _password;
+        private decimal _balance;
 
         public string Name
         {
@@ -43,11 +44,23 @@ namespace NewClient
             }
         }
 
-        public Session(string name, string username, string password)
+        public decimal Balance
+        {
+            get { return _balance; }
+            set
+            {
+                if (value == _balance) return;
+                _balance = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Session(string name, string username, string password, decimal balance)
         {
             Name = name;
             Username = username;
             Password = password;
+            Balance = balance;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

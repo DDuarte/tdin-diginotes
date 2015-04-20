@@ -26,10 +26,10 @@ namespace Common
 
         #region Local Handlers
 
-        public void LocallyHandleMessageArrived(string message)
+        public void LocallyHandleMessageArrived(Update update)
         {
             if (MessageArrived != null)
-                MessageArrived(message);
+                MessageArrived(update);
         }
 
         #endregion
