@@ -45,14 +45,14 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Label Margin="0 8 0 8" Content="ID" Grid.Column="0" Grid.Row="0"/>
-                <TextBox Grid.Column="1" Grid.Row="0"/>
+                <TextBox IsEnabled="False" Text="{Binding SelectedPurchaseOrder.Id, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0"/>
                 <Label Margin="0 8 0 8" Content="Count" Grid.Column="0" Grid.Row="1"/>
-                <TextBox Text="{Binding SelectedPurchaseOrder.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1"/>
+                <TextBox IsEnabled ="False" Text="{Binding SelectedPurchaseOrder.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1"/>
                 <Label Margin="0 8 0 8" Content="Value" Grid.Column="0" Grid.Row="2"/>
-                <TextBox Grid.Column="1" Grid.Row="2"/>
+                <TextBox Text="{Binding SelectedPurchaseOrder.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
                 <StackPanel Margin="0 8 0 0" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Cancel" Command="{Binding Cancel}" />
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="8 0 0 0" Content="Edit" Command="{Binding Edit}" />
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Delete" Command="{Binding DeleteCommand}" />
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="8 0 0 0" Content="Edit" Command="{Binding EditCommand}" />
                 </StackPanel>
             </Grid>
         </StackPanel>
@@ -60,41 +60,36 @@
             <Label FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" Margin="0 8 0 8" Content="My Orders"/>
             <TabControl>
                 <TabItem Header="All">
-                    <DataGrid ItemsSource="{Binding Path=PurchaseOrders}"
+                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=PurchaseOrders}"
+                  Grid.Row="0"
                   AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID"/>
-                            <DataGridTextColumn Header="Fulfilled" Binding="{Binding FulFilled}"></DataGridTextColumn>
-
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                            <controls:DataGridNumericUpDownColumn Header="Value" 
-                                                     Binding="{Binding Value}"
-                                                      Minimum="0" />
+                            <DataGridTextColumn Header="Fulfilled" Binding="{Binding FulFilled}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Open">
-                    <DataGrid ItemsSource="{Binding Path=OpenPurchaseOrders}"
+                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=OpenPurchaseOrders}"
+                  Grid.Row="0"
                   AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" />
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                            <controls:DataGridNumericUpDownColumn Header="Value" 
-                                                     Binding="{Binding Value}"
-                                                      StringFormat="C" 
-                                                      Minimum="0" />
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Closed">
-                    <DataGrid ItemsSource="{Binding Path=ClosedPurchaseOrders}"
+                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=ClosedPurchaseOrders}"
+                  Grid.Row="0"
                   AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" />
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                            <controls:DataGridNumericUpDownColumn Header="Value" 
-                                                     Binding="{Binding Value}"
-                                                      Minimum="0" />
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>

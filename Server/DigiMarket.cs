@@ -337,7 +337,7 @@ namespace Server
             if (purchaseOrderToDelete == null) return;
 
             PurchaseOrders.Remove(purchaseOrderToDelete);
-            PublishMessage("update");
+            PublishMessage(Update.General);
         }
 
         public SalesResult CreateSalesOrder(string username, string password, int quantity)

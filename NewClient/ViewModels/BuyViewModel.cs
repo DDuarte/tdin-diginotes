@@ -122,6 +122,23 @@ namespace NewClient.ViewModels
             await mainWindow.ShowInputAsync("Buy Diginotes", "Result " + ret);
         }
 
+        public ICommand DeleteCommand { get; private set; }
+        private void DeleteCommandExecute()
+        {
+            var session = App.Current.Session;
+            App.Current.TheDigiMarket.DeletePurchaseOrder(session.Username, session.Password, SelectedPurchaseOrder.Id);
+            SelectedPurchaseOrder = null;
+        }
+
+        public ICommand EditCommand { get; private set; }
+
+        private void EditCommandExecute()
+        {
+            var session = App.Current.Session;
+            App.Current.TheDigiMarket.UpdatePurchaseOrder(session.Username, session.Password, SelectedPurchaseOrder.Id, SelectedPurchaseOrder.Value);
+        }
+
+
         public override void OnUpdate(Update update)
         {
             var session = App.Current.Session;
@@ -140,6 +157,8 @@ namespace NewClient.ViewModels
         public BuyViewModel()
         {
             BuyCommand = new RelayCommand(BuyCommandExecute, () => true);
+            EditCommand = new RelayCommand(EditCommandExecute, () => true);
+            DeleteCommand = new RelayCommand(DeleteCommandExecute, () => true);
             PurchaseNotInProgress = true;
         }
     }
