@@ -21,7 +21,7 @@ namespace NewClient.ViewModels
             set
             {
                 _purchaseOrders = value;
-                RaisePropertyChanged("PurchaseOrders");
+                RaisePropertyChanged();
             }
 
         }
@@ -37,7 +37,7 @@ namespace NewClient.ViewModels
             set
             {
                 _openPurchaseOrders = value;
-                RaisePropertyChanged("OpenPurchaseOrders");
+                RaisePropertyChanged();
             }
         }
 
@@ -51,7 +51,7 @@ namespace NewClient.ViewModels
             set
             {
                 _closedPurchaseOrders = value;
-                RaisePropertyChanged("ClosedPurchaseOrders");
+                RaisePropertyChanged();
             }
         } 
 
@@ -65,7 +65,7 @@ namespace NewClient.ViewModels
             set
             {
                 _selectedPurchaseOrder = value;
-                RaisePropertyChanged("SelectedPurchaseOrder");
+                RaisePropertyChanged();
             }
         }
 
@@ -79,7 +79,7 @@ namespace NewClient.ViewModels
             set
             {
                 _buyResultMessage = value;
-                RaisePropertyChanged("BuyResultMessage");
+                RaisePropertyChanged();
             }
         }
 
@@ -94,7 +94,7 @@ namespace NewClient.ViewModels
             set
             {
                 _purchaseNotInProgress = value;
-                RaisePropertyChanged("PurchaseNotInProgress");
+                RaisePropertyChanged();
             }
         }
 
@@ -126,8 +126,8 @@ namespace NewClient.ViewModels
         {
             var session = App.Current.Session;
             PurchaseOrders = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
-            OpenPurchaseOrders = PurchaseOrders.Where((order) => order.FulFilled == false);
-            ClosedPurchaseOrders = PurchaseOrders.Where((order) => order.FulFilled == true);
+            OpenPurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled);
+            ClosedPurchaseOrders = PurchaseOrders.Where(order => order.FulFilled);
         }
 
         public override void OnEnter()

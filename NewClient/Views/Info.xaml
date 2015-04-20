@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:NewClient.Views"
              xmlns:viewModels="clr-namespace:NewClient.ViewModels"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="489" d:DesignWidth="528"
              d:DataContext="{d:DesignInstance viewModels:InfoViewModel}"
              DataContext="{Binding Info, Source={StaticResource Locator}}">
     <UserControl.Resources>
@@ -35,54 +36,28 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Margin="16">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
-        <Viewbox Grid.Row="0" Grid.Column="0">
-            <Canvas Width="24" Height="24">
-                <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" Fill="Red" />
-            </Canvas>
-        </Viewbox>
-        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-            <Label  Content="Welcome, " />
-            <Label  Content="{Binding Session.Name}" />
-        </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="3">
-            <Viewbox Width="24" Height="24">
-                <Button Command="{Binding LogoutCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Left">
-                    <Image Width="24" Height="24" Source="../Assets/logout13.png" ToolTip="Logout"></Image>
-                </Button>
-            </Viewbox>
-        </StackPanel>
-        <Viewbox Grid.Row="2" Grid.Column="0">
-            <Image Width="24" Height="24" Source="../Assets/paper-bill.png"></Image>
-        </Viewbox>
-        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-            <Label VerticalAlignment="Center" Content="Quotation: " />
-            <Label VerticalAlignment="Center" Content="{Binding Session.Name}" />
-        </StackPanel>
-        <Viewbox Grid.Row="3" Grid.Column="0">
-            <Image Width="24" Height="24" Source="../Assets/dollar179.png"></Image>
-        </Viewbox>
-        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
-            <Label Content="Balance: " VerticalAlignment="Center" />
-            <Label Content="{Binding Session.Balance}" VerticalAlignment="Center" />
-            <Label Content="€" VerticalAlignment="Center" />
-            <Button Margin="10 0 0 0" Content="Add Funds" VerticalAlignment="Center" ToolTip="Use Sparingly" Style="{StaticResource MaterialDesignRaisedLightButton}" Command="{Binding AddFundsCommand}"/>
-        </StackPanel>
-
-        <Image Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Source="../Assets/business183.png"></Image>
+        <controls:Tile Width="Auto" Height="Auto" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Title="Welcome" TiltFactor="0" Count="{Binding Session.Name}" Foreground="{StaticResource TerciaryAccentForegroundBrush}" Background="{StaticResource TerciaryAccentBrush}"/>
+        <controls:Tile Width="Auto" Height="Auto" Grid.Row="1" Grid.Column="0" Title="Quotation" TiltFactor="0" Count="1 €" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" Background="{StaticResource PrimaryHueMidBrush}"/>
+        <controls:Tile Width="Auto" Height="Auto" Grid.Row="1" Grid.Column="1" Title="Balance"   TiltFactor="0" Count="{Binding Session.Balance}" Foreground="{StaticResource PrimaryHueDarkForegroundBrush}" Background="{StaticResource PrimaryHueDarkBrush}"/>
+        <controls:Tile Width="Auto" Height="Auto" Grid.Row="2" Grid.Column="0" Title="Add Funds" TiltFactor="0" ToolTip="Use Sparingly" Command="{Binding AddFundsCommand}" Foreground="{StaticResource PrimaryHueLightForegroundBrush}" Background="{StaticResource PrimaryHueLightBrush}">
+            <Rectangle Width="24" Height="24">
+                <Rectangle.Fill>
+                    <VisualBrush Visual="{StaticResource appbar_billing}" />
+                </Rectangle.Fill>
+            </Rectangle>
+        </controls:Tile>
+        <controls:Tile Width="Auto" Height="Auto" Grid.Row="2" Grid.Column="1" Title="Logout" TiltFactor="0" Command="{Binding LogoutCommand}" Foreground="{StaticResource SecondaryAccentForegroundBrush}" Background="{StaticResource SecondaryAccentBrush}" >
+            <Image Width="24" Height="24" Source="../Assets/logout13.png" ToolTip="Logout"/>
+        </controls:Tile>
     </Grid>
 </UserControl>
