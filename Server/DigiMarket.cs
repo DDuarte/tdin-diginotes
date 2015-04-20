@@ -325,14 +325,19 @@ namespace Server
         public void DeletePurchaseOrder(string username, string password, int id)
         {
             // insert login logic
+            PurchaseOrder purchaseOrderToDelete = null;
             foreach (var order in PurchaseOrders)
             {
                 if (order.Id == id)
                 {
-                    PurchaseOrders.Remove(order);
-                    PublishMessage(Update.General);
+                    purchaseOrderToDelete = order;
                 }
             }
+
+            if (purchaseOrderToDelete == null) return;
+
+            PurchaseOrders.Remove(purchaseOrderToDelete);
+            PublishMessage("update");
         }
 
         public SalesResult CreateSalesOrder(string username, string password, int quantity)
@@ -349,7 +354,7 @@ namespace Server
 
             if (numOffers == 0)
             {
-                SalesOrders.Add(new SalesOrder(requestingUser, quantity));
+                SalesOrders.Add(new SalesOrder(requestingUser, quantity, Quotation));
                 return SalesResult.Unfulfilled;
             }
 
