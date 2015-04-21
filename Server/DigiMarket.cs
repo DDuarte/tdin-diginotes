@@ -289,6 +289,7 @@ namespace Server
 
             var surplus = quantity - numOffers;
             var salesQuantity = 0;
+            var salesOrdersToAdd = new List<SalesOrder>();
             var selectedSalesOrders =
                 SalesOrders
                     .Where(salesOrder => !salesOrder.Fulfilled /* && salesOrder.Seller != requestingUser */)
@@ -304,13 +305,14 @@ namespace Server
                             var transientDiginotes = salesOrder.Diginotes.Take(salesOrder.Count - necessaryCount).ToList();
                             transientDiginotes.ForEach((transientDiginote) => salesOrder.Seller.AddDiginote(transientDiginote));
                             salesOrder.Diginotes.RemoveWhere((diginote) => transientDiginotes.Contains(diginote));
-                            SalesOrders.Add(new SalesOrder(salesOrder.Seller, salesOrder.Count - necessaryCount, Quotation));
+                            salesOrdersToAdd.Add(new SalesOrder(salesOrder.Seller, salesOrder.Count - necessaryCount, Quotation));
                             salesOrder.Count = necessaryCount;
                         }
 
                         return !exceeded;
                     });
 
+            salesOrdersToAdd.ForEach((order) => SalesOrders.Add(order));
             // purchase order is totally fulfilled
             if (surplus <= 0)
             {
