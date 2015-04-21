@@ -176,7 +176,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -190,27 +189,6 @@
       <Project>{1F6867A1-D16E-45FE-A780-D3617BEFE5DA}</Project>
       <Name>Remotes</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\logout13.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\hand129.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\dollar179.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\paper-bill.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\business183.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\WindowsIcons-license.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Entypo-license.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

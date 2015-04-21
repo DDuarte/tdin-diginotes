@@ -32,11 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeAnnotations.cs" />
@@ -44,12 +39,9 @@
     <Compile Include="Diginote.cs" />
     <Compile Include="EventProxy.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="LoginError.cs" />
-    <Compile Include="LogoutError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseOrder.cs" />
     <Compile Include="PurchaseResult.cs" />
-    <Compile Include="RegisterError.cs" />
     <Compile Include="RemoteNew.cs" />
     <Compile Include="SalesOrder.cs" />
     <Compile Include="SalesResult.cs" />

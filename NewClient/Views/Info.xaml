@@ -57,7 +57,11 @@
             </Rectangle>
         </controls:Tile>
         <controls:Tile Width="Auto" Height="Auto" Grid.Row="2" Grid.Column="1" Title="Logout" TiltFactor="0" Command="{Binding LogoutCommand}" Foreground="{StaticResource SecondaryAccentForegroundBrush}" Background="{StaticResource SecondaryAccentBrush}" >
-            <Image Width="24" Height="24" Source="../Assets/logout13.png" ToolTip="Logout"/>
+            <Rectangle Width="24" Height="24">
+                <Rectangle.Fill>
+                    <VisualBrush Visual="{StaticResource appbar_door_lock_open}" />
+                </Rectangle.Fill>
+            </Rectangle>
         </controls:Tile>
     </Grid>
 </UserControl>
