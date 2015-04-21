@@ -270,13 +270,20 @@ namespace Server
 
             var requestingUser = r.Value;
 
+            var price = quantity*Quotation;
+            if (requestingUser.Balance < price)
+                return PurchaseResult.InsuficientFunds;
+
             // get available offers
             var numOffers = SalesOrders.Where(order => !order.Fulfilled).Sum(order => order.Count);
 
             if (numOffers == 0)
             {
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, Quotation));
+                var po = new PurchaseOrder(requestingUser, quantity, Quotation);
+                PurchaseOrders.Add(po);
+                requestingUser.AddFunds(-po.Value);
                 PublishMessage(Update.General);
+                PublishMessage(Update.Balance);
                 return PurchaseResult.Unfulfilled;
             }
 
@@ -284,7 +291,7 @@ namespace Server
             var salesQuantity = 0;
             var selectedSalesOrders =
                 SalesOrders
-                    .Where(salesOrder => !salesOrder.Fulfilled && salesOrder.Seller != requestingUser)
+                    .Where(salesOrder => !salesOrder.Fulfilled /* && salesOrder.Seller != requestingUser */)
                     .TakeWhile(salesOrder =>
                     {
                         bool exceeded = salesQuantity > quantity;
@@ -445,7 +452,7 @@ namespace Server
                 return SalesResult.InsufficientFunds;
 
             // get available offers
-            var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled && order.Buyer != requestingUser);
+            var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled /* && order.Buyer != requestingUser */);
             var purchaseOrders = availablePurchaseOrders as IList<PurchaseOrder> ?? availablePurchaseOrders.ToList();
 
             var numOffers = purchaseOrders.Sum(  order => order.Count);

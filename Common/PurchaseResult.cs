@@ -5,6 +5,7 @@
         Fulfilled,
         PartiallyFullfilled,
         Unfulfilled,
-        Error
+        Error,
+        InsuficientFunds
     }
 }
