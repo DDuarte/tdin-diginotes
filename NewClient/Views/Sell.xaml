@@ -43,14 +43,14 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Label Margin="0 8 0 8" Content="ID" Grid.Column="0" Grid.Row="0"/>
-                <TextBox IsEnabled="False" Text="{Binding SelectedPurchaseOrder.Id, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0"/>
+                <TextBox IsEnabled="False" Text="{Binding SelectedSalesOrder.Id, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="0"/>
                 <Label Margin="0 8 0 8" Content="Count" Grid.Column="0" Grid.Row="1"/>
-                <TextBox IsEnabled ="False" Text="{Binding SelectedPurchaseOrder.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1"/>
+                <TextBox IsEnabled ="False" Text="{Binding SelectedSalesOrder.Count, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="1"/>
                 <Label Margin="0 8 0 8" Content="Value" Grid.Column="0" Grid.Row="2"/>
-                <TextBox Text="{Binding SelectedPurchaseOrder.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
+                <TextBox Text="{Binding SelectedSalesOrder.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2"/>
                 <StackPanel Margin="0 8 0 0" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Delete" Command="{Binding DeleteCommand}" IsEnabled="{Binding SelectedPurchaseOrder, Converter={StaticResource NullToBoolValueConverter}, ConverterParameter=True}"/>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="8 0 0 0" Content="Edit" Command="{Binding EditCommand}" IsEnabled="{Binding SelectedPurchaseOrder, Converter={StaticResource NullToBoolValueConverter}, ConverterParameter=True}"/>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Content="Delete" Command="{Binding DeleteCommand}" IsEnabled="{Binding SelectedSalesOrder, Converter={StaticResource NullToBoolValueConverter}, ConverterParameter=True}"/>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="8 0 0 0" Content="Edit" Command="{Binding EditCommand}" IsEnabled="{Binding SelectedSalesOrder, Converter={StaticResource NullToBoolValueConverter}, ConverterParameter=True}"/>
                 </StackPanel>
             </Grid>
         </StackPanel>
@@ -58,19 +58,19 @@
             <Label FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" Margin="0 8 0 8" Content="My Orders"/>
             <TabControl>
                 <TabItem Header="All">
-                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=PurchaseOrders}"
+                    <DataGrid SelectedItem="{Binding SelectedSalesOrder}" IsReadOnly="True" ItemsSource="{Binding Path=SalesOrders}"
                   Grid.Row="0"
                   AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Fulfilled" Binding="{Binding FulFilled}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Fulfilled" Binding="{Binding Fulfilled}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Open">
-                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=OpenPurchaseOrders}"
+                    <DataGrid SelectedItem="{Binding SelectedSalesOrder}" IsReadOnly="True" ItemsSource="{Binding Path=OpenSalesOrders}"
                   Grid.Row="0"
                   AutoGenerateColumns="False">
                         <DataGrid.Columns>
@@ -81,7 +81,7 @@
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Closed">
-                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=ClosedPurchaseOrders}"
+                    <DataGrid SelectedItem="{Binding SelectedSalesOrder}" IsReadOnly="True" ItemsSource="{Binding Path=ClosedSalesOrders}"
                   Grid.Row="0"
                   AutoGenerateColumns="False">
                         <DataGrid.Columns>
