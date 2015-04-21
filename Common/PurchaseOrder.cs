@@ -5,7 +5,7 @@ namespace Common
     [Serializable]
     public class PurchaseOrder
     {
-        private static int _lastId;
+        private static int _lastId = 1;
         public int Id { get; private set; }
         public int Count { get; set; }
         public User Buyer { get; private set; }

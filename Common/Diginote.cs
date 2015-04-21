@@ -4,7 +4,7 @@ namespace Common
 {
     public class Diginote : MarshalByRefObject
     {
-        private static int _lastId;
+        private static int _lastId = 1;
         public int Id { get; private set; }
         public int Value { get; set; }
 

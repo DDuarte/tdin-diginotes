@@ -7,7 +7,7 @@ namespace Common
     [Serializable]
     public class SalesOrder : MarshalByRefObject
     {
-        private static int _lastId;
+        private static int _lastId = 1;
         public int Id { get; private set; }
         public int Count { get; private set; }
         public User Seller { get; private set; }
