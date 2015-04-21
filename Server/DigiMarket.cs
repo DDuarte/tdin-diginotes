@@ -366,6 +366,16 @@ namespace Server
             PublishMessage(Update.General);
         }
 
+        public void UpdateSaleOrder(string username, string password, int id, decimal value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteSaleOrder(string username, string password, int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public SalesResult CreateSalesOrder(string username, string password, int quantity)
         {
             Logger.Log("attempt: username={0} password={1} quantity={2}",

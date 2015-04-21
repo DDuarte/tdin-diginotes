@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using Common;
 using GalaSoft.MvvmLight.Command;
@@ -13,7 +12,7 @@ namespace NewClient.ViewModels
     {
         public SellViewModel()
         {
-            SaleCommand = new RelayCommand(SaleCommandExecute, () => true);
+            SellCommand = new RelayCommand(SellCommandExecute, () => true);
             EditCommand = new RelayCommand(EditCommandExecute, () => true);
             DeleteCommand = new RelayCommand(DeleteCommandExecute, () => true);
             SaleNotInProgress = true;
@@ -106,43 +105,39 @@ namespace NewClient.ViewModels
             }
         }
 
-        public ICommand SaleCommand { get; private set; }
+        public ICommand SellCommand { get; private set; }
 
-        private async void SaleCommandExecute()
+        private async void SellCommandExecute()
         {
-            var result = await MainWindow.Instance.ShowInputAsync("Buy Diginotes", "How many?",
+            var result = await MainWindow.Instance.ShowInputAsync("Sell Diginotes", "How many?",
                 new MetroDialogSettings { ColorScheme = MetroDialogColorScheme.Accented,
-                    AffirmativeButtonText = "Buy",
+                    AffirmativeButtonText = "Sell",
                     DefaultText = "1" });
 
-            if (result == null) //user pressed cancel
+            if (result == null) // user pressed cancel
                 return;
 
-            // PurchaseNotInProgress = false;
             var session = App.Current.Session;
             int buyQuantity = int.Parse(result);
-            var ret = App.Current.TheDigiMarket.CreatePurchaseOrder(session.Username, session.Password, buyQuantity);
-            // PurchaseNotInProgress = true;
+            var ret = App.Current.TheDigiMarket.CreateSalesOrder(session.Username, session.Password, buyQuantity);
 
-            await MainWindow.Instance.ShowInputAsync("Buy Diginotes", "Result " + ret);
+            await MainWindow.Instance.ShowInputAsync("Sell Diginotes", "Result " + ret);
         }
 
         public ICommand DeleteCommand { get; private set; }
         private void DeleteCommandExecute()
         {
             var session = App.Current.Session;
-            App.Current.TheDigiMarket.DeletePurchaseOrder(session.Username, session.Password, SelectedSalesOrder.Id);
+            App.Current.TheDigiMarket.DeleteSaleOrder(session.Username, session.Password, SelectedSalesOrder.Id);
             SelectedSalesOrder = null;
         }
 
         public ICommand EditCommand { get; private set; }
-
         private void EditCommandExecute()
         {
             var session = App.Current.Session;
-            App.Current.TheDigiMarket.UpdatePurchaseOrder(session.Username, session.Password, SelectedSalesOrder.Id, SelectedSalesOrder.Value);
+            App.Current.TheDigiMarket.UpdateSaleOrder(session.Username, session.Password, SelectedSalesOrder.Id, SelectedSalesOrder.Value);
         }
-
 
         public override void OnUpdate(Update update)
         {
