@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Common
 {
     [Serializable]
-    public class User : MarshalByRefObject
+    public class User
     {
         public string Name { get; private set; }
         public string Username { get; private set; }
@@ -35,11 +35,6 @@ namespace Common
         public void AddFunds(decimal euros)
         {
             Balance += euros;
-        }
-
-        public override object InitializeLifetimeService()
-        {
-            return null; // infinite
         }
     }
 }

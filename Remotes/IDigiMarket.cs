@@ -44,7 +44,7 @@ namespace Remotes
     }
 
     [Serializable]
-    public class Result<T> : MarshalByRefObject
+    public class Result<T>
     {
         public T Value { get; private set; }
         public DigiMarketError Error { get; private set; }
@@ -64,11 +64,6 @@ namespace Remotes
         public static implicit operator bool(Result<T> r)
         {
             return r.Error == DigiMarketError.None;
-        }
-
-        public override object InitializeLifetimeService()
-        {
-            return null; // infinite
         }
     }
 }

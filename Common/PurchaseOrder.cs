@@ -3,7 +3,7 @@
 namespace Common
 {
     [Serializable]
-    public class PurchaseOrder : MarshalByRefObject
+    public class PurchaseOrder
     {
         private static int _lastId = 1;
         public int Id { get; private set; }
@@ -21,11 +21,6 @@ namespace Common
             FulFilled = fulfilled;
             Value = currentQuotation*count;
             Locked = false;
-        }
-
-        public override object InitializeLifetimeService()
-        {
-            return null; // infinite
         }
 
         public override int GetHashCode()

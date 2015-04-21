@@ -5,7 +5,7 @@ using System.Linq;
 namespace Common
 {
     [Serializable]
-    public class SalesOrder : MarshalByRefObject
+    public class SalesOrder
     {
         private static int _lastId = 1;
         public int Id { get; private set; }
@@ -55,11 +55,6 @@ namespace Common
                 throw new Exception("User has insufficient diginotes");
 
             seller.Diginotes.RemoveWhere(diginote => Diginotes.Contains(diginote));
-        }
-
-        public override object InitializeLifetimeService()
-        {
-            return null; // infinite
         }
 
         public override int GetHashCode()
