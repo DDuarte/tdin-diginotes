@@ -310,9 +310,9 @@ namespace Server
                         }
 
                         return !exceeded;
-                    });
+                    }).ToList();
 
-            salesOrdersToAdd.ForEach((order) => SalesOrders.Add(order));
+            SalesOrders.AddRange(salesOrdersToAdd);
             // purchase order is totally fulfilled
             if (surplus <= 0)
             {
@@ -468,7 +468,7 @@ namespace Server
             var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled /* && order.Buyer != requestingUser */);
             var purchaseOrders = availablePurchaseOrders as IList<PurchaseOrder> ?? availablePurchaseOrders.ToList();
 
-            var numOffers = purchaseOrders.Sum(  order => order.Count);
+            var numOffers = purchaseOrders.Sum(order => order.Count);
             var surplus = quantity - numOffers;
 
             if (numOffers == 0)
