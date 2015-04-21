@@ -301,9 +301,9 @@ namespace Server
                         var excess = salesQuantity - quantity;
                         if (excess > 0)
                         {
-                            var necessaryCount = quantity - salesQuantity;
+                            var necessaryCount = quantity - (salesQuantity - salesOrder.Count);
                             var transientDiginotes = salesOrder.Diginotes.Take(salesOrder.Count - necessaryCount).ToList();
-                            transientDiginotes.ForEach((transientDiginote) => salesOrder.Seller.AddDiginote(transientDiginote));
+                            transientDiginotes.ForEach(transientDiginote => salesOrder.Seller.AddDiginote(transientDiginote));
                             salesOrder.Diginotes.RemoveWhere((diginote) => transientDiginotes.Contains(diginote));
                             salesOrdersToAdd.Add(new SalesOrder(salesOrder.Seller, salesOrder.Count - necessaryCount, Quotation));
                             salesOrder.Count = necessaryCount;
@@ -480,7 +480,7 @@ namespace Server
 
             // select orders
             var selectedPurchaseOrders = new List<PurchaseOrder>();
-            for (int i = 0, purchaseQuantity = 0; i < purchaseOrders.Count() || purchaseQuantity < quantity; ++i)
+            for (int i = 0, purchaseQuantity = 0; i < purchaseOrders.Count() && purchaseQuantity < quantity; ++i)
             {
                 var availablePurchaseOrder = purchaseOrders.ElementAt(i);
                 var availableOrderCount = availablePurchaseOrder.Count;
@@ -494,7 +494,8 @@ namespace Server
 
                 // split purchase order
                 var necessaryCount = quantity - purchaseQuantity;
-                availablePurchaseOrder.Count = necessaryCount; 
+                availablePurchaseOrder.Value = necessaryCount * availablePurchaseOrder.Value / availablePurchaseOrder.Count;
+                availablePurchaseOrder.Count = necessaryCount;
                 selectedPurchaseOrders.Add(availablePurchaseOrder);
                 PurchaseOrders.Add(new PurchaseOrder(availablePurchaseOrder.Buyer, availableOrderCount - necessaryCount, Quotation));
             }
@@ -503,11 +504,10 @@ namespace Server
             foreach (var selectedPurchaseOrder in selectedPurchaseOrders)
             {
                 selectedPurchaseOrder.FulFilled = true;
-                selectedPurchaseOrder.Buyer.AddFunds(-selectedPurchaseOrder.Value);
                 requestingUser.AddFunds(selectedPurchaseOrder.Value);
                 var selectedDiginotes = requestingUser.Diginotes.Take(selectedPurchaseOrder.Count).ToList();
-                selectedDiginotes.ForEach(selectedDiginote => selectedPurchaseOrder.Buyer.AddDiginote(selectedDiginote));
-                requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));                 
+                requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));
+                selectedDiginotes.ForEach(selectedDiginote => selectedPurchaseOrder.Buyer.AddDiginote(selectedDiginote));                 
             }
 
             // SalesOrder is totally fulfilled
