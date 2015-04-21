@@ -296,8 +296,16 @@ namespace Server
                     {
                         bool exceeded = salesQuantity > quantity;
                         salesQuantity += salesOrder.Count;
-                        return !exceeded;
 
+                        var excess = salesQuantity - quantity;
+                        if (excess > 0)
+                        {
+                            var necessaryCount = quantity - salesQuantity;
+                            SalesOrders.Add(new SalesOrder(salesOrder.Seller, salesOrder.Count - necessaryCount, Quotation));
+                            salesOrder.Count = necessaryCount;
+                        }
+
+                        return !exceeded;
                     });
 
             // purchase order is totally fulfilled
@@ -479,6 +487,7 @@ namespace Server
                     continue;
                 }
 
+                // split purchase order
                 var necessaryCount = quantity - purchaseQuantity;
                 availablePurchaseOrder.Count = necessaryCount; 
                 selectedPurchaseOrders.Add(availablePurchaseOrder);
