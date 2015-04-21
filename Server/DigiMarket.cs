@@ -309,6 +309,7 @@ namespace Server
                 var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser, quantity, Quotation, true);
                 PurchaseOrders.Add(fulfilledPurchaseOrder);
                 requestingUser.AddFunds(-fulfilledPurchaseOrder.Value);
+                fulfilledPurchaseOrder.Buyer.AddFunds(fulfilledPurchaseOrder.Value);
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
@@ -328,6 +329,7 @@ namespace Server
                 PurchaseOrders.Add(fulfilledPurchaseOrder); // fulfilled
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus, Quotation)); // unfulfiled
                 requestingUser.AddFunds(-fulfilledPurchaseOrder.Value);
+                fulfilledPurchaseOrder.Buyer.AddFunds(fulfilledPurchaseOrder.Value);
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
