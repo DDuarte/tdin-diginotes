@@ -118,8 +118,8 @@ namespace NewClient.ViewModels
                 return;
 
             var session = App.Current.Session;
-            int buyQuantity = int.Parse(result);
-            var ret = App.Current.TheDigiMarket.CreateSalesOrder(session.Username, session.Password, buyQuantity);
+            int sellQuantity = int.Parse(result);
+            var ret = App.Current.TheDigiMarket.CreateSalesOrder(session.Username, session.Password, sellQuantity);
 
             await MainWindow.Instance.ShowInputAsync("Sell Diginotes", "Result " + ret);
         }
