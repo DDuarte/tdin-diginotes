@@ -301,6 +301,9 @@ namespace Server
                         if (excess > 0)
                         {
                             var necessaryCount = quantity - salesQuantity;
+                            var transientDiginotes = salesOrder.Diginotes.Take(salesOrder.Count - necessaryCount).ToList();
+                            transientDiginotes.ForEach((transientDiginote) => salesOrder.Seller.AddDiginote(transientDiginote));
+                            salesOrder.Diginotes.RemoveWhere((diginote) => transientDiginotes.Contains(diginote));
                             SalesOrders.Add(new SalesOrder(salesOrder.Seller, salesOrder.Count - necessaryCount, Quotation));
                             salesOrder.Count = necessaryCount;
                         }
