@@ -285,7 +285,7 @@ namespace Server
             var salesQuantity = 0;
             var selectedSalesOrders =
                 SalesOrders
-                    .Where(salesOrder => !salesOrder.Fulfilled)
+                    .Where(salesOrder => !salesOrder.Fulfilled && salesOrder.Seller != requestingUser)
                     .TakeWhile(salesOrder =>
                     {
                         bool exceeded = salesQuantity > quantity;
@@ -306,7 +306,10 @@ namespace Server
                     salesOrder.Diginotes.Clear();
                 }
 
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, Quotation, true));
+                var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser, quantity, Quotation, true);
+                PurchaseOrders.Add(fulfilledPurchaseOrder);
+                requestingUser.AddFunds(-fulfilledPurchaseOrder.Value);
+                PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
                 return PurchaseResult.Fulfilled;
@@ -321,8 +324,11 @@ namespace Server
                     salesOrder.Diginotes.Clear();
                 }
 
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, Quotation, true)); // fulfilled
+                var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser, numOffers, Quotation, true);
+                PurchaseOrders.Add(fulfilledPurchaseOrder); // fulfilled
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus, Quotation)); // unfulfiled
+                requestingUser.AddFunds(-fulfilledPurchaseOrder.Value);
+                PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
                 return PurchaseResult.PartiallyFullfilled;
