@@ -14,6 +14,7 @@ namespace Common
         public bool Fulfilled { get; set; }
         public decimal Value {get; set;}
         public HashSet<Diginote> Diginotes { get; set; }
+        public bool Locked;
 
         public SalesOrder(User seller, int count, decimal currentQuotation, bool fulfilled = false)
         {
@@ -23,6 +24,7 @@ namespace Common
             Value = currentQuotation*count;
             Fulfilled = fulfilled;
             Diginotes = new HashSet<Diginote>(Seller.Diginotes.Take(count));
+            Locked = false;
 
             if (Diginotes.Count < count)
                 throw new Exception("User has insufficient diginotes");
