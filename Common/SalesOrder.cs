@@ -13,7 +13,7 @@ namespace Common
         public User Seller { get; private set; }
         public bool Fulfilled { get; set; }
         public decimal Value {get; set;}
-        public HashSet<Diginote> Diginotes { get; set; }
+        public HashSet<Diginote> Diginotes { get; private set; }
         public bool Locked;
 
         public SalesOrder(User seller, int count, decimal currentQuotation, bool fulfilled = false)
@@ -29,7 +29,7 @@ namespace Common
             if (Diginotes.Count < count)
                 throw new Exception("User has insufficient diginotes");
 
-            seller.Diginotes.RemoveWhere((diginote) => Diginotes.Contains(diginote));
+            seller.Diginotes.RemoveWhere(diginote => Diginotes.Contains(diginote));
         }
 
         public override int GetHashCode()

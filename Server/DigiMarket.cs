@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Common;
 using Remotes;
@@ -453,6 +452,7 @@ namespace Server
             if (numOffers == 0)
             {
                 SalesOrders.Add(new SalesOrder(requestingUser, quantity, Quotation));
+                PublishMessage(Update.Diginotes);
                 return SalesResult.Unfulfilled;
             }
 
