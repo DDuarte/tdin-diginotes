@@ -116,7 +116,7 @@ namespace NewClient.ViewModels
             var ret = App.Current.TheDigiMarket.CreatePurchaseOrder(session.Username, session.Password, buyQuantity);
             // PurchaseNotInProgress = true;
 
-            await MainWindow.Instance.ShowInputAsync("Buy Diginotes", "Result " + ret);
+            await MainWindow.Instance.ShowMessageAsync("Buy Diginotes", ret.ToString());
         }
 
         public ICommand DeleteCommand { get; private set; }

@@ -121,7 +121,7 @@ namespace NewClient.ViewModels
             int sellQuantity = int.Parse(result);
             var ret = App.Current.TheDigiMarket.CreateSalesOrder(session.Username, session.Password, sellQuantity);
 
-            await MainWindow.Instance.ShowInputAsync("Sell Diginotes", "Result " + ret);
+            await MainWindow.Instance.ShowMessageAsync("Sell Diginotes", ret.ToString());
         }
 
         public ICommand DeleteCommand { get; private set; }
