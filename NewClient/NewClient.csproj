@@ -69,7 +69,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Notifications\GrowlNotifications.xaml.cs" />
+    <Compile Include="Notifications\GrowlNotifications.xaml.cs">
+      <DependentUpon>GrowlNotifications.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Views\Sell.xaml.cs">
       <DependentUpon>Sell.xaml</DependentUpon>
@@ -77,6 +79,10 @@
     <Page Include="Notifications\ButtonStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Notifications\GrowlNotifications.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -89,10 +95,6 @@
     <Page Include="Views\DiginoteChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Notifications\GrowlNotifications.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Info.xaml">
       <SubType>Designer</SubType>

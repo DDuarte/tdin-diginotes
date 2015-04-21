@@ -27,7 +27,7 @@ namespace NewClient.Notifications
                 _buffer.Add(notification);
             else
                 _notifications.Add(notification);
-            
+
             //Show window if there're notifications
             if (_notifications.Count > 0 && !IsActive)
                 Show();
@@ -37,14 +37,14 @@ namespace NewClient.Notifications
         {
             if (_notifications.Contains(notification))
                 _notifications.Remove(notification);
-            
+
             if (_buffer.Count > 0)
             {
                 _notifications.Add(_buffer[0]);
                 _buffer.RemoveAt(0);
             }
-            
-            //Close window if there's nothing to show
+
+            // Close window if there's nothing to show
             if (_notifications.Count < 1)
                 Hide();
         }

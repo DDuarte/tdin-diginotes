@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Runtime.Remoting;
-using System.Threading.Tasks;
+﻿using System.Runtime.Remoting;
 using System.Windows;
 using Common;
 using GalaSoft.MvvmLight.Messaging;

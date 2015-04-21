@@ -40,7 +40,7 @@ namespace NewClient.Notifications
             get { return _iconData; }
             set
             {
-                if (_iconData == value) return;
+                if (Equals(_iconData, value)) return;
                 _iconData = value;
                 OnPropertyChanged("IconData");
             }
