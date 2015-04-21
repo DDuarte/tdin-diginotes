@@ -35,5 +35,10 @@ namespace Common
         {
             Balance += euros;
         }
+
+        public override object InitializeLifetimeService()
+        {
+            return null; // infinite
+        }
     }
 }

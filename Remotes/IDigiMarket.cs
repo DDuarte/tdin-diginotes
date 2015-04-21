@@ -65,5 +65,10 @@ namespace Remotes
         {
             return r.Error == DigiMarketError.None;
         }
+
+        public override object InitializeLifetimeService()
+        {
+            return null; // infinite
+        }
     }
 }

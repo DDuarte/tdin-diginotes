@@ -15,7 +15,7 @@ namespace Common
 
         public override object InitializeLifetimeService()
         {
-            return null;
+            return null; // infinite
         }
 
         #endregion

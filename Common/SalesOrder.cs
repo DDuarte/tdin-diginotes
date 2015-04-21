@@ -32,6 +32,11 @@ namespace Common
             seller.Diginotes.RemoveWhere(diginote => Diginotes.Contains(diginote));
         }
 
+        public override object InitializeLifetimeService()
+        {
+            return null; // infinite
+        }
+
         public override int GetHashCode()
         {
             return Id.GetHashCode();

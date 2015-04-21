@@ -14,6 +14,11 @@ namespace Common
             Value = 1;
         }
 
+        public override object InitializeLifetimeService()
+        {
+            return null; // infinite
+        }
+
         public override int GetHashCode()
         {
             return Id.GetHashCode();
