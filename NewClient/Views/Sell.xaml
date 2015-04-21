@@ -94,7 +94,7 @@
             </TabControl>
         </StackPanel>
         <StackPanel Margin="0 8 0 8" Grid.Row="0" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Top">
-            <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" Content="$$ BUY $$" Command="{Binding BuyCommand}" />
+            <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" Content="$$ SELL $$" Command="{Binding SellCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

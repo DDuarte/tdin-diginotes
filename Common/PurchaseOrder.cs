@@ -7,7 +7,7 @@ namespace Common
     {
         private static int _lastId;
         public int Id { get; private set; }
-        public int Count { get; private set; }
+        public int Count { get; set; }
         public User Buyer { get; private set; }
         public bool FulFilled { get; set; }
         public decimal Value { get; set; }

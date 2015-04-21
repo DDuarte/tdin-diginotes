@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Common
 {
@@ -11,6 +13,7 @@ namespace Common
         public User Seller { get; private set; }
         public bool Fulfilled { get; private set; }
         public decimal Value {get; set;}
+        public HashSet<Diginote> Diginotes { get; set; }
 
         public SalesOrder(User seller, int count, decimal currentQuotation, bool fulfilled = false)
         {
@@ -19,6 +22,12 @@ namespace Common
             Seller = seller;
             Value = currentQuotation*count;
             Fulfilled = fulfilled;
+            Diginotes = new HashSet<Diginote>(Seller.Diginotes.Take(count));
+
+            if (Diginotes.Count < count)
+                throw new Exception("User has insufficient diginotes");
+
+            seller.Diginotes.RemoveWhere((diginote) => Diginotes.Contains(diginote));
         }
 
         public override int GetHashCode()

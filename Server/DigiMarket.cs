@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using Common;
 using Remotes;
 
@@ -378,10 +379,13 @@ namespace Server
             }
 
             var requestingUser = r.Value;
+            if (requestingUser.Diginotes.Count < quantity)
+                return SalesResult.InsufficientFunds;
 
             // get available offers
-            var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled).ToList();
-            var numOffers = availablePurchaseOrders.Sum(order => order.Count);
+            var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled && order.Buyer != requestingUser);
+            var purchaseOrders = availablePurchaseOrders as IList<PurchaseOrder> ?? availablePurchaseOrders.ToList();
+            var numOffers = purchaseOrders.Sum(  order => order.Count);
 
             if (numOffers == 0)
             {
@@ -389,47 +393,37 @@ namespace Server
                 return SalesResult.Unfulfilled;
             }
 
-            var surplus = quantity - numOffers;
             var selectedPurchaseOrders = new List<PurchaseOrder>();
-            for (int i = 0, purchaseQuantity = 0; i < availablePurchaseOrders.Count() || purchaseQuantity < quantity; ++i)
+            for (int i = 0, purchaseQuantity = 0; i < purchaseOrders.Count() || purchaseQuantity < quantity; ++i)
             {
-                //if ()
-                selectedPurchaseOrders.Add(availablePurchaseOrders.ElementAt(i));
-
-                purchaseQuantity += availablePurchaseOrders.ElementAt(i).Count;
-            }
-
-            // purchase order is totally fulfilled
-            /*if (surplus <= 0)
-            {
-
-                // transfer diginotes
-                var chosenDiginotes = availableDiginotes.Take(quantity);
-
-                foreach (var chosenDiginote in chosenDiginotes)
+                var availablePurchaseOrder = purchaseOrders.ElementAt(i);
+                var availableOrderCount = availablePurchaseOrder.Count;
+                var excess = (purchaseQuantity + availableOrderCount) - quantity;
+                if (excess <= 0)
                 {
-                    requestingUser.AddDiginote(chosenDiginote);
-                    Users.Values.Where((User u) => u.Diginotes.Contains(chosenDiginote)).Select((User u) => u.RemoveDiginote(chosenDiginote));
+                    selectedPurchaseOrders.Add(availablePurchaseOrder);
+                    purchaseQuantity += availableOrderCount;
+                    continue;
                 }
 
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, true));
-                return SalesResult.Fulfilled;
+                var necessaryCount = quantity - purchaseQuantity;
+                availablePurchaseOrder.Count = necessaryCount; 
+                selectedPurchaseOrders.Add(availablePurchaseOrder);
+                PurchaseOrders.Add(new PurchaseOrder(availablePurchaseOrder.Buyer, availableOrderCount - necessaryCount, Quotation));
             }
-            else // the order is partially fulfilled
+
+            // transfer diginotes
+            foreach (var selectedPurchaseOrder in selectedPurchaseOrders)
             {
-                // transfer diginotes
-                var chosenDiginotes = availableDiginotes.Take(numOffers);
+                selectedPurchaseOrder.FulFilled = true;
+                var selectedDiginotes = requestingUser.Diginotes.Take(selectedPurchaseOrder.Count).ToList();
+                selectedDiginotes.ForEach((selectedDiginote) => selectedPurchaseOrder.Buyer.AddDiginote(selectedDiginote));
+                requestingUser.Diginotes.RemoveWhere((diginote) => selectedDiginotes.Contains(diginote));                 
+            }
 
-                foreach (var chosenDiginote in chosenDiginotes)
-                {
-                    requestingUser.AddDiginote(chosenDiginote);
-                    Users.Values.Where((User u) => u.Diginotes.Contains(chosenDiginote)).Select((User u) => u.RemoveDiginote(chosenDiginote));
-                }
-
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, true)); // fulfilled
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus, false)); // unfulfiled
+            PublishMessage(Update.General);
+            if (selectedPurchaseOrders.Sum((order) => order.Count) < quantity)
                 return SalesResult.PartiallyFullfilled;
-            } */
 
             return SalesResult.Fulfilled;
         }
