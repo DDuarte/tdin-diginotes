@@ -283,7 +283,7 @@ namespace Server
 
             var surplus = quantity - numOffers;
             var salesQuantity = 0;
-            var availableDiginotes =
+            var selectedSalesOrders =
                 SalesOrders
                     .Where(salesOrder => !salesOrder.Fulfilled)
                     .TakeWhile(salesOrder =>
@@ -298,7 +298,7 @@ namespace Server
             if (surplus <= 0)
             {
 
-                foreach (var salesOrder in SalesOrders)
+                foreach (var salesOrder in selectedSalesOrders)
                 {
                     salesOrder.Fulfilled = true;
                     var selectedDiginotes = salesOrder.Diginotes.ToList();
@@ -313,7 +313,7 @@ namespace Server
             }
             else // the order is partially fulfilled
             {
-                foreach (var salesOrder in SalesOrders)
+                foreach (var salesOrder in selectedSalesOrders)
                 {
                     salesOrder.Fulfilled = true;
                     var selectedDiginotes = salesOrder.Diginotes.ToList();
