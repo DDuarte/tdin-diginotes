@@ -395,7 +395,7 @@ namespace Server
                 }
             }
 
-            if (purchaseOrderToDelete == null) return;
+            if (purchaseOrderToDelete == null || purchaseOrderToDelete.FulFilled) return;
 
             PurchaseOrders.Remove(purchaseOrderToDelete);
             PublishMessage(Update.General);
@@ -440,7 +440,7 @@ namespace Server
                 }
             }
 
-            if (saleOrderToDelete == null) return;
+            if (saleOrderToDelete == null || saleOrderToDelete.Fulfilled) return;
 
             saleOrderToDelete.Diginotes.ToList().ForEach(diginote => saleOrderToDelete.Seller.AddDiginote(diginote));
             SalesOrders.Remove(saleOrderToDelete);
