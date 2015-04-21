@@ -447,7 +447,9 @@ namespace Server
             // get available offers
             var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled && order.Buyer != requestingUser);
             var purchaseOrders = availablePurchaseOrders as IList<PurchaseOrder> ?? availablePurchaseOrders.ToList();
+
             var numOffers = purchaseOrders.Sum(  order => order.Count);
+            var surplus = quantity - numOffers;
 
             if (numOffers == 0)
             {
@@ -485,6 +487,17 @@ namespace Server
                 var selectedDiginotes = requestingUser.Diginotes.Take(selectedPurchaseOrder.Count).ToList();
                 selectedDiginotes.ForEach(selectedDiginote => selectedPurchaseOrder.Buyer.AddDiginote(selectedDiginote));
                 requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));                 
+            }
+
+            // SalesOrder is totally fulfilled
+            if (surplus <= 0)
+            {
+                SalesOrders.Add(new SalesOrder(requestingUser, quantity, Quotation, true));
+            }
+            else
+            {
+                SalesOrders.Add(new SalesOrder(requestingUser, numOffers, Quotation, true));
+                SalesOrders.Add(new SalesOrder(requestingUser, surplus, Quotation));
             }
 
             PublishMessage(Update.Balance);
