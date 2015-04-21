@@ -25,6 +25,8 @@
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
         <!-- Icons -->
         <ResourceDictionary Source="/Resources/Icons.xaml" />
+        <!-- growl -->
+        <ResourceDictionary Source="/Resources/ButtonStyle.xaml" />
         <!-- primary color -->
         <ResourceDictionary>
           <!-- include your primary palette -->

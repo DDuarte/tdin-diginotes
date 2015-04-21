@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace NewClient.Views
 {
@@ -8,12 +9,25 @@ namespace NewClient.Views
     /// </summary>
     public partial class MainWindow
     {
+        private const double TopOffset = 20;
+        private const double LeftOffset = 380;
+        private readonly GrowlNotifications _growlNotifications = new GrowlNotifications();
+
         public MainWindow()
         {
             InitializeComponent();
 
+            _growlNotifications.Top = SystemParameters.WorkArea.Top + TopOffset;
+            _growlNotifications.Left = SystemParameters.WorkArea.Left + SystemParameters.WorkArea.Width - LeftOffset;
+
             CreateTab("LOGIN", new Login());
             CreateTab("REGISTER", new Register());
+        }
+
+        public void ShowNotification(string title, string message)
+        {
+            var icon = Geometry.Parse("F1 M 38,19C 48.4934,19 57,27.5066 57,38C 57,48.4934 48.4934,57 38,57C 27.5066,57 19,48.4934 19,38C 19,27.5066 27.5066,19 38,19 Z M 51,30L 42,30L 45.0857,33.0858L 39.5754,38.5962L 34.5,33.5208L 24,44.0208L 26.8284,46.8493L 34.5,39.1777L 39.5754,44.2531L 47.9142,35.9142L 51,39L 51,30 Z");
+            _growlNotifications.AddNotification(new Notification { Title = title, IconData = icon, Message = message });
         }
 
         public void ShowChartTab()
@@ -39,6 +53,7 @@ namespace NewClient.Views
             RemoveTab("INFO");
             RemoveTab("BUY");
             RemoveTab("SELL");
+            RemoveTab("CHARTS");
             TabablzControl.SelectedIndex = 0;
         }
 
@@ -70,6 +85,12 @@ namespace NewClient.Views
                 TabablzControl.Items.RemoveAt(i);
                 return;
             }
+        }
+
+        protected override void OnClosed(System.EventArgs e)
+        {
+            _growlNotifications.Close();
+            base.OnClosed(e);
         }
     }
 }
