@@ -11,7 +11,7 @@ namespace Common
         public int Id { get; private set; }
         public int Count { get; private set; }
         public User Seller { get; private set; }
-        public bool Fulfilled { get; private set; }
+        public bool Fulfilled { get; set; }
         public decimal Value {get; set;}
         public HashSet<Diginote> Diginotes { get; set; }
 

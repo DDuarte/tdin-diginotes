@@ -277,25 +277,28 @@ namespace Server
             }
 
             var surplus = quantity - numOffers;
-
+            var salesQuantity = 0;
             var availableDiginotes =
-                (from salesOrder in SalesOrders
-                 join user in Users.Values on salesOrder.Seller.Username equals user.Username
-                 select user)
-                    .SelectMany(user => user.Diginotes.ToList());
+                SalesOrders
+                    .Where((salesOrder) => !salesOrder.Fulfilled)
+                    .TakeWhile((salesOrder) =>
+                    {
+                        bool exceeded = salesQuantity > quantity;
+                        salesQuantity += salesOrder.Count;
+                        return !exceeded;
+
+                    });
 
             // purchase order is totally fulfilled
             if (surplus <= 0)
             {
 
-                // transfer diginotes
-                var chosenDiginotes = availableDiginotes.Take(quantity);
-
-                foreach (var chosenDiginote in chosenDiginotes)
+                foreach (var salesOrder in SalesOrders)
                 {
-                    requestingUser.AddDiginote(chosenDiginote);
-                    var diginote = chosenDiginote;
-                    Users.Values.Where(u => u.Diginotes.Contains(diginote)).ToList().ForEach(u => u.RemoveDiginote(diginote));
+                    salesOrder.Fulfilled = true;
+                    var selectedDiginotes = salesOrder.Diginotes.ToList();
+                    selectedDiginotes.ForEach((selectedDiginote) => requestingUser.AddDiginote(selectedDiginote));
+                    salesOrder.Diginotes.Clear();
                 }
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, Quotation, true));
@@ -304,14 +307,12 @@ namespace Server
             }
             else // the order is partially fulfilled
             {
-                // transfer diginotes
-                var chosenDiginotes = availableDiginotes.Take(numOffers);
-
-                foreach (var chosenDiginote in chosenDiginotes)
+                foreach (var salesOrder in SalesOrders)
                 {
-                    requestingUser.AddDiginote(chosenDiginote);
-                    var diginote = chosenDiginote;
-                    Users.Values.Where(u => u.Diginotes.Contains(diginote)).ToList().ForEach(u => u.RemoveDiginote(diginote));
+                    salesOrder.Fulfilled = true;
+                    var selectedDiginotes = salesOrder.Diginotes.ToList();
+                    selectedDiginotes.ForEach((selectedDiginote) => requestingUser.AddDiginote(selectedDiginote));
+                    salesOrder.Diginotes.Clear();
                 }
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, Quotation, true)); // fulfilled
