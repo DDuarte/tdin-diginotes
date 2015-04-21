@@ -19,7 +19,7 @@ namespace Remotes
         PurchaseResult CreatePurchaseOrder(string username, string password, int quantity);
         bool UpdatePurchaseOrder(string username, string password, int id, decimal value);
         void DeletePurchaseOrder(string username, string password, int id);
-        void UpdateSaleOrder(string username, string password, int id, decimal value);
+        bool UpdateSaleOrder(string username, string password, int id, decimal value);
         void DeleteSaleOrder(string username, string password, int id);
         SalesResult CreateSalesOrder(string username, string password, int quantity);
         Result<List<PurchaseOrder>> GetPurchaseOrders(string username, string password);

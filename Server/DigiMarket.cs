@@ -367,14 +367,51 @@ namespace Server
             PublishMessage(Update.General);
         }
 
-        public void UpdateSaleOrder(string username, string password, int id, decimal value)
+        public bool UpdateSaleOrder(string username, string password, int id, decimal value)
         {
-            throw new NotImplementedException();
+            var r = ValidateCredentials(username, password);
+            if (!r)
+            {
+                Logger.Log("fail: user={0} error={1}", username, r.Error);
+                return false;
+            }
+
+            var user = r.Value;
+
+            var saleOrder = SalesOrders.Where(order => order.Id == id && order.Seller == user).ToList().FirstOrDefault();
+
+            if (saleOrder == null)
+                return false;
+
+            saleOrder.Value = value;
+            PublishMessage(Update.General);
+            return true;
         }
 
         public void DeleteSaleOrder(string username, string password, int id)
         {
-            throw new NotImplementedException();
+            var r = ValidateCredentials(username, password);
+            if (!r)
+            {
+                Logger.Log("fail: user={0} error={1}", username, r.Error);
+                return /* false */;
+            }
+
+            SalesOrder saleOrderToDelete = null;
+            foreach (var order in SalesOrders)
+            {
+                if (order.Id == id)
+                {
+                    saleOrderToDelete = order;
+                }
+            }
+
+            if (saleOrderToDelete == null) return;
+
+
+            saleOrderToDelete.Diginotes.ToList().ForEach((diginote) => saleOrderToDelete.Seller.AddDiginote(diginote));
+            SalesOrders.Remove(saleOrderToDelete);
+            PublishMessage(Update.General);
         }
 
         public SalesResult CreateSalesOrder(string username, string password, int quantity)
