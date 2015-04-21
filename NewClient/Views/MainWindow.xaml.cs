@@ -9,6 +9,8 @@ namespace NewClient.Views
     /// </summary>
     public partial class MainWindow
     {
+        public static MainWindow Instance { get; private set; }
+
         private const double TopOffset = 20;
         private const double LeftOffset = 380;
         private readonly GrowlNotifications _growlNotifications = new GrowlNotifications();
@@ -22,6 +24,8 @@ namespace NewClient.Views
 
             CreateTab("LOGIN", new Login());
             CreateTab("REGISTER", new Register());
+
+            Instance = this;
         }
 
         public void ShowNotification(string title, string message)

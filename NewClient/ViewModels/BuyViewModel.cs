@@ -102,13 +102,10 @@ namespace NewClient.ViewModels
 
         private async void BuyCommandExecute()
         {
-            var mainWindow = Application.Current.Windows.Count > 0 ?
-                    Application.Current.Windows[0] as MainWindow : null;
-
-            if (mainWindow == null)
-                return;
-
-            var result = await mainWindow.ShowInputAsync("Buy Diginotes", "How many?", new MetroDialogSettings { ColorScheme = MetroDialogColorScheme.Accented, AffirmativeButtonText = "Buy", DefaultText = "1" });
+            var result = await MainWindow.Instance.ShowInputAsync("Buy Diginotes", "How many?",
+                new MetroDialogSettings { ColorScheme = MetroDialogColorScheme.Accented,
+                    AffirmativeButtonText = "Buy",
+                    DefaultText = "1" });
 
             if (result == null) //user pressed cancel
                 return;
@@ -119,7 +116,7 @@ namespace NewClient.ViewModels
             var ret = App.Current.TheDigiMarket.CreatePurchaseOrder(session.Username, session.Password, buyQuantity);
             // PurchaseNotInProgress = true;
 
-            await mainWindow.ShowInputAsync("Buy Diginotes", "Result " + ret);
+            await MainWindow.Instance.ShowInputAsync("Buy Diginotes", "Result " + ret);
         }
 
         public ICommand DeleteCommand { get; private set; }

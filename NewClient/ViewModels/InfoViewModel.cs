@@ -23,11 +23,7 @@ namespace NewClient.ViewModels
         private void LogoutExecute()
         {
             App.Current.TheDigiMarket.Logout(App.Current.Session.Username, App.Current.Session.Password);
-            var mainWindow = Application.Current.Windows.Count > 0 ?
-                    Application.Current.Windows[0] as MainWindow : null;
-
-            if (mainWindow != null)
-                mainWindow.AfterLogout();
+            MainWindow.Instance.AfterLogout();
         }
 
         private void AddFundsExecute()
@@ -37,11 +33,7 @@ namespace NewClient.ViewModels
 
         private void ShowQuotationExecute()
         {
-            var mainWindow = Application.Current.Windows.Count > 0 ?
-                    Application.Current.Windows[0] as MainWindow : null;
-
-            if (mainWindow != null)
-                mainWindow.ShowChartTab();
+            MainWindow.Instance.ShowChartTab();
         }
 
         public ICommand LogoutCommand { get; private set; }

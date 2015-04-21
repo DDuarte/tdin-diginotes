@@ -10,7 +10,7 @@ namespace NewClient.Views
     /// <summary>
     /// Interaction logic for Login.xaml
     /// </summary>
-    public partial class Register : UserControl
+    public partial class Register
     {
         public Register()
         {
@@ -79,12 +79,7 @@ namespace NewClient.Views
             if (result)
             {
                 App.Current.Session = new Session(result.Value.Name, result.Value.Username, Password, 0);
-
-                var mainWindow = Application.Current.Windows.Count > 0 ?
-                    Application.Current.Windows[0] as MainWindow : null;
-
-                if (mainWindow != null)
-                    mainWindow.AfterLogin();
+                MainWindow.Instance.AfterLogin();
             }
             else
             {

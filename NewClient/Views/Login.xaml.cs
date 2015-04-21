@@ -72,12 +72,7 @@ namespace NewClient.Views
             {
                 var user = result.Value;
                 App.Current.Session = new Session(user.Name, user.Username, Password, user.Balance);
-
-                var mainWindow = Application.Current.Windows.Count > 0 ?
-                    Application.Current.Windows[0] as MainWindow : null;
-
-                if (mainWindow != null)
-                    mainWindow.AfterLogin();
+                MainWindow.Instance.AfterLogin();
             }
             else
             {
