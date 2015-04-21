@@ -456,6 +456,7 @@ namespace Server
                 return SalesResult.Unfulfilled;
             }
 
+            // select orders
             var selectedPurchaseOrders = new List<PurchaseOrder>();
             for (int i = 0, purchaseQuantity = 0; i < purchaseOrders.Count() || purchaseQuantity < quantity; ++i)
             {
@@ -479,11 +480,14 @@ namespace Server
             foreach (var selectedPurchaseOrder in selectedPurchaseOrders)
             {
                 selectedPurchaseOrder.FulFilled = true;
+                selectedPurchaseOrder.Buyer.AddFunds(-selectedPurchaseOrder.Value);
+                requestingUser.AddFunds(selectedPurchaseOrder.Value);
                 var selectedDiginotes = requestingUser.Diginotes.Take(selectedPurchaseOrder.Count).ToList();
                 selectedDiginotes.ForEach(selectedDiginote => selectedPurchaseOrder.Buyer.AddDiginote(selectedDiginote));
                 requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));                 
             }
 
+            PublishMessage(Update.Balance);
             PublishMessage(Update.General);
             PublishMessage(Update.Diginotes);
 
