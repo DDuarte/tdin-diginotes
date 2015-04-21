@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 // Implementation by Ivan Leonenko (https://github.com/IvanLeonenko/WPFGrowlNotification)
 
-namespace NewClient.Views
+namespace NewClient.Notifications
 {
     public partial class GrowlNotifications
     {
@@ -54,7 +54,8 @@ namespace NewClient.Views
             if (e.NewSize.Height != 0.0)
                 return;
             var element = sender as Grid;
-            RemoveNotification(_notifications.First(n => n.Id == Int32.Parse(element.Tag.ToString())));
+            if (element != null)
+                RemoveNotification(_notifications.First(n => n.Id == Int32.Parse(element.Tag.ToString())));
         }
     }
 }

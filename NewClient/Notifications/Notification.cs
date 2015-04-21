@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 // Implementation by Ivan Leonenko (https://github.com/IvanLeonenko/WPFGrowlNotification)
 
-namespace NewClient.Views
+namespace NewClient.Notifications
 {
     public class Notification : INotifyPropertyChanged
     {
