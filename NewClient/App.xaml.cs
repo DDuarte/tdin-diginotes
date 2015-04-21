@@ -12,7 +12,7 @@ namespace NewClient
     public partial class App : Application
     {
         public readonly IDigiMarket TheDigiMarket;
-        public Session Session = new Session(string.Empty, string.Empty, string.Empty, 0);
+        public Session Session = new Session(string.Empty, string.Empty, string.Empty, 0, 0);
         public readonly EventProxy EventProxy;
 
         public new static App Current

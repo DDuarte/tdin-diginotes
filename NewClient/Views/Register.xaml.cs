@@ -78,7 +78,8 @@ namespace NewClient.Views
 
             if (result)
             {
-                App.Current.Session = new Session(result.Value.Name, result.Value.Username, Password, 0);
+                var user = result.Value;
+                App.Current.Session = new Session(user.Name, user.Username, Password, user.Balance, user.Diginotes.Count);
                 MainWindow.Instance.AfterLogin();
             }
             else

@@ -10,6 +10,7 @@ namespace NewClient
         private string _username;
         private string _password;
         private decimal _balance;
+        private int _diginoteCount;
 
         public string Name
         {
@@ -55,12 +56,24 @@ namespace NewClient
             }
         }
 
-        public Session(string name, string username, string password, decimal balance)
+        public int DiginoteCount
+        {
+            get { return _diginoteCount; }
+            set
+            {
+                if (value == _diginoteCount) return;
+                _diginoteCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Session(string name, string username, string password, decimal balance, int diginoteCount)
         {
             Name = name;
             Username = username;
             Password = password;
             Balance = balance;
+            DiginoteCount = diginoteCount;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

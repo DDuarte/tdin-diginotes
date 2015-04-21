@@ -71,7 +71,7 @@ namespace NewClient.Views
             if (result)
             {
                 var user = result.Value;
-                App.Current.Session = new Session(user.Name, user.Username, Password, user.Balance);
+                App.Current.Session = new Session(user.Name, user.Username, Password, user.Balance, user.Diginotes.Count);
                 MainWindow.Instance.AfterLogin();
             }
             else

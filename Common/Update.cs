@@ -3,6 +3,7 @@
     public enum Update
     {
         General,
-        Balance
+        Balance,
+        Diginotes
     }
 }

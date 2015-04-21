@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Security.Policy;
 using Common;
 using Remotes;
 
@@ -45,21 +45,25 @@ namespace Server
             return new Result<User>(user);
         }
 
-        public bool AddFunds(string username, string password, decimal euros)
+        public bool AddFunds(string username, string password, decimal euros, int diginotes)
         {
-            Logger.Log("attempt: user={0} euros={1}", username, euros);
+            Logger.Log("attempt: user={0} euros={1} diginotes={2}", username, euros, diginotes);
 
             var r = ValidateCredentials(username, password);
             if (!r)
             {
-                Logger.Log("fail: user={0} euros={1} error={2}", username, euros, r.Error);
+                Logger.Log("fail: user={0} euros={1} diginotes={2} error={3}", username, euros, diginotes, r.Error);
                 return false;
             }
 
             r.Value.AddFunds(euros);
-            PublishMessage(Update.Balance);
+            for (var i = 0; i < diginotes; ++i)
+                r.Value.AddDiginote(new Diginote());
 
-            Logger.Log("success: user={0} +balance={1}", username, euros);
+            PublishMessage(Update.Balance);
+            PublishMessage(Update.Diginotes);
+
+            Logger.Log("success: user={0} +balance={1} +diginotes={2}", username, euros, diginotes);
 
             return true;
         }
@@ -115,6 +119,7 @@ namespace Server
                 }
                 catch (Exception e)
                 {
+                    Logger.Log("exception: {0}: {1}", update, e.ToString());
                     //Could not reach the destination, so remove it
                     //from the list
                     MessageArrived -= listener;
@@ -198,7 +203,7 @@ namespace Server
             return r;
         }
 
-        public Result<IEnumerable<Diginote>> GetDiginotes(string username, string password)
+        public Result<List<Diginote>> GetDiginotes(string username, string password)
         {
             Logger.Log("attempt: username={0} password={1}", username, password);
 
@@ -206,10 +211,10 @@ namespace Server
             if (!r)
             {
                 Logger.Log("fail: user={0} error={1}", username, r.Error);
-                return new Result<IEnumerable<Diginote>>(r.Error);
+                return new Result<List<Diginote>>(r.Error);
             }
 
-            var rr = new Result<IEnumerable<Diginote>>(Users[username].Diginotes);
+            var rr = new Result<List<Diginote>>(Users[username].Diginotes.ToList());
             Logger.Log("success: user={0} diginotes={1}", username, rr.Value.Count());
 
             return rr;
@@ -280,8 +285,8 @@ namespace Server
             var salesQuantity = 0;
             var availableDiginotes =
                 SalesOrders
-                    .Where((salesOrder) => !salesOrder.Fulfilled)
-                    .TakeWhile((salesOrder) =>
+                    .Where(salesOrder => !salesOrder.Fulfilled)
+                    .TakeWhile(salesOrder =>
                     {
                         bool exceeded = salesQuantity > quantity;
                         salesQuantity += salesOrder.Count;
@@ -297,12 +302,13 @@ namespace Server
                 {
                     salesOrder.Fulfilled = true;
                     var selectedDiginotes = salesOrder.Diginotes.ToList();
-                    selectedDiginotes.ForEach((selectedDiginote) => requestingUser.AddDiginote(selectedDiginote));
+                    selectedDiginotes.ForEach(selectedDiginote => requestingUser.AddDiginote(selectedDiginote));
                     salesOrder.Diginotes.Clear();
                 }
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, quantity, Quotation, true));
                 PublishMessage(Update.General);
+                PublishMessage(Update.Diginotes);
                 return PurchaseResult.Fulfilled;
             }
             else // the order is partially fulfilled
@@ -311,13 +317,14 @@ namespace Server
                 {
                     salesOrder.Fulfilled = true;
                     var selectedDiginotes = salesOrder.Diginotes.ToList();
-                    selectedDiginotes.ForEach((selectedDiginote) => requestingUser.AddDiginote(selectedDiginote));
+                    selectedDiginotes.ForEach(selectedDiginote => requestingUser.AddDiginote(selectedDiginote));
                     salesOrder.Diginotes.Clear();
                 }
 
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, numOffers, Quotation, true)); // fulfilled
                 PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus, Quotation)); // unfulfiled
                 PublishMessage(Update.General);
+                PublishMessage(Update.Diginotes);
                 return PurchaseResult.PartiallyFullfilled;
             }
         }
@@ -408,10 +415,10 @@ namespace Server
 
             if (saleOrderToDelete == null) return;
 
-
-            saleOrderToDelete.Diginotes.ToList().ForEach((diginote) => saleOrderToDelete.Seller.AddDiginote(diginote));
+            saleOrderToDelete.Diginotes.ToList().ForEach(diginote => saleOrderToDelete.Seller.AddDiginote(diginote));
             SalesOrders.Remove(saleOrderToDelete);
             PublishMessage(Update.General);
+            PublishMessage(Update.Diginotes);
         }
 
         public SalesResult CreateSalesOrder(string username, string password, int quantity)
@@ -465,12 +472,14 @@ namespace Server
             {
                 selectedPurchaseOrder.FulFilled = true;
                 var selectedDiginotes = requestingUser.Diginotes.Take(selectedPurchaseOrder.Count).ToList();
-                selectedDiginotes.ForEach((selectedDiginote) => selectedPurchaseOrder.Buyer.AddDiginote(selectedDiginote));
-                requestingUser.Diginotes.RemoveWhere((diginote) => selectedDiginotes.Contains(diginote));                 
+                selectedDiginotes.ForEach(selectedDiginote => selectedPurchaseOrder.Buyer.AddDiginote(selectedDiginote));
+                requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));                 
             }
 
             PublishMessage(Update.General);
-            if (selectedPurchaseOrders.Sum((order) => order.Count) < quantity)
+            PublishMessage(Update.Diginotes);
+
+            if (selectedPurchaseOrders.Sum(order => order.Count) < quantity)
                 return SalesResult.PartiallyFullfilled;
 
             return SalesResult.Fulfilled;

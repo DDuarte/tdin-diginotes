@@ -24,8 +24,9 @@ namespace Remotes
         SalesResult CreateSalesOrder(string username, string password, int quantity);
         Result<List<PurchaseOrder>> GetPurchaseOrders(string username, string password);
         Result<List<SalesOrder>> GetSalesOrders(string username, string password);
-        bool AddFunds(string username, string password, decimal euros);
+        bool AddFunds(string username, string password, decimal euros, int diginotes);
         Result<decimal> GetBalance(string username, string password);
+        Result<List<Diginote>> GetDiginotes(string username, string password);
 
         void ApplyingLogs(bool active);
     }
