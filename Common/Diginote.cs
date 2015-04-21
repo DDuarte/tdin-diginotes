@@ -2,6 +2,7 @@
 
 namespace Common
 {
+    [Serializable]
     public class Diginote : MarshalByRefObject
     {
         private static int _lastId = 1;

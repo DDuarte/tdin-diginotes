@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Common
 {
+    [Serializable]
     public class User : MarshalByRefObject
     {
         public string Name { get; private set; }
