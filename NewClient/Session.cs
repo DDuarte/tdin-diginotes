@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using NewClient.Annotations;
+using Common.Properties;
 
 namespace NewClient
 {

@@ -114,7 +114,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Utils\NullToBoolValueConverter.cs" />
     <Compile Include="ViewModels\BuyViewModel.cs" />
