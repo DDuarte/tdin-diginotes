@@ -451,7 +451,7 @@ namespace Server
             var salesOrdersToAdd = new List<SalesOrder>();
             var selectedSalesOrders =
                 SalesOrders
-                    .Where(salesOrder => !salesOrder.Fulfilled && !salesOrder.Suspended /* && salesOrder.Seller != requestingUser */)
+                    .Where(salesOrder => !salesOrder.Fulfilled && !salesOrder.Suspended && salesOrder.Seller != requestingUser.Username)
                     .TakeWhile(salesOrder =>
                     {
                         bool exceeded = salesQuantity > quantity;
@@ -469,7 +469,8 @@ namespace Server
                         }
 
                         return !exceeded;
-                    }).ToList();
+                    })
+                    .OrderBy(order => order.Date).ToList();
 
             SalesOrders.AddRange(salesOrdersToAdd); OrdersSnapshot();
             // purchase order is totally fulfilled
@@ -507,7 +508,7 @@ namespace Server
                 var unfulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, surplus, Quotation);
                 PurchaseOrders.Add(fulfilledPurchaseOrder); OrdersSnapshot();
                 PurchaseOrders.Add(unfulfilledPurchaseOrder); OrdersSnapshot();
-                requestingUser.AddFunds(-fulfilledPurchaseOrder.Value);
+                requestingUser.AddFunds(-(fulfilledPurchaseOrder.Value + unfulfilledPurchaseOrder.Value));
                 Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
@@ -625,10 +626,8 @@ namespace Server
                 return new Result<SalesOrder>(DigiMarketError.InsuficientFunds);
 
             // get available offers
-            var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled && !order.Suspended /* && order.Buyer != requestingUser */);
-            var purchaseOrders = availablePurchaseOrders as IList<PurchaseOrder> ?? availablePurchaseOrders.ToList();
-
-            var numOffers = purchaseOrders.Sum(order => order.Count);
+            var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled && !order.Suspended && order.Buyer != requestingUser.Username).OrderBy(order => order.Date).ToList();
+            var numOffers = availablePurchaseOrders.Sum(order => order.Count);
             var surplus = quantity - numOffers;
 
             if (numOffers == 0)
@@ -641,9 +640,9 @@ namespace Server
 
             // select orders
             var selectedPurchaseOrders = new List<PurchaseOrder>();
-            for (int i = 0, purchaseQuantity = 0; i < purchaseOrders.Count() && purchaseQuantity < quantity; ++i)
+            for (int i = 0, purchaseQuantity = 0; i < availablePurchaseOrders.Count() && purchaseQuantity < quantity; ++i)
             {
-                var availablePurchaseOrder = purchaseOrders.ElementAt(i);
+                var availablePurchaseOrder = availablePurchaseOrders.ElementAt(i);
                 var availableOrderCount = availablePurchaseOrder.Count;
                 var excess = (purchaseQuantity + availableOrderCount) - quantity;
                 if (excess <= 0)
