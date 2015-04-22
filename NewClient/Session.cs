@@ -15,7 +15,7 @@ namespace NewClient
         public string Name
         {
             get { return _name; }
-            set
+            private set
             {
                 if (value == _name) return;
                 _name = value;
@@ -26,7 +26,7 @@ namespace NewClient
         public string Username
         {
             get { return _username; }
-            set
+            private set
             {
                 if (value == _username) return;
                 _username = value;
@@ -37,7 +37,7 @@ namespace NewClient
         public string Password
         {
             get { return _password; }
-            set
+            private set
             {
                 if (value == _password) return;
                 _password = value;

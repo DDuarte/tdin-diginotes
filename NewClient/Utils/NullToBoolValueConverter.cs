@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace NewClient.Utils
@@ -13,7 +9,7 @@ namespace NewClient.Utils
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var result = value == null ? true : false;
+            var result = value == null;
             if (parameter != null)
                 return !result;
             return result;

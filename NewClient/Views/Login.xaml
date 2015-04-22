@@ -8,6 +8,7 @@
              xmlns:views="clr-namespace:NewClient.Views"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:viewModels="clr-namespace:NewClient.ViewModels"
+             xmlns:utils="clr-namespace:NewClient.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance viewModels:LoginViewModel}">
@@ -60,7 +61,7 @@
             <TextBox.Text>
                 <Binding Path="Username" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <newClient:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                        <utils:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>

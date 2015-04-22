@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 
-namespace NewClient
+namespace NewClient.Utils
 {
     public class NotEmptyValidationRule : ValidationRule
     {
