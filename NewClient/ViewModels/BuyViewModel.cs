@@ -120,12 +120,12 @@ namespace NewClient.ViewModels
 
             if (ret.Error == DigiMarketError.NotFullfilled)
             {
-                result = await MainWindow.Instance.ShowInputAsync("Buy Diginotes",
+                result = await MainWindow.Instance.ShowInputAsync("Change quotation",
                     "Order was not fulfilled, specify new quotation value",
                     new MetroDialogSettings
                     {
                         ColorScheme = MetroDialogColorScheme.Accented,
-                        AffirmativeButtonText = "Buy",
+                        AffirmativeButtonText = "Change",
                         DefaultText =
                             App.Current.TheDigiMarket.GetQuotation(session.Username, session.Password)
                                 .Value.ToString(CultureInfo.InvariantCulture)
@@ -169,7 +169,6 @@ namespace NewClient.ViewModels
             var session = App.Current.Session;
             App.Current.TheDigiMarket.UpdatePurchaseOrder(session.Username, session.Password, SelectedPurchaseOrder.Id, SelectedPurchaseOrder.Value);
         }
-
 
         public override void OnUpdate(Update update)
         {
