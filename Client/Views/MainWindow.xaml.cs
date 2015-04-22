@@ -94,7 +94,9 @@ namespace Client.Views
 
         protected override void OnClosed(System.EventArgs e)
         {
+            var session = App.Current.Session;
             _growlNotifications.Close();
+            App.Current.TheDigiMarket.Logout(session.Username, session.Password);
             base.OnClosed(e);
         }
     }
