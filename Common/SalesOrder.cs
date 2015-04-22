@@ -8,9 +8,9 @@ namespace Common
     public class SalesOrder
     {
         private static int _lastId = 1;
-        public int Id { get; private set; }
+        public int Id { get; set; }
         public int Count { get; set; }
-        public string Seller { get; private set; }
+        public string Seller { get; set; }
         public bool Fulfilled { get; set; }
 
         private bool _valueOverriden;
