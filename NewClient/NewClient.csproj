@@ -73,6 +73,7 @@
       <DependentUpon>GrowlNotifications.xaml</DependentUpon>
     </Compile>
     <Compile Include="Notifications\Notification.cs" />
+    <Compile Include="ViewModels\DiginoteChartViewModel.cs" />
     <Compile Include="Views\Sell.xaml.cs">
       <DependentUpon>Sell.xaml</DependentUpon>
     </Compile>

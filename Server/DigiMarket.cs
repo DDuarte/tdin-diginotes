@@ -14,6 +14,10 @@ namespace Server
         private readonly ActionLog _actionLog;
 
         public decimal Quotation = 1;
+        public readonly Dictionary<DateTime, decimal> QuotationHistory = new Dictionary<DateTime, decimal>
+        {
+            { DateTime.Now, 1}
+        }; 
 
         public readonly ConcurrentDictionary<String, User> Users = new ConcurrentDictionary<string, User>();
 
@@ -122,7 +126,7 @@ namespace Server
 
             return false;
         }
-
+        
         private async Task ChangeQuotationPurchase(decimal quotation, int orderId)
         {
             PurchaseOrder selectedOrder = PurchaseOrders.FirstOrDefault(order => order.Id == orderId);
@@ -146,6 +150,20 @@ namespace Server
             }
 
             PublishMessage(Update.General);
+        }
+
+        public Dictionary<DateTime, decimal> GetQuotationHistory(string username, string password)
+        {
+            Logger.Log("attempt: user={0}", username);
+
+            var r = ValidateCredentials(username, password);
+            if (!r)
+            {
+                Logger.Log("fail: user={0} error={1}", username, r.Error);
+                return null;
+            }
+
+            return QuotationHistory;
         }
 
         public void ApplyingLogs(bool active)
