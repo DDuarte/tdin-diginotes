@@ -120,16 +120,17 @@ namespace NewClient.ViewModels
 
             if (ret.Error == DigiMarketError.NotFullfilled)
             {
+                var quotationResult = App.Current.TheDigiMarket.GetQuotation(session.Username, session.Password);
+                if (!quotationResult)
+                    return;
+
                 result = await MainWindow.Instance.ShowInputAsync("Change quotation",
                     "Order was not fulfilled, specify new quotation value",
                     new MetroDialogSettings
                     {
                         ColorScheme = MetroDialogColorScheme.Accented,
                         AffirmativeButtonText = "Change",
-                        DefaultText =
-                            App.Current.TheDigiMarket.GetQuotation(session.Username, session.Password)
-                                .Value.ToString(CultureInfo.InvariantCulture)
-
+                        DefaultText = quotationResult.Value.ToString(CultureInfo.InvariantCulture)
                     });
 
                 if (result == null)
