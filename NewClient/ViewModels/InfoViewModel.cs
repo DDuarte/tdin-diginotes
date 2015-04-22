@@ -27,12 +27,13 @@ namespace NewClient.ViewModels
 
         public InfoViewModel()
         {
-            Quotation = "1 €";
+            Quotation = "inf €";
             LogoutCommand = new RelayCommand(LogoutExecute, () => true);
             AddFundsCommand = new RelayCommand(AddFundsExecute, () => true);
             ShowQuotation = new RelayCommand(ShowQuotationExecute, () => true);
             Session = App.Current.Session;
             UpdateBalanceString();
+            UpdateQuotation();
         }
 
         public Session Session { get; set; }
@@ -105,14 +106,17 @@ namespace NewClient.ViewModels
                 }
                 case Update.Quotation:
                 {
-                    var result = App.Current.TheDigiMarket.GetQuotation(Session.Username, Session.Password);
-                    if (result)
-                    {
-                        Quotation = result.Value + " €";
-                    }
+                    UpdateQuotation();
                     break;
                 }
             }
+        }
+
+        private void UpdateQuotation()
+        {
+            var result = App.Current.TheDigiMarket.GetQuotation(Session.Username, Session.Password);
+            if (result)
+                Quotation = result.Value + " €";
         }
 
         public override void OnEnter()
