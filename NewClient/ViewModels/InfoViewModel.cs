@@ -10,8 +10,24 @@ namespace NewClient.ViewModels
 {
     public class InfoViewModel : DiginotesViewModelBase
     {
+        private string _quotation;
+
+        public String Quotation
+        {
+            get
+            {
+                return _quotation;
+            }
+            set
+            {
+                _quotation = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public InfoViewModel()
         {
+            Quotation = "1 €";
             LogoutCommand = new RelayCommand(LogoutExecute, () => true);
             AddFundsCommand = new RelayCommand(AddFundsExecute, () => true);
             ShowQuotation = new RelayCommand(ShowQuotationExecute, () => true);
@@ -87,7 +103,15 @@ namespace NewClient.ViewModels
                     }
                     break;
                 }
-
+                case Update.Quotation:
+                {
+                    var result = App.Current.TheDigiMarket.GetQuotation(Session.Username, Session.Password);
+                    if (result)
+                    {
+                        Quotation = result.Value + " €";
+                    }
+                    break;
+                }
             }
         }
 

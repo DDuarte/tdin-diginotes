@@ -4,6 +4,7 @@
     {
         General,
         Balance,
-        Diginotes
+        Diginotes,
+        Quotation
     }
 }

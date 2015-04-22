@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -6,6 +7,7 @@ using Common;
 using GalaSoft.MvvmLight.Command;
 using MahApps.Metro.Controls.Dialogs;
 using NewClient.Views;
+using Remotes;
 
 namespace NewClient.ViewModels
 {
@@ -116,7 +118,40 @@ namespace NewClient.ViewModels
             var ret = App.Current.TheDigiMarket.CreatePurchaseOrder(session.Username, session.Password, buyQuantity);
             // PurchaseNotInProgress = true;
 
-            await MainWindow.Instance.ShowMessageAsync("Buy Diginotes", ret.ToString());
+            if (ret.Error == DigiMarketError.NotFullfilled)
+            {
+                result = await MainWindow.Instance.ShowInputAsync("Buy Diginotes",
+                    "Order was not fulfilled, specify new quotation value",
+                    new MetroDialogSettings
+                    {
+                        ColorScheme = MetroDialogColorScheme.Accented,
+                        AffirmativeButtonText = "Buy",
+                        DefaultText =
+                            App.Current.TheDigiMarket.GetQuotation(session.Username, session.Password)
+                                .Value.ToString(CultureInfo.InvariantCulture)
+
+                    });
+
+                if (result == null)
+                    return;
+
+                decimal newQuotation;
+                if (!decimal.TryParse(result, out newQuotation)) return;
+
+                if (App.Current.TheDigiMarket.ChangeQuotation(session.Username, session.Password, newQuotation, true))
+                {
+                    MainWindow.Instance.ShowNotification("Info", "Quotation successfully changed");
+                }
+                else
+                {
+                    MainWindow.Instance.ShowNotification("Error", "Error changing quotation");
+                }
+            }
+            else
+            {
+                await MainWindow.Instance.ShowMessageAsync("Buy Diginotes", ret.Error.ToString());
+            }
+            
         }
 
         public ICommand DeleteCommand { get; private set; }

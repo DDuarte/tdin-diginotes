@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Common;
 using Remotes;
 
@@ -12,7 +13,7 @@ namespace Server
     {
         private readonly ActionLog _actionLog;
 
-        public readonly decimal Quotation = 1;
+        public decimal Quotation = 1;
 
         public readonly ConcurrentDictionary<String, User> Users = new ConcurrentDictionary<string, User>();
 
@@ -82,6 +83,67 @@ namespace Server
             Logger.Log("success: user={0} balance={1}", username, balance);
 
             return new Result<decimal>(balance);
+        }
+
+        public Result<decimal> GetQuotation(string username, string password)
+        {
+            Logger.Log("attempt: user={0}", username);
+
+            var r = ValidateCredentials(username, password);
+            if (!r)
+            {
+                Logger.Log("fail: user={0} error={1}", username, r.Error);
+                return new Result<decimal>(r.Error);
+            }
+
+            return new Result<decimal>(Quotation);
+        }
+
+        public bool ChangeQuotation(string username, string password, decimal quotation, bool isPurchase)
+        {
+            Logger.Log("attempt: user={0}", username);
+
+            var r = ValidateCredentials(username, password);
+            if (!r)
+            {
+                Logger.Log("fail: user={0} error={1}", username, r.Error);
+                return false;
+            }
+
+            if (isPurchase)
+            {
+                if (quotation < Quotation)
+                    return false;
+
+                Task.Run(() => ChangeQuotationPurchase(quotation));
+                
+                return true;
+            }
+
+            return false;
+        }
+
+        private async Task ChangeQuotationPurchase(decimal quotation)
+        {
+
+            Quotation = quotation;
+            PublishMessage(Update.Quotation);
+
+            foreach (var purchaseOrder in PurchaseOrders)
+            {
+                purchaseOrder.Suspended = true;
+            }
+
+            PublishMessage(Update.General);
+
+            await Task.Delay(5000);
+
+            foreach (var purchaseOrder in PurchaseOrders)
+            {
+                purchaseOrder.Suspended = false;
+            }
+
+            PublishMessage(Update.General);
         }
 
         public void ApplyingLogs(bool active)
@@ -257,7 +319,7 @@ namespace Server
             return rr;
         }
 
-        public PurchaseResult CreatePurchaseOrder(string username, string password, int quantity)
+        public Result<PurchaseOrder> CreatePurchaseOrder(string username, string password, int quantity)
         {
             Logger.Log("attempt: username={0} password={1} quantity={2}", username, password, quantity);
 
@@ -265,14 +327,14 @@ namespace Server
             if (!r)
             {
                 Logger.Log("fail: user={0} error={1}", username, r.Error);
-                return PurchaseResult.Error;
+                return new Result<PurchaseOrder>(r.Error);
             }
 
             var requestingUser = r.Value;
 
             var price = quantity*Quotation;
             if (requestingUser.Balance < price)
-                return PurchaseResult.InsuficientFunds;
+                return new Result<PurchaseOrder>(DigiMarketError.InsuficientFunds);
 
             // get available offers
             var numOffers = SalesOrders.Where(order => !order.Fulfilled).Sum(order => order.Count);
@@ -284,7 +346,7 @@ namespace Server
                 requestingUser.AddFunds(-po.Value);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Balance);
-                return PurchaseResult.Unfulfilled;
+                return new Result<PurchaseOrder>(po, DigiMarketError.NotFullfilled);
             }
 
             var surplus = quantity - numOffers;
@@ -332,7 +394,7 @@ namespace Server
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
-                return PurchaseResult.Fulfilled;
+                return new Result<PurchaseOrder>(fulfilledPurchaseOrder);
             }
             else // the order is partially fulfilled
             {
@@ -345,14 +407,15 @@ namespace Server
                 }
 
                 var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser, numOffers, Quotation, true);
+                var unfulfilledPurchaseOrder = new PurchaseOrder(requestingUser, surplus, Quotation);
                 PurchaseOrders.Add(fulfilledPurchaseOrder); // fulfilled
-                PurchaseOrders.Add(new PurchaseOrder(requestingUser, surplus, Quotation)); // unfulfiled
+                PurchaseOrders.Add(unfulfilledPurchaseOrder); // unfulfiled
                 requestingUser.AddFunds(-fulfilledPurchaseOrder.Value);
                 fulfilledPurchaseOrder.Buyer.AddFunds(fulfilledPurchaseOrder.Value);
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
-                return PurchaseResult.PartiallyFullfilled;
+                return new Result<PurchaseOrder>(unfulfilledPurchaseOrder, DigiMarketError.NotFullfilled);
             }
         }
 
@@ -448,7 +511,7 @@ namespace Server
             PublishMessage(Update.Diginotes);
         }
 
-        public SalesResult CreateSalesOrder(string username, string password, int quantity)
+        public Result<SalesOrder> CreateSalesOrder(string username, string password, int quantity)
         {
             Logger.Log("attempt: username={0} password={1} quantity={2}",
                 username, password, quantity);
@@ -457,12 +520,12 @@ namespace Server
             if (!r)
             {
                 Logger.Log("fail: user={0} error={1}", username, r.Error);
-                return SalesResult.Error;
+                return new Result<SalesOrder>(r.Error);
             }
 
             var requestingUser = r.Value;
             if (requestingUser.Diginotes.Count < quantity)
-                return SalesResult.InsufficientFunds;
+                return new Result<SalesOrder>(DigiMarketError.InsuficientFunds);
 
             // get available offers
             var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled /* && order.Buyer != requestingUser */);
@@ -475,7 +538,7 @@ namespace Server
             {
                 SalesOrders.Add(new SalesOrder(requestingUser, quantity, Quotation));
                 PublishMessage(Update.Diginotes);
-                return SalesResult.Unfulfilled;
+                return new Result<SalesOrder>(DigiMarketError.NotFullfilled);
             }
 
             // select orders
@@ -513,22 +576,23 @@ namespace Server
             // SalesOrder is totally fulfilled
             if (surplus <= 0)
             {
-                SalesOrders.Add(new SalesOrder(requestingUser, quantity, Quotation, true));
+                var fulfilledSalesOrder = new SalesOrder(requestingUser, quantity, Quotation, true);
+                SalesOrders.Add(fulfilledSalesOrder);
+                PublishMessage(Update.Balance);
+                PublishMessage(Update.General);
+                PublishMessage(Update.Diginotes);
+                return new Result<SalesOrder>(fulfilledSalesOrder);
             }
             else
             {
+                var unfulfilledSalesOrder = new SalesOrder(requestingUser, surplus, Quotation);
                 SalesOrders.Add(new SalesOrder(requestingUser, numOffers, Quotation, true));
-                SalesOrders.Add(new SalesOrder(requestingUser, surplus, Quotation));
+                SalesOrders.Add(unfulfilledSalesOrder);
+                PublishMessage(Update.Balance);
+                PublishMessage(Update.General);
+                PublishMessage(Update.Diginotes);
+                return new Result<SalesOrder>(unfulfilledSalesOrder, DigiMarketError.NotFullfilled);
             }
-
-            PublishMessage(Update.Balance);
-            PublishMessage(Update.General);
-            PublishMessage(Update.Diginotes);
-
-            if (selectedPurchaseOrders.Sum(order => order.Count) < quantity)
-                return SalesResult.PartiallyFullfilled;
-
-            return SalesResult.Fulfilled;
         }
     }
 }

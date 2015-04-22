@@ -11,7 +11,7 @@ namespace Common
         public User Buyer { get; private set; }
         public bool FulFilled { get; set; }
         public decimal Value { get; set; }
-        public bool Locked;
+        public bool Suspended { get; set; }
 
         public PurchaseOrder(User buyer, int count, decimal currentQuotation, bool fulfilled = false)
         {
@@ -20,7 +20,7 @@ namespace Common
             Count = count;
             FulFilled = fulfilled;
             Value = currentQuotation*count;
-            Locked = false;
+            Suspended = false;
         }
 
         public override int GetHashCode()
