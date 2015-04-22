@@ -31,14 +31,14 @@ namespace Common
             }
         }
 
-        public HashSet<Diginote> Diginotes { get; private set; }
+        public HashSet<Diginote> Diginotes { get; set; }
         public bool Suspended { get; set; }
 
         private readonly decimal _quotation;
 
         public SalesOrder()
         {
-            
+            Diginotes = new HashSet<Diginote>();
         }
 
         public SalesOrder(User seller, int count, decimal currentQuotation, bool fulfilled = false)
