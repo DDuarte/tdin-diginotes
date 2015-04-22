@@ -21,7 +21,7 @@ namespace Server
             { DateTime.Now, 1}
         }; 
 
-        public readonly ConcurrentDictionary<String, User> Users = new ConcurrentDictionary<string, User>();
+        public readonly ConcurrentDictionary<string, User> Users = new ConcurrentDictionary<string, User>();
 
         public readonly List<PurchaseOrder> PurchaseOrders = new List<PurchaseOrder>();
         public readonly List<SalesOrder> SalesOrders = new List<SalesOrder>();
@@ -31,7 +31,43 @@ namespace Server
             _actionLog = new ActionLog(this);
         }
 
+        public override object InitializeLifetimeService()
+        {
+            return null; // infinite
+        }
+
+        public event MessageArrivedEvent MessageArrived;
+
+        public void PublishMessage(Update update)
+        {
+            if (MessageArrived == null)
+                return; // no listeners
+
+            MessageArrivedEvent listener = null;
+            var dels = MessageArrived.GetInvocationList();
+
+            foreach (var del in dels)
+            {
+                try
+                {
+                    listener = (MessageArrivedEvent)del;
+                    listener.Invoke(update);
+                }
+                catch (Exception e)
+                {
+                    Logger.Log("exception: {0}: {1}", update, e.ToString());
+                    // could not reach the destination, so remove it from the list
+                    MessageArrived -= listener;
+                }
+            }
+        }
+
         private bool _applyingLogs = true;
+
+        public void ApplyingLogs(bool active)
+        {
+            _applyingLogs = active;
+        }
 
         private Result<User> ValidateCredentials(string username, string password)
         {
@@ -62,9 +98,7 @@ namespace Server
                 return false;
             }
 
-            r.Value.AddFunds(euros);
-            for (var i = 0; i < diginotes; ++i)
-                r.Value.AddDiginote(new Diginote());
+            AddFundsDirect(r.Value.Username, euros, diginotes);
 
             PublishMessage(Update.Balance);
             PublishMessage(Update.Diginotes);
@@ -72,6 +106,29 @@ namespace Server
             Logger.Log("success: user={0} +balance={1} +diginotes={2}", username, euros, diginotes);
 
             return true;
+        }
+
+        public void AddFundsDirect(string user, decimal balance, int diginoteCount)
+        {
+            var u = Users[user];
+            u.AddFunds(balance);
+            for (var i = 0; i < diginoteCount; ++i)
+                u.AddDiginote(new Diginote());
+
+            if (!_applyingLogs)
+                _actionLog.LogAction(new AddFundsAction { User = user, Balance = balance, DiginoteCount = diginoteCount });
+
+            Logger.Log("success: user={0} balance={1} diginotes={2}", user, balance, diginoteCount);
+        }
+
+        public void CreatePurchaseOrderDirect(string user, int count, decimal quotation, bool fulfilled)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CreateSalesOrder(string user, int count, decimal quotation, bool fulfilled)
+        {
+            throw new NotImplementedException();
         }
 
         public Result<decimal> GetBalance(string username, string password)
@@ -148,7 +205,7 @@ namespace Server
         {
             selectedOrder.Value = quotation*selectedOrder.Count;
 
-            Quotation = quotation;
+            ChangeQuotationDirect(quotation, DateTime.Now);
 
             var now = DateTime.Now;
             if (!QuotationHistory.ContainsKey(now))
@@ -156,20 +213,15 @@ namespace Server
 
             PublishMessage(Update.Quotation);
 
-            foreach (var purchaseOrder in PurchaseOrders)
-            {
-                purchaseOrder.Suspended = true;
-            }
+            foreach (var order in PurchaseOrders)
+                order.Suspended = true;
 
             PublishMessage(Update.General);
 
             await Task.Delay(SuspendedTime);
 
-            foreach (var purchaseOrder in PurchaseOrders)
-            {
-                purchaseOrder.Suspended = false;
-                // TODO: need update (match orders)
-            }
+            foreach (var order in PurchaseOrders) // TODO: need update (match orders)
+                order.Suspended = false;
 
             PublishMessage(Update.General);
         }
@@ -178,9 +230,7 @@ namespace Server
         {
             selectedOrder.Value = quotation * selectedOrder.Count;
 
-            var now = DateTime.Now;
-            if (!QuotationHistory.ContainsKey(now))
-                QuotationHistory.Add(now, Quotation);
+            ChangeQuotationDirect(quotation, DateTime.Now);
 
             PublishMessage(Update.Quotation);
 
@@ -197,6 +247,17 @@ namespace Server
             PublishMessage(Update.General);
         }
 
+        public void ChangeQuotationDirect(decimal quotation, DateTime time)
+        {
+            Quotation = quotation;
+            QuotationHistory[time] = quotation;
+
+            if (!_applyingLogs)
+                _actionLog.LogAction(new QuotationChangeAction { Quotation = quotation, Time = time });
+
+            Logger.Log("success: quotation={0} time={1}", quotation, time);
+        }
+
         public Dictionary<DateTime, decimal> GetQuotationHistory(string username, string password)
         {
             Logger.Log("attempt: user={0}", username);
@@ -209,48 +270,6 @@ namespace Server
             }
 
             return QuotationHistory;
-        }
-
-        public void ApplyingLogs(bool active)
-        {
-            _applyingLogs = active;
-        }
-
-        public override object InitializeLifetimeService()
-        {
-            return null; // infinite
-        }
-
-        public event MessageArrivedEvent MessageArrived;
-
-        public void PublishMessage(Update update)
-        {
-            SafeInvokeMessageArrived(update);
-        }
-
-        private void SafeInvokeMessageArrived(Update update)
-        {
-            if (MessageArrived == null)
-                return; // no listeners
-
-            MessageArrivedEvent listener = null;
-            var dels = MessageArrived.GetInvocationList();
-
-            foreach (var del in dels)
-            {
-                try
-                {
-                    listener = (MessageArrivedEvent)del;
-                    listener.Invoke(update);
-                }
-                catch (Exception e)
-                {
-                    Logger.Log("exception: {0}: {1}", update, e.ToString());
-                    //Could not reach the destination, so remove it
-                    //from the list
-                    MessageArrived -= listener;
-                }
-            }
         }
 
         public Result<User> Register(string name, string username, string password)
@@ -431,7 +450,7 @@ namespace Server
                             var necessaryCount = quantity - (salesQuantity - salesOrder.Count);
                             var transientDiginotes = salesOrder.Diginotes.Take(salesOrder.Count - necessaryCount).ToList();
                             transientDiginotes.ForEach(transientDiginote => salesOrder.Seller.AddDiginote(transientDiginote));
-                            salesOrder.Diginotes.RemoveWhere((diginote) => transientDiginotes.Contains(diginote));
+                            salesOrder.Diginotes.RemoveWhere(diginote => transientDiginotes.Contains(diginote));
                             salesOrdersToAdd.Add(new SalesOrder(salesOrder.Seller, salesOrder.Count - necessaryCount, Quotation));
                             salesOrder.Count = necessaryCount;
                         }

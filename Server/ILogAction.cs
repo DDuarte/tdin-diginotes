@@ -29,4 +29,27 @@ namespace Server
             digiMarket.Register(Name, User, Password);
         }
     }
+
+    public class QuotationChangeAction : ILogAction
+    {
+        public decimal Quotation { get; set; }
+        public DateTime Time { get; set; }
+
+        public void Apply(IDigiMarket digiMarket)
+        {
+            digiMarket.ChangeQuotationDirect(Quotation, Time);
+        }
+    }
+
+    public class AddFundsAction : ILogAction
+    {
+        public string User { get; set; }
+        public decimal Balance { get; set; }
+        public int DiginoteCount { get; set; }
+
+        public void Apply(IDigiMarket digiMarket)
+        {
+            digiMarket.AddFundsDirect(User, Balance, DiginoteCount);
+        }
+    }
 }
