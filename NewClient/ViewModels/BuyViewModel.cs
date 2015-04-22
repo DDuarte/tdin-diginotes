@@ -136,7 +136,7 @@ namespace NewClient.ViewModels
                     return;
 
                 decimal newQuotation;
-                if (!decimal.TryParse(result, out newQuotation)) return;
+                if (!decimal.TryParse(result, NumberStyles.Any, CultureInfo.InvariantCulture, out newQuotation)) return;
 
                 if (App.Current.TheDigiMarket.ChangeQuotation(session.Username, session.Password, newQuotation, ret.Value.Id,true))
                 {

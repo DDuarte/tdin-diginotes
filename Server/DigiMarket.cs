@@ -149,6 +149,11 @@ namespace Server
             selectedOrder.Value = quotation*selectedOrder.Count;
 
             Quotation = quotation;
+
+            var now = DateTime.Now;
+            if (!QuotationHistory.ContainsKey(now))
+                QuotationHistory.Add(now, Quotation);
+
             PublishMessage(Update.Quotation);
 
             foreach (var purchaseOrder in PurchaseOrders)
@@ -173,7 +178,10 @@ namespace Server
         {
             selectedOrder.Value = quotation * selectedOrder.Count;
 
-            Quotation = quotation;
+            var now = DateTime.Now;
+            if (!QuotationHistory.ContainsKey(now))
+                QuotationHistory.Add(now, Quotation);
+
             PublishMessage(Update.Quotation);
 
             foreach (var order in SalesOrders)
