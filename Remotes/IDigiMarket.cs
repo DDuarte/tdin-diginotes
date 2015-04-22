@@ -28,7 +28,7 @@ namespace Remotes
         Result<decimal> GetBalance(string username, string password);
         Result<List<Diginote>> GetDiginotes(string username, string password);
         Result<decimal> GetQuotation(string username, string password);
-        bool ChangeQuotation(string username, string password, decimal quotation, bool isPurchase);  
+        bool ChangeQuotation(string username, string password, decimal quotation, int orderId, bool isPurchase);  
 
         void ApplyingLogs(bool active);
     }

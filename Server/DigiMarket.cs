@@ -99,7 +99,7 @@ namespace Server
             return new Result<decimal>(Quotation);
         }
 
-        public bool ChangeQuotation(string username, string password, decimal quotation, bool isPurchase)
+        public bool ChangeQuotation(string username, string password, decimal quotation, int id, bool isPurchase)
         {
             Logger.Log("attempt: user={0}", username);
 
@@ -115,7 +115,7 @@ namespace Server
                 if (quotation < Quotation)
                     return false;
 
-                Task.Run(() => ChangeQuotationPurchase(quotation));
+                Task.Run(() => ChangeQuotationPurchase(quotation, id));
                 
                 return true;
             }
@@ -123,8 +123,10 @@ namespace Server
             return false;
         }
 
-        private async Task ChangeQuotationPurchase(decimal quotation)
+        private async Task ChangeQuotationPurchase(decimal quotation, int orderId)
         {
+            PurchaseOrder selectedOrder = PurchaseOrders.FirstOrDefault(order => order.Id == orderId);
+            if (selectedOrder != null) selectedOrder.Value = quotation*selectedOrder.Count;
 
             Quotation = quotation;
             PublishMessage(Update.Quotation);
