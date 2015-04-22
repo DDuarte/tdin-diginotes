@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              DataContext="{Binding Buy, Source={StaticResource Locator}}"
              d:DesignHeight="500" d:DesignWidth="600">
@@ -59,9 +58,7 @@
             <Label FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" Margin="0 8 0 8" Content="My Orders"/>
             <TabControl>
                 <TabItem Header="All">
-                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=PurchaseOrders}"
-                  Grid.Row="0"
-                  AutoGenerateColumns="False">
+                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=PurchaseOrders}" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
@@ -72,9 +69,7 @@
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Open">
-                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=OpenPurchaseOrders}"
-                  Grid.Row="0"
-                  AutoGenerateColumns="False">
+                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=OpenPurchaseOrders}" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
@@ -84,9 +79,7 @@
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Closed">
-                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=ClosedPurchaseOrders}"
-                  Grid.Row="0"
-                  AutoGenerateColumns="False">
+                    <DataGrid SelectedItem="{Binding SelectedPurchaseOrder}" IsReadOnly="True" ItemsSource="{Binding Path=ClosedPurchaseOrders}" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>

@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace NewClient.Views
+﻿namespace NewClient.Views
 {
     /// <summary>
     /// Interaction logic for Info.xaml

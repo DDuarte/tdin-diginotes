@@ -1,11 +1,9 @@
-﻿using System.Windows.Controls;
-
-namespace NewClient.Views
+﻿namespace NewClient.Views
 {
     /// <summary>
     /// Description for Sell.
     /// </summary>
-    public partial class Sell : UserControl
+    public partial class Sell
     {
         /// <summary>
         /// Initializes a new instance of the Sell class.

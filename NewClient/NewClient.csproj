@@ -74,6 +74,8 @@
     </Compile>
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="ViewModels\DiginoteChartViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="Views\Sell.xaml.cs">
       <DependentUpon>Sell.xaml</DependentUpon>
     </Compile>
