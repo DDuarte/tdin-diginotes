@@ -9,9 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remotes", "Remotes\Remotes.csproj", "{1F6867A1-D16E-45FE-A780-D3617BEFE5DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewClient", "NewClient\NewClient.csproj", "{1CAC001B-CB59-4469-9637-10CCE24BE3EC}"
-EndProject
-Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ModelingProject1", "ModelingProject1\ModelingProject1.modelproj", "{A33A4A83-EE49-4E87-9D4C-5D844FA11186}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{1CAC001B-CB59-4469-9637-10CCE24BE3EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,16 +63,6 @@ Global
 		{1CAC001B-CB59-4469-9637-10CCE24BE3EC}.Release|ARM.ActiveCfg = Release|Any CPU
 		{1CAC001B-CB59-4469-9637-10CCE24BE3EC}.Release|x64.ActiveCfg = Release|Any CPU
 		{1CAC001B-CB59-4469-9637-10CCE24BE3EC}.Release|x86.ActiveCfg = Release|Any CPU
-		{A33A4A83-EE49-4E87-9D4C-5D844FA11186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A33A4A83-EE49-4E87-9D4C-5D844FA11186}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A33A4A83-EE49-4E87-9D4C-5D844FA11186}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{A33A4A83-EE49-4E87-9D4C-5D844FA11186}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A33A4A83-EE49-4E87-9D4C-5D844FA11186}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A33A4A83-EE49-4E87-9D4C-5D844FA11186}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A33A4A83-EE49-4E87-9D4C-5D844FA11186}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A33A4A83-EE49-4E87-9D4C-5D844FA11186}.Release|ARM.ActiveCfg = Release|Any CPU
-		{A33A4A83-EE49-4E87-9D4C-5D844FA11186}.Release|x64.ActiveCfg = Release|Any CPU
-		{A33A4A83-EE49-4E87-9D4C-5D844FA11186}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
