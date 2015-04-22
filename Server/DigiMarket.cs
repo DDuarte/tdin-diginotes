@@ -121,14 +121,27 @@ namespace Server
             Logger.Log("success: user={0} balance={1} diginotes={2}", user, balance, diginoteCount);
         }
 
-        public void CreatePurchaseOrderDirect(string user, int count, decimal quotation, bool fulfilled)
+        private void OrdersSnapshot()
         {
-            throw new NotImplementedException();
+            OrdersSnapshot(PurchaseOrders, SalesOrders);
         }
 
-        public void CreateSalesOrder(string user, int count, decimal quotation, bool fulfilled)
+        public void OrdersSnapshot(List<PurchaseOrder> purchaseOrders, List<SalesOrder> salesOrders)
         {
-            throw new NotImplementedException();
+            if (_applyingLogs)
+            {
+                PurchaseOrders.Clear();
+                PurchaseOrders.AddRange(purchaseOrders);
+
+                SalesOrders.Clear();
+                SalesOrders.AddRange(salesOrders);
+
+                PublishMessage(Update.General);
+            }
+            else
+                _actionLog.LogAction(new OrdersSnapshot { PurchaseOrders = purchaseOrders, SalesOrders = salesOrders });
+
+            Logger.Log("success: purchaseOrders#={0} salesOrders#={1}", purchaseOrders.Count, salesOrders.Count);
         }
 
         public Result<decimal> GetBalance(string username, string password)
@@ -378,7 +391,7 @@ namespace Server
 
             var user = r.Value;
 
-            var rr = new Result<List<PurchaseOrder>>(PurchaseOrders.Where(p => p.Buyer == user).ToList());
+            var rr = new Result<List<PurchaseOrder>>(PurchaseOrders.Where(p => p.Buyer == user.Username).ToList());
             Logger.Log("success: user={0} orders={1}", username, rr.Value.Count);
 
             return rr;
@@ -397,7 +410,7 @@ namespace Server
 
             var user = r.Value;
 
-            var rr = new Result<List<SalesOrder>>(SalesOrders.Where(s => s.Seller == user).ToList());
+            var rr = new Result<List<SalesOrder>>(SalesOrders.Where(s => s.Seller == user.Username).ToList());
             Logger.Log("success: user={0} orders={1}", username, rr.Value.Count);
 
             return rr;
@@ -425,8 +438,8 @@ namespace Server
 
             if (numOffers == 0)
             {
-                var po = new PurchaseOrder(requestingUser, quantity, Quotation);
-                PurchaseOrders.Add(po);
+                var po = new PurchaseOrder(requestingUser.Username, quantity, Quotation);
+                PurchaseOrders.Add(po); OrdersSnapshot();
                 requestingUser.AddFunds(-po.Value);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Balance);
@@ -449,16 +462,16 @@ namespace Server
                         {
                             var necessaryCount = quantity - (salesQuantity - salesOrder.Count);
                             var transientDiginotes = salesOrder.Diginotes.Take(salesOrder.Count - necessaryCount).ToList();
-                            transientDiginotes.ForEach(transientDiginote => salesOrder.Seller.AddDiginote(transientDiginote));
+                            transientDiginotes.ForEach(transientDiginote => Users[salesOrder.Seller].AddDiginote(transientDiginote));
                             salesOrder.Diginotes.RemoveWhere(diginote => transientDiginotes.Contains(diginote));
-                            salesOrdersToAdd.Add(new SalesOrder(salesOrder.Seller, salesOrder.Count - necessaryCount, Quotation));
+                            salesOrdersToAdd.Add(new SalesOrder(Users[salesOrder.Seller], salesOrder.Count - necessaryCount, Quotation));
                             salesOrder.Count = necessaryCount;
                         }
 
                         return !exceeded;
                     }).ToList();
 
-            SalesOrders.AddRange(salesOrdersToAdd);
+            SalesOrders.AddRange(salesOrdersToAdd); OrdersSnapshot();
             // purchase order is totally fulfilled
             if (surplus <= 0)
             {
@@ -471,10 +484,10 @@ namespace Server
                     salesOrder.Diginotes.Clear();
                 }
 
-                var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser, quantity, Quotation, true);
-                PurchaseOrders.Add(fulfilledPurchaseOrder);
+                var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, quantity, Quotation, true);
+                PurchaseOrders.Add(fulfilledPurchaseOrder); OrdersSnapshot();
                 requestingUser.AddFunds(-fulfilledPurchaseOrder.Value);
-                fulfilledPurchaseOrder.Buyer.AddFunds(fulfilledPurchaseOrder.Value);
+                Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
@@ -490,12 +503,12 @@ namespace Server
                     salesOrder.Diginotes.Clear();
                 }
 
-                var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser, numOffers, Quotation, true);
-                var unfulfilledPurchaseOrder = new PurchaseOrder(requestingUser, surplus, Quotation);
-                PurchaseOrders.Add(fulfilledPurchaseOrder); // fulfilled
-                PurchaseOrders.Add(unfulfilledPurchaseOrder); // unfulfiled
+                var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, numOffers, Quotation, true);
+                var unfulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, surplus, Quotation);
+                PurchaseOrders.Add(fulfilledPurchaseOrder); OrdersSnapshot();
+                PurchaseOrders.Add(unfulfilledPurchaseOrder); OrdersSnapshot();
                 requestingUser.AddFunds(-fulfilledPurchaseOrder.Value);
-                fulfilledPurchaseOrder.Buyer.AddFunds(fulfilledPurchaseOrder.Value);
+                Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
@@ -514,12 +527,12 @@ namespace Server
 
             var user = r.Value;
 
-            var purchaseOrder = PurchaseOrders.Where(order => order.Id == id && order.Buyer == user).ToList().FirstOrDefault();
+            var purchaseOrder = PurchaseOrders.Where(order => order.Id == id && order.Buyer == user.Username).ToList().FirstOrDefault();
 
             if (purchaseOrder == null)
                 return false;
 
-            purchaseOrder.Value = value;
+            purchaseOrder.Value = value; OrdersSnapshot();
             PublishMessage(Update.General);
             return true;
         }
@@ -544,7 +557,7 @@ namespace Server
 
             if (purchaseOrderToDelete == null || purchaseOrderToDelete.FulFilled) return;
 
-            PurchaseOrders.Remove(purchaseOrderToDelete);
+            PurchaseOrders.Remove(purchaseOrderToDelete); OrdersSnapshot();
             PublishMessage(Update.General);
         }
 
@@ -559,12 +572,12 @@ namespace Server
 
             var user = r.Value;
 
-            var saleOrder = SalesOrders.Where(order => order.Id == id && order.Seller == user).ToList().FirstOrDefault();
+            var saleOrder = SalesOrders.Where(order => order.Id == id && order.Seller == user.Username).ToList().FirstOrDefault();
 
             if (saleOrder == null)
                 return false;
 
-            saleOrder.Value = value;
+            saleOrder.Value = value; OrdersSnapshot();
             PublishMessage(Update.General);
             return true;
         }
@@ -589,8 +602,8 @@ namespace Server
 
             if (saleOrderToDelete == null || saleOrderToDelete.Fulfilled) return;
 
-            saleOrderToDelete.Diginotes.ToList().ForEach(diginote => saleOrderToDelete.Seller.AddDiginote(diginote));
-            SalesOrders.Remove(saleOrderToDelete);
+            saleOrderToDelete.Diginotes.ToList().ForEach(diginote => Users[saleOrderToDelete.Seller].AddDiginote(diginote));
+            SalesOrders.Remove(saleOrderToDelete); OrdersSnapshot();
             PublishMessage(Update.General);
             PublishMessage(Update.Diginotes);
         }
@@ -621,7 +634,7 @@ namespace Server
             if (numOffers == 0)
             {
                 var order = new SalesOrder(requestingUser, quantity, Quotation);
-                SalesOrders.Add(order);
+                SalesOrders.Add(order); OrdersSnapshot();
                 PublishMessage(Update.Diginotes);
                 return new Result<SalesOrder>(order, DigiMarketError.NotFullfilled);
             }
@@ -655,14 +668,14 @@ namespace Server
                 requestingUser.AddFunds(selectedPurchaseOrder.Value);
                 var selectedDiginotes = requestingUser.Diginotes.Take(selectedPurchaseOrder.Count).ToList();
                 requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));
-                selectedDiginotes.ForEach(selectedDiginote => selectedPurchaseOrder.Buyer.AddDiginote(selectedDiginote));                 
+                selectedDiginotes.ForEach(selectedDiginote => Users[selectedPurchaseOrder.Buyer].AddDiginote(selectedDiginote));                 
             }
 
             // SalesOrder is totally fulfilled
             if (surplus <= 0)
             {
                 var fulfilledSalesOrder = new SalesOrder(requestingUser, quantity, Quotation, true);
-                SalesOrders.Add(fulfilledSalesOrder);
+                SalesOrders.Add(fulfilledSalesOrder); OrdersSnapshot();
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
@@ -672,7 +685,7 @@ namespace Server
             {
                 var unfulfilledSalesOrder = new SalesOrder(requestingUser, surplus, Quotation);
                 SalesOrders.Add(new SalesOrder(requestingUser, numOffers, Quotation, true));
-                SalesOrders.Add(unfulfilledSalesOrder);
+                SalesOrders.Add(unfulfilledSalesOrder); OrdersSnapshot();
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);

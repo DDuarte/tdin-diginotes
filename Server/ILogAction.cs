@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Common;
 using Remotes;
 
 namespace Server
@@ -50,6 +52,17 @@ namespace Server
         public void Apply(IDigiMarket digiMarket)
         {
             digiMarket.AddFundsDirect(User, Balance, DiginoteCount);
+        }
+    }
+
+    public class OrdersSnapshot : ILogAction
+    {
+        public List<PurchaseOrder> PurchaseOrders { get; set; }
+        public List<SalesOrder> SalesOrders { get; set; }
+
+        public void Apply(IDigiMarket digiMarket)
+        {
+            digiMarket.OrdersSnapshot(PurchaseOrders, SalesOrders);
         }
     }
 }

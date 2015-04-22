@@ -8,12 +8,12 @@ namespace Common
         private static int _lastId = 1;
         public int Id { get; private set; }
         public int Count { get; set; }
-        public User Buyer { get; private set; }
+        public string Buyer { get; private set; }
         public bool FulFilled { get; set; }
         public decimal Value { get; set; }
         public bool Suspended { get; set; }
 
-        public PurchaseOrder(User buyer, int count, decimal currentQuotation, bool fulfilled = false)
+        public PurchaseOrder(string buyer, int count, decimal currentQuotation, bool fulfilled = false)
         {
             Id = _lastId++;
             Buyer = buyer;

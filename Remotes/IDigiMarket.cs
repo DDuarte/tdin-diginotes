@@ -44,8 +44,7 @@ namespace Remotes
         void ApplyingLogs(bool active);
         void ChangeQuotationDirect(decimal quotation, DateTime time);
         void AddFundsDirect(string user, decimal balance, int diginoteCount);
-        void CreatePurchaseOrderDirect(string user, int count, decimal quotation, bool fulfilled);
-        void CreateSalesOrder(string user, int count, decimal quotation, bool fulfilled);
+        void OrdersSnapshot(List<PurchaseOrder> purchaseOrders, List<SalesOrder> salesOrders);
 
         #endregion
     }

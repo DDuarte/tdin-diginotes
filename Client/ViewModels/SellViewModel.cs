@@ -18,6 +18,8 @@ namespace Client.ViewModels
             EditCommand = new RelayCommand(EditCommandExecute, () => true);
             DeleteCommand = new RelayCommand(DeleteCommandExecute, () => true);
             SaleNotInProgress = true;
+
+            UpdateOrders();
         }
 
         private IEnumerable<SalesOrder> _salesOrders;
@@ -176,6 +178,17 @@ namespace Client.ViewModels
 
         public override void OnUpdate(Update update)
         {
+            UpdateOrders();
+        }
+
+        public override void OnEnter()
+        {
+            UpdateOrders();
+            SaleNotInProgress = true;
+        }
+
+        private void UpdateOrders()
+        {
             var session = App.Current.Session;
 
             var result = App.Current.TheDigiMarket.GetSalesOrders(session.Username, session.Password);
@@ -186,16 +199,6 @@ namespace Client.ViewModels
             SalesOrders = result.Value;
             OpenSalesOrders = SalesOrders.Where(order => order.Fulfilled == false);
             ClosedSalesOrders = SalesOrders.Where(order => order.Fulfilled);
-        }
-
-        public override void OnEnter()
-        {
-            var session = App.Current.Session;
-
-            var result = App.Current.TheDigiMarket.GetSalesOrders(session.Username, session.Password);
-
-            SalesOrders = result.Value;
-            SaleNotInProgress = true;
         }
     }
 }

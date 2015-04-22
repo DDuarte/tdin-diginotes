@@ -171,6 +171,18 @@ namespace Client.ViewModels
 
         public override void OnUpdate(Update update)
         {
+            UpdateOrders();
+        }
+
+        public override void OnEnter()
+        {
+            UpdateOrders();
+            PurchaseNotInProgress = true;
+            SelectedPurchaseOrder = null;
+        }
+
+        private void UpdateOrders()
+        {
             var session = App.Current.Session;
 
             var result = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
@@ -182,25 +194,14 @@ namespace Client.ViewModels
             ClosedPurchaseOrders = PurchaseOrders.Where(order => order.FulFilled);
         }
 
-        public override void OnEnter()
-        {
-            var session = App.Current.Session;
-
-            var result = App.Current.TheDigiMarket.GetPurchaseOrders(session.Username, session.Password);
-            if (!result)
-                return;
-
-            PurchaseOrders = result.Value;
-            PurchaseNotInProgress = true;
-            SelectedPurchaseOrder = null;
-        }
-
         public BuyViewModel()
         {
             BuyCommand = new RelayCommand(BuyCommandExecute, () => true);
             EditCommand = new RelayCommand(EditCommandExecute, () => true);
             DeleteCommand = new RelayCommand(DeleteCommandExecute, () => true);
             PurchaseNotInProgress = true;
+
+            UpdateOrders();
         }
     }
 }

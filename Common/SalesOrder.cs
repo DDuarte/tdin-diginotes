@@ -10,7 +10,7 @@ namespace Common
         private static int _lastId = 1;
         public int Id { get; private set; }
         public int Count { get; set; }
-        public User Seller { get; private set; }
+        public string Seller { get; private set; }
         public bool Fulfilled { get; set; }
 
         private bool _valueOverriden;
@@ -22,8 +22,7 @@ namespace Common
             {
                 if (!_valueOverriden)
                     return Count*_quotation;
-                else
-                    return _newValue;
+                return _newValue;
             }
             set 
             { 
@@ -37,11 +36,16 @@ namespace Common
 
         private readonly decimal _quotation;
 
+        public SalesOrder()
+        {
+            
+        }
+
         public SalesOrder(User seller, int count, decimal currentQuotation, bool fulfilled = false)
         {
             Id = _lastId++;
             Count = count;
-            Seller = seller;
+            Seller = seller.Username;
             Fulfilled = fulfilled;
             Suspended = false;
             Diginotes = new HashSet<Diginote>();
@@ -50,7 +54,7 @@ namespace Common
 
             if (fulfilled) return;
 
-            Diginotes = new HashSet<Diginote>(Seller.Diginotes.Take(count));
+            Diginotes = new HashSet<Diginote>(seller.Diginotes.Take(count));
             if (Diginotes.Count < count)
                 throw new Exception("User has insufficient diginotes");
 
