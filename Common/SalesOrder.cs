@@ -33,7 +33,7 @@ namespace Common
         }
 
         public HashSet<Diginote> Diginotes { get; private set; }
-        public bool Locked;
+        public bool Suspended { get; set; }
 
         private readonly decimal _quotation;
 
@@ -43,7 +43,7 @@ namespace Common
             Count = count;
             Seller = seller;
             Fulfilled = fulfilled;
-            Locked = false;
+            Suspended = false;
             Diginotes = new HashSet<Diginote>();
             _quotation = currentQuotation;
             _valueOverriden = false;

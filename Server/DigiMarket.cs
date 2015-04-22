@@ -13,6 +13,8 @@ namespace Server
     {
         private readonly ActionLog _actionLog;
 
+        private const int SuspendedTime = 60000;
+
         public decimal Quotation = 1;
         public readonly Dictionary<DateTime, decimal> QuotationHistory = new Dictionary<DateTime, decimal>
         {
@@ -119,18 +121,32 @@ namespace Server
                 if (quotation < Quotation)
                     return false;
 
-                Task.Run(() => ChangeQuotationPurchase(quotation, id));
+                PurchaseOrder selectedOrder = PurchaseOrders.FirstOrDefault(order => order.Id == id);
+                if (selectedOrder == null)
+                    return false;
+
+                Task.Run(() => ChangeQuotationPurchase(quotation, selectedOrder));
                 
                 return true;
             }
+            else
+            {
+                if (quotation > Quotation)
+                    return false;
 
-            return false;
+                SalesOrder selectedOrder = SalesOrders.FirstOrDefault(order => order.Id == id);
+                if (selectedOrder == null)
+                    return false;
+
+                Task.Run(() => ChangeQuotationSales(quotation, selectedOrder));
+
+                return true;
+            }
         }
-        
-        private async Task ChangeQuotationPurchase(decimal quotation, int orderId)
+
+        private async Task ChangeQuotationPurchase(decimal quotation, PurchaseOrder selectedOrder)
         {
-            PurchaseOrder selectedOrder = PurchaseOrders.FirstOrDefault(order => order.Id == orderId);
-            if (selectedOrder != null) selectedOrder.Value = quotation*selectedOrder.Count;
+            selectedOrder.Value = quotation*selectedOrder.Count;
 
             Quotation = quotation;
             PublishMessage(Update.Quotation);
@@ -142,12 +158,33 @@ namespace Server
 
             PublishMessage(Update.General);
 
-            await Task.Delay(5000);
+            await Task.Delay(SuspendedTime);
 
             foreach (var purchaseOrder in PurchaseOrders)
             {
                 purchaseOrder.Suspended = false;
+                // TODO: need update (match orders)
             }
+
+            PublishMessage(Update.General);
+        }
+
+        private async Task ChangeQuotationSales(decimal quotation, SalesOrder selectedOrder)
+        {
+            selectedOrder.Value = quotation * selectedOrder.Count;
+
+            Quotation = quotation;
+            PublishMessage(Update.Quotation);
+
+            foreach (var order in SalesOrders)
+                order.Suspended = true;
+
+            PublishMessage(Update.General);
+
+            await Task.Delay(SuspendedTime);
+
+            foreach (var order in SalesOrders) // TODO: need update (match orders)
+                order.Suspended = false;
 
             PublishMessage(Update.General);
         }
@@ -357,7 +394,7 @@ namespace Server
                 return new Result<PurchaseOrder>(DigiMarketError.InsuficientFunds);
 
             // get available offers
-            var numOffers = SalesOrders.Where(order => !order.Fulfilled).Sum(order => order.Count);
+            var numOffers = SalesOrders.Where(order => !order.Fulfilled && !order.Suspended).Sum(order => order.Count);
 
             if (numOffers == 0)
             {
@@ -374,7 +411,7 @@ namespace Server
             var salesOrdersToAdd = new List<SalesOrder>();
             var selectedSalesOrders =
                 SalesOrders
-                    .Where(salesOrder => !salesOrder.Fulfilled /* && salesOrder.Seller != requestingUser */)
+                    .Where(salesOrder => !salesOrder.Fulfilled && !salesOrder.Suspended /* && salesOrder.Seller != requestingUser */)
                     .TakeWhile(salesOrder =>
                     {
                         bool exceeded = salesQuantity > quantity;
@@ -548,7 +585,7 @@ namespace Server
                 return new Result<SalesOrder>(DigiMarketError.InsuficientFunds);
 
             // get available offers
-            var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled /* && order.Buyer != requestingUser */);
+            var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled && !order.Suspended /* && order.Buyer != requestingUser */);
             var purchaseOrders = availablePurchaseOrders as IList<PurchaseOrder> ?? availablePurchaseOrders.ToList();
 
             var numOffers = purchaseOrders.Sum(order => order.Count);
@@ -556,9 +593,10 @@ namespace Server
 
             if (numOffers == 0)
             {
-                SalesOrders.Add(new SalesOrder(requestingUser, quantity, Quotation));
+                var order = new SalesOrder(requestingUser, quantity, Quotation);
+                SalesOrders.Add(order);
                 PublishMessage(Update.Diginotes);
-                return new Result<SalesOrder>(DigiMarketError.NotFullfilled);
+                return new Result<SalesOrder>(order, DigiMarketError.NotFullfilled);
             }
 
             // select orders

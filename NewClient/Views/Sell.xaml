@@ -66,6 +66,7 @@
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Fulfilled" Binding="{Binding Fulfilled}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Suspended" Binding="{Binding Suspended}"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
@@ -77,6 +78,7 @@
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                             <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
                             <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Suspended" Binding="{Binding Suspended}"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>

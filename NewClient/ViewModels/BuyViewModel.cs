@@ -124,7 +124,7 @@ namespace NewClient.ViewModels
                     return;
 
                 result = await MainWindow.Instance.ShowInputAsync("Change quotation",
-                    "Order was not fulfilled, specify new quotation value",
+                    "Order was not fulfilled, specify new higher quotation value",
                     new MetroDialogSettings
                     {
                         ColorScheme = MetroDialogColorScheme.Accented,
@@ -151,7 +151,6 @@ namespace NewClient.ViewModels
             {
                 await MainWindow.Instance.ShowMessageAsync("Buy Diginotes", ret.Error.ToString());
             }
-            
         }
 
         public ICommand DeleteCommand { get; private set; }
