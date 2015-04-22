@@ -12,6 +12,7 @@ namespace Common
         public int Count { get; set; }
         public string Seller { get; set; }
         public bool Fulfilled { get; set; }
+        public DateTime Date { get; set; }
 
         private bool _valueOverriden;
         private decimal _newValue;
@@ -39,6 +40,7 @@ namespace Common
         public SalesOrder()
         {
             Diginotes = new HashSet<Diginote>();
+            Date = DateTime.Now;
         }
 
         public SalesOrder(User seller, int count, decimal currentQuotation, bool fulfilled = false)
@@ -49,6 +51,8 @@ namespace Common
             Fulfilled = fulfilled;
             Suspended = false;
             Diginotes = new HashSet<Diginote>();
+            Date = DateTime.Now;
+
             _quotation = currentQuotation;
             _valueOverriden = false;
 
