@@ -13,7 +13,7 @@ namespace Server
     {
         private readonly ActionLog _actionLog;
 
-        private const int SuspendedTime = 60000;
+        private const int SuspendedTime = 15000;
 
         public decimal Quotation = 1;
         public readonly Dictionary<DateTime, decimal> QuotationHistory = new Dictionary<DateTime, decimal>
@@ -149,6 +149,13 @@ namespace Server
             User user;
             if (Users.TryGetValue(username, out user))
                 user.SetBalance(balance);
+        }
+
+        public void UpdateDiginotesDirect(string username, int diginotes, int value)
+        {
+            User user;
+            if (Users.TryGetValue(username, out user))
+                user.UpdateDiginotes(diginotes, value);
         }
 
         public Result<decimal> GetBalance(string username, string password)
@@ -475,8 +482,15 @@ namespace Server
                             var necessaryCount = quantity - (salesQuantity - salesOrder.Count);
                             var transientDiginotes = salesOrder.Diginotes.Take(salesOrder.Count - necessaryCount).ToList();
                             transientDiginotes.ForEach(transientDiginote => Users[salesOrder.Seller].AddDiginote(transientDiginote));
+                            if (!_applyingLogs)
+                                _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = transientDiginotes.Count, User = salesOrder.Seller, Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1 });
+
                             salesOrder.Diginotes.RemoveWhere(diginote => transientDiginotes.Contains(diginote));
                             salesOrdersToAdd.Add(new SalesOrder(Users[salesOrder.Seller], salesOrder.Count - necessaryCount, Quotation));
+
+                            if (!_applyingLogs)
+                                _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = transientDiginotes.Count, User = salesOrder.Seller, Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1 });
+
                             salesOrder.Count = necessaryCount;
                         }
 
@@ -494,6 +508,9 @@ namespace Server
                     salesOrder.Fulfilled = true;
                     var selectedDiginotes = salesOrder.Diginotes.ToList();
                     selectedDiginotes.ForEach(selectedDiginote => requestingUser.AddDiginote(selectedDiginote));
+                    if (!_applyingLogs)
+                        _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = selectedDiginotes.Count, User = requestingUser.Username, Value = selectedDiginotes.Count > 0 ? selectedDiginotes.First().Value : 1 });
+
                     salesOrder.Diginotes.Clear();
                     Users[salesOrder.Seller].AddFunds(salesOrder.Value);
                     if (!_applyingLogs)
@@ -520,6 +537,9 @@ namespace Server
                     salesOrder.Fulfilled = true;
                     var selectedDiginotes = salesOrder.Diginotes.ToList();
                     selectedDiginotes.ForEach(selectedDiginote => requestingUser.AddDiginote(selectedDiginote));
+                    if (!_applyingLogs)
+                        _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = selectedDiginotes.Count, User = requestingUser.Username, Value = selectedDiginotes.Count > 0 ? selectedDiginotes.First().Value : 1 });
+
                     salesOrder.Diginotes.Clear();
                     Users[salesOrder.Seller].AddFunds(salesOrder.Value);
                     if (!_applyingLogs)
@@ -637,6 +657,9 @@ namespace Server
             if (saleOrderToDelete == null || saleOrderToDelete.Fulfilled) return;
 
             saleOrderToDelete.Diginotes.ToList().ForEach(diginote => Users[saleOrderToDelete.Seller].AddDiginote(diginote));
+            if (!_applyingLogs)
+                _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = saleOrderToDelete.Diginotes.Count, User = saleOrderToDelete.Seller, Value = saleOrderToDelete.Diginotes.Count > 0 ? saleOrderToDelete.Diginotes.First().Value : 1 });
+
             SalesOrders.Remove(saleOrderToDelete); OrdersSnapshot();
             PublishMessage(Update.General);
             PublishMessage(Update.Diginotes);
@@ -703,7 +726,12 @@ namespace Server
 
                 var selectedDiginotes = requestingUser.Diginotes.Take(selectedPurchaseOrder.Count).ToList();
                 requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));
-                selectedDiginotes.ForEach(selectedDiginote => Users[selectedPurchaseOrder.Buyer].AddDiginote(selectedDiginote));                 
+                if (!_applyingLogs)
+                    _actionLog.LogAction(new UpdateDiginotesAction { Diginotes = -selectedDiginotes.Count, User = requestingUser.Username, Value = selectedDiginotes.Count > 0 ? selectedDiginotes.First().Value : 1 });
+
+                selectedDiginotes.ForEach(selectedDiginote => Users[selectedPurchaseOrder.Buyer].AddDiginote(selectedDiginote));
+                if (!_applyingLogs)
+                    _actionLog.LogAction(new UpdateDiginotesAction { Diginotes = selectedDiginotes.Count, User = selectedPurchaseOrder.Buyer, Value = selectedDiginotes.Count > 0 ? selectedDiginotes.First().Value : 1 });
             }
 
             // SalesOrder is totally fulfilled

@@ -76,4 +76,16 @@ namespace Server
             digiMarket.SetFundsDirect(User, Balance);
         }
     }
+
+    public class UpdateDiginotesAction : ILogAction
+    {
+        public string User { get; set; }
+        public int Diginotes { get; set; }
+        public int Value { get; set; }
+
+        public void Apply(IDigiMarket digiMarket)
+        {
+            digiMarket.UpdateDiginotesDirect(User, Diginotes, Value);
+        }
+    }
 }

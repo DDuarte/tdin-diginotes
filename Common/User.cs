@@ -41,5 +41,14 @@ namespace Common
         {
             Balance = balance;
         }
+
+        public void UpdateDiginotes(int diginotes, int value)
+        {
+            if (diginotes > 0)
+            {
+                for (int i = 0; i < diginotes; ++i)
+                    Diginotes.Add(new Diginote() { Value = value });
+            }
+        }
     }
 }

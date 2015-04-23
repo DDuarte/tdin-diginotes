@@ -46,8 +46,10 @@ namespace Remotes
         void AddFundsDirect(string user, decimal balance, int diginoteCount);
         void OrdersSnapshot(List<PurchaseOrder> purchaseOrders, List<SalesOrder> salesOrders);
         void SetFundsDirect(string user, decimal balance);
+        void UpdateDiginotesDirect(string user, int diginotes, int value);
 
         #endregion
+
     }
 
     public enum DigiMarketError
