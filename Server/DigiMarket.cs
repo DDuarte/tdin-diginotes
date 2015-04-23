@@ -558,7 +558,9 @@ namespace Server
 
             if (purchaseOrderToDelete == null || purchaseOrderToDelete.FulFilled) return;
 
+            Users[purchaseOrderToDelete.Buyer].AddFunds(purchaseOrderToDelete.Value);
             PurchaseOrders.Remove(purchaseOrderToDelete); OrdersSnapshot();
+            PublishMessage(Update.Balance);
             PublishMessage(Update.General);
         }
 
