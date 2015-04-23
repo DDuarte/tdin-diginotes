@@ -443,7 +443,7 @@ namespace Server
             requestingUser.AddFunds(-price);
 
             // get available offers
-            var numOffers = SalesOrders.Where(order => !order.Fulfilled && !order.Suspended).Sum(order => order.Count);
+            var numOffers = SalesOrders.Where(order => !order.Fulfilled && !order.Suspended && order.Seller != requestingUser.Username).Sum(order => order.Count);
 
             if (numOffers == 0)
             {
