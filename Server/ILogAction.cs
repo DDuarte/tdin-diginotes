@@ -55,7 +55,7 @@ namespace Server
         }
     }
 
-    public class OrdersSnapshot : ILogAction
+    public class OrdersSnapshotAction : ILogAction
     {
         public List<PurchaseOrder> PurchaseOrders { get; set; }
         public List<SalesOrder> SalesOrders { get; set; }
@@ -63,6 +63,17 @@ namespace Server
         public void Apply(IDigiMarket digiMarket)
         {
             digiMarket.OrdersSnapshot(PurchaseOrders, SalesOrders);
+        }
+    }
+
+    public class UpdateBalanceAction : ILogAction
+    {
+        public string User { get; set; }
+        public decimal Balance { get; set; }
+
+        public void Apply(IDigiMarket digiMarket)
+        {
+            digiMarket.SetFundsDirect(User, Balance);
         }
     }
 }

@@ -49,8 +49,10 @@ namespace Server
                     return JsonConvert.DeserializeObject<QuotationChangeAction>(json);
                 case "AddFundsAction":
                     return JsonConvert.DeserializeObject<AddFundsAction>(json);
-                case "OrdersSnapshot":
-                    return JsonConvert.DeserializeObject<OrdersSnapshot>(json);
+                case "OrdersSnapshotAction":
+                    return JsonConvert.DeserializeObject<OrdersSnapshotAction>(json);
+                case "UpdateBalanceAction":
+                    return JsonConvert.DeserializeObject<UpdateBalanceAction>(json);
                 default:
                     throw new ArgumentOutOfRangeException("name");
             }

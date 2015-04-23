@@ -139,9 +139,16 @@ namespace Server
                 PublishMessage(Update.General);
             }
             else
-                _actionLog.LogAction(new OrdersSnapshot { PurchaseOrders = purchaseOrders, SalesOrders = salesOrders });
+                _actionLog.LogAction(new OrdersSnapshotAction { PurchaseOrders = purchaseOrders, SalesOrders = salesOrders });
 
             Logger.Log("success: purchaseOrders#={0} salesOrders#={1}", purchaseOrders.Count, salesOrders.Count);
+        }
+
+        public void SetFundsDirect(string username, decimal balance)
+        {
+            User user;
+            if (Users.TryGetValue(username, out user))
+                user.SetBalance(balance);
         }
 
         public Result<decimal> GetBalance(string username, string password)
@@ -441,6 +448,10 @@ namespace Server
                 var po = new PurchaseOrder(requestingUser.Username, quantity, Quotation);
                 PurchaseOrders.Add(po); OrdersSnapshot();
                 requestingUser.AddFunds(-po.Value);
+                
+                if (!_applyingLogs)
+                    _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
+
                 PublishMessage(Update.General);
                 PublishMessage(Update.Balance);
                 return new Result<PurchaseOrder>(po, DigiMarketError.NotFullfilled);
@@ -488,7 +499,11 @@ namespace Server
                 var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, quantity, Quotation, true);
                 PurchaseOrders.Add(fulfilledPurchaseOrder); OrdersSnapshot();
                 requestingUser.AddFunds(-fulfilledPurchaseOrder.Value);
+                if (!_applyingLogs)
+                    _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
                 Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
+                if (!_applyingLogs)
+                    _actionLog.LogAction(new UpdateBalanceAction { User = fulfilledPurchaseOrder.Buyer, Balance = Users[fulfilledPurchaseOrder.Buyer].Balance });
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
@@ -509,7 +524,13 @@ namespace Server
                 PurchaseOrders.Add(fulfilledPurchaseOrder); OrdersSnapshot();
                 PurchaseOrders.Add(unfulfilledPurchaseOrder); OrdersSnapshot();
                 requestingUser.AddFunds(-(fulfilledPurchaseOrder.Value + unfulfilledPurchaseOrder.Value));
+                if (!_applyingLogs)
+                    _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
+
                 Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
+                if (!_applyingLogs)
+                    _actionLog.LogAction(new UpdateBalanceAction { User = fulfilledPurchaseOrder.Buyer, Balance = Users[fulfilledPurchaseOrder.Buyer].Balance });
+
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
@@ -559,6 +580,9 @@ namespace Server
             if (purchaseOrderToDelete == null || purchaseOrderToDelete.FulFilled) return;
 
             Users[purchaseOrderToDelete.Buyer].AddFunds(purchaseOrderToDelete.Value);
+            if (!_applyingLogs)
+                _actionLog.LogAction(new UpdateBalanceAction { User = purchaseOrderToDelete.Buyer, Balance = Users[purchaseOrderToDelete.Buyer].Balance });
+
             PurchaseOrders.Remove(purchaseOrderToDelete); OrdersSnapshot();
             PublishMessage(Update.Balance);
             PublishMessage(Update.General);
@@ -667,6 +691,9 @@ namespace Server
             {
                 selectedPurchaseOrder.FulFilled = true;
                 requestingUser.AddFunds(selectedPurchaseOrder.Value);
+                if (!_applyingLogs)
+                    _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
+
                 var selectedDiginotes = requestingUser.Diginotes.Take(selectedPurchaseOrder.Count).ToList();
                 requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));
                 selectedDiginotes.ForEach(selectedDiginote => Users[selectedPurchaseOrder.Buyer].AddDiginote(selectedDiginote));                 

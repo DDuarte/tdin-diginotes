@@ -36,5 +36,10 @@ namespace Common
         {
             Balance += euros;
         }
+
+        public void SetBalance(decimal balance)
+        {
+            Balance = balance;
+        }
     }
 }
