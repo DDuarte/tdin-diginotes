@@ -495,15 +495,19 @@ namespace Server
                     var selectedDiginotes = salesOrder.Diginotes.ToList();
                     selectedDiginotes.ForEach(selectedDiginote => requestingUser.AddDiginote(selectedDiginote));
                     salesOrder.Diginotes.Clear();
+                    Users[salesOrder.Seller].AddFunds(salesOrder.Value);
+                    if (!_applyingLogs)
+                        _actionLog.LogAction(new UpdateBalanceAction { User = salesOrder.Seller, Balance = Users[salesOrder.Seller].Balance });
                 }
 
                 var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, quantity, Quotation, true);
                 PurchaseOrders.Add(fulfilledPurchaseOrder); OrdersSnapshot();
                 if (!_applyingLogs)
                     _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
-                Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
-                if (!_applyingLogs)
+                //Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
+                /*if (!_applyingLogs)
                     _actionLog.LogAction(new UpdateBalanceAction { User = fulfilledPurchaseOrder.Buyer, Balance = Users[fulfilledPurchaseOrder.Buyer].Balance });
+                 * */
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
@@ -517,6 +521,9 @@ namespace Server
                     var selectedDiginotes = salesOrder.Diginotes.ToList();
                     selectedDiginotes.ForEach(selectedDiginote => requestingUser.AddDiginote(selectedDiginote));
                     salesOrder.Diginotes.Clear();
+                    Users[salesOrder.Seller].AddFunds(salesOrder.Value);
+                    if (!_applyingLogs)
+                        _actionLog.LogAction(new UpdateBalanceAction { User = salesOrder.Seller, Balance = Users[salesOrder.Seller].Balance });
                 }
 
                 var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, numOffers, Quotation, true);
@@ -526,9 +533,10 @@ namespace Server
                 if (!_applyingLogs)
                     _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
 
-                Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
-                if (!_applyingLogs)
+               // Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
+                /*if (!_applyingLogs)
                     _actionLog.LogAction(new UpdateBalanceAction { User = fulfilledPurchaseOrder.Buyer, Balance = Users[fulfilledPurchaseOrder.Buyer].Balance });
+                 * */
 
                 PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
