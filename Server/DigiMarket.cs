@@ -440,6 +440,8 @@ namespace Server
             if (requestingUser.Balance < price)
                 return new Result<PurchaseOrder>(DigiMarketError.InsuficientFunds);
 
+            requestingUser.AddFunds(-price);
+
             // get available offers
             var numOffers = SalesOrders.Where(order => !order.Fulfilled && !order.Suspended).Sum(order => order.Count);
 
@@ -447,7 +449,6 @@ namespace Server
             {
                 var po = new PurchaseOrder(requestingUser.Username, quantity, Quotation);
                 PurchaseOrders.Add(po); OrdersSnapshot();
-                requestingUser.AddFunds(-po.Value);
                 
                 if (!_applyingLogs)
                     _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
@@ -498,7 +499,6 @@ namespace Server
 
                 var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, quantity, Quotation, true);
                 PurchaseOrders.Add(fulfilledPurchaseOrder); OrdersSnapshot();
-                requestingUser.AddFunds(-fulfilledPurchaseOrder.Value);
                 if (!_applyingLogs)
                     _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
                 Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
@@ -523,7 +523,6 @@ namespace Server
                 var unfulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, surplus, Quotation);
                 PurchaseOrders.Add(fulfilledPurchaseOrder); OrdersSnapshot();
                 PurchaseOrders.Add(unfulfilledPurchaseOrder); OrdersSnapshot();
-                requestingUser.AddFunds(-(fulfilledPurchaseOrder.Value + unfulfilledPurchaseOrder.Value));
                 if (!_applyingLogs)
                     _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
 
