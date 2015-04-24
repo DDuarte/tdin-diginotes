@@ -38,18 +38,6 @@ namespace Remotes
         Dictionary<DateTime, decimal> GetQuotationHistory(string username, string password);
 
         #endregion
-
-        #region Maintenance
-
-        void ApplyingLogs(bool active);
-        void ChangeQuotationDirect(decimal quotation, DateTime time);
-        void AddFundsDirect(string user, decimal balance, int diginoteCount);
-        void OrdersSnapshot(List<PurchaseOrder> purchaseOrders, List<SalesOrder> salesOrders);
-        void SetFundsDirect(string user, decimal balance);
-        void UpdateDiginotesDirect(string user, int diginotes, int value);
-
-        #endregion
-
     }
 
     public enum DigiMarketError

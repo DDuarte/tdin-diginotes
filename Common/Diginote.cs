@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Common
 {
-    [Serializable]
-    public class Diginote : MarshalByRefObject
+    public class Diginote
     {
         private static int _lastId = 1;
         public int Id { get; private set; }
-        public int Value { get; set; }
+        public int Value { get; private set; }
 
         public Diginote()
         {
@@ -15,14 +15,22 @@ namespace Common
             Value = 1;
         }
 
-        public override object InitializeLifetimeService()
+        protected bool Equals(Diginote other)
         {
-            return null; // infinite
+            return Id == other.Id;
         }
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return Id;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            var other = obj as Diginote;
+            return other != null && Equals(other);
         }
     }
 }

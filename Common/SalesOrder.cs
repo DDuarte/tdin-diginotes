@@ -17,20 +17,7 @@ namespace Common
         private bool _valueOverriden;
         private decimal _newValue;
 
-        public decimal Value
-        {
-            get
-            {
-                if (!_valueOverriden)
-                    return Count*_quotation;
-                return _newValue;
-            }
-            set 
-            { 
-                _valueOverriden = true;
-                _newValue = value;
-            }
-        }
+        public decimal Value { get; set; }
 
         public HashSet<Diginote> Diginotes { get; set; }
         public bool Suspended { get; set; }
@@ -59,10 +46,6 @@ namespace Common
             if (fulfilled) return;
 
             Diginotes = new HashSet<Diginote>(seller.Diginotes.Take(count));
-            if (Diginotes.Count < count)
-                throw new Exception("User has insufficient diginotes");
-
-            seller.Diginotes.RemoveWhere(diginote => Diginotes.Contains(diginote));
         }
 
         public override int GetHashCode()
