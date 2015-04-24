@@ -6,6 +6,7 @@ using Common;
 using GalaSoft.MvvmLight.Command;
 using MahApps.Metro.Controls.Dialogs;
 using Client.Views;
+using Common.Models;
 using Remotes;
 
 namespace Client.ViewModels
@@ -146,7 +147,7 @@ namespace Client.ViewModels
                 decimal newQuotation;
                 if (!decimal.TryParse(result, NumberStyles.Any, CultureInfo.InvariantCulture, out newQuotation)) return;
 
-                if (App.Current.TheDigiMarket.ChangeQuotation(session.Username, session.Password, newQuotation, ret.Value.Id, false))
+                if (App.Current.TheDigiMarket.ChangeQuotation(session.Username, session.Password, newQuotation, ret.Value.SalesOrderId, false))
                 {
                     MainWindow.Instance.ShowNotification("Info", "Quotation successfully changed");
                 }
@@ -165,7 +166,7 @@ namespace Client.ViewModels
         private void DeleteCommandExecute()
         {
             var session = App.Current.Session;
-            App.Current.TheDigiMarket.DeleteSaleOrder(session.Username, session.Password, SelectedSalesOrder.Id);
+            App.Current.TheDigiMarket.DeleteSaleOrder(session.Username, session.Password, SelectedSalesOrder.SalesOrderId);
             SelectedSalesOrder = null;
         }
 
@@ -173,7 +174,7 @@ namespace Client.ViewModels
         private void EditCommandExecute()
         {
             var session = App.Current.Session;
-            App.Current.TheDigiMarket.UpdateSaleOrder(session.Username, session.Password, SelectedSalesOrder.Id, SelectedSalesOrder.Value);
+            App.Current.TheDigiMarket.UpdateSaleOrder(session.Username, session.Password, SelectedSalesOrder.SalesOrderId, SelectedSalesOrder.Value);
         }
 
         public override void OnUpdate(Update update)
@@ -197,8 +198,8 @@ namespace Client.ViewModels
                 return;
 
             SalesOrders = result.Value;
-            OpenSalesOrders = SalesOrders.Where(order => order.Fulfilled == false);
-            ClosedSalesOrders = SalesOrders.Where(order => order.Fulfilled);
+            OpenSalesOrders = SalesOrders.Where(order => true /* TODO !order.Fulfilled */);
+            ClosedSalesOrders = SalesOrders.Where(order => true /* TODO order.Fulfilled */);
         }
     }
 }

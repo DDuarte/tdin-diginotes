@@ -6,6 +6,7 @@ using Common;
 using GalaSoft.MvvmLight.Command;
 using MahApps.Metro.Controls.Dialogs;
 using Client.Views;
+using Common.Models;
 using Remotes;
 
 namespace Client.ViewModels
@@ -138,7 +139,7 @@ namespace Client.ViewModels
                 decimal newQuotation;
                 if (!decimal.TryParse(result, NumberStyles.Any, CultureInfo.InvariantCulture, out newQuotation)) return;
 
-                if (App.Current.TheDigiMarket.ChangeQuotation(session.Username, session.Password, newQuotation, ret.Value.Id,true))
+                if (App.Current.TheDigiMarket.ChangeQuotation(session.Username, session.Password, newQuotation, ret.Value.PurchaseOrderId,true))
                 {
                     MainWindow.Instance.ShowNotification("Info", "Quotation successfully changed");
                 }
@@ -157,7 +158,7 @@ namespace Client.ViewModels
         private void DeleteCommandExecute()
         {
             var session = App.Current.Session;
-            App.Current.TheDigiMarket.DeletePurchaseOrder(session.Username, session.Password, SelectedPurchaseOrder.Id);
+            App.Current.TheDigiMarket.DeletePurchaseOrder(session.Username, session.Password, SelectedPurchaseOrder.PurchaseOrderId);
             SelectedPurchaseOrder = null;
         }
 
@@ -166,7 +167,7 @@ namespace Client.ViewModels
         private void EditCommandExecute()
         {
             var session = App.Current.Session;
-            App.Current.TheDigiMarket.UpdatePurchaseOrder(session.Username, session.Password, SelectedPurchaseOrder.Id, SelectedPurchaseOrder.Value);
+            App.Current.TheDigiMarket.UpdatePurchaseOrder(session.Username, session.Password, SelectedPurchaseOrder.PurchaseOrderId, SelectedPurchaseOrder.Value);
         }
 
         public override void OnUpdate(Update update)
@@ -190,8 +191,8 @@ namespace Client.ViewModels
                 return;
 
             PurchaseOrders = result.Value;
-            OpenPurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled);
-            ClosedPurchaseOrders = PurchaseOrders.Where(order => order.FulFilled);
+            OpenPurchaseOrders = PurchaseOrders.Where(order => true /* TODO !order.FulFilled */);
+            ClosedPurchaseOrders = PurchaseOrders.Where(order => true /* TODO order.FulFilled */);
         }
 
         public BuyViewModel()

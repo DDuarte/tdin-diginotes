@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Common;
+using Common.Models;
 using Remotes;
 
 namespace Server
 {
     // ReSharper disable once UnusedMember.Global
-    public class DigiMarket : MarshalByRefObject, IDigiMarket
+    public class DigiMarket : MarshalByRefObject, IDigiMarket, IDisposable
     {
+        private readonly MarketContext _db;
+        private readonly Market _market;
+
         private const int SuspendedTime = 15000;
 
-        public decimal Quotation = 1;
-        public readonly Dictionary<DateTime, decimal> QuotationHistory = new Dictionary<DateTime, decimal>
+        public DigiMarket()
         {
-            { DateTime.Now, 1}
-        }; 
-
-        public readonly ConcurrentDictionary<string, User> Users = new ConcurrentDictionary<string, User>();
-
-        public readonly List<PurchaseOrder> PurchaseOrders = new List<PurchaseOrder>();
-        public readonly List<SalesOrder> SalesOrders = new List<SalesOrder>();
+            _db = new MarketContext();
+            _market = _db.Markets.FirstOrDefault();
+            Trace.Assert(_market != null);
+        }
 
         public override object InitializeLifetimeService()
         {
@@ -59,8 +60,8 @@ namespace Server
             if (!Validators.ValidUsername(username))
                 return new Result<User>(DigiMarketError.InvalidUsername);
 
-            User user;
-            if (!Users.TryGetValue(username, out user))
+            var user = _db.Users.Find(username);
+            if (user == null)
                 return new Result<User>(DigiMarketError.UnexistingUser);
 
             if (!Validators.ValidPassword(password))
@@ -83,7 +84,7 @@ namespace Server
                 return false;
             }
 
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
 
             Logger.Log("success: user={0} +balance={1} +diginotes={2}", username, euros, diginotes);
 
@@ -118,7 +119,7 @@ namespace Server
                 return new Result<decimal>(r.Error);
             }
 
-            return new Result<decimal>(Quotation);
+            return new Result<decimal>(_market.Quotation);
         }
 
         public bool ChangeQuotation(string username, string password, decimal quotation, int id, bool isPurchase)
@@ -132,7 +133,8 @@ namespace Server
                 return false;
             }
 
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
+            return true;
         }
 
         public Dictionary<DateTime, decimal> GetQuotationHistory(string username, string password)
@@ -146,7 +148,7 @@ namespace Server
                 return null;
             }
 
-            return QuotationHistory;
+            return null; /* TODO */
         }
 
         public Result<User> Register(string name, string username, string password)
@@ -154,7 +156,7 @@ namespace Server
             Logger.Log("attempt: name={0} username={1} password={2}", name, username, password);
 
             var error = DigiMarketError.None;
-            User user;
+            User user = null;
 
             if (!Validators.ValidUsername(username))
                 error = DigiMarketError.InvalidUsername;
@@ -162,7 +164,7 @@ namespace Server
                 error = DigiMarketError.InvalidName;
             else if (!Validators.ValidPassword(password))
                 error = DigiMarketError.InvalidPassword;
-            else if (Users.TryGetValue(username, out user))
+            else if (_db.Users.Find(username) != null)
                 error = DigiMarketError.ExistingUsername;
 
             if (error != DigiMarketError.None)
@@ -171,7 +173,7 @@ namespace Server
                 return new Result<User>(error);
             }
 
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
 
             Logger.Log("success: user={0}", username);
             return new Result<User>(user);
@@ -192,7 +194,7 @@ namespace Server
                 return r;
             }
 
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
 
             Logger.Log("success: user={0}", username);
 
@@ -214,7 +216,7 @@ namespace Server
                 return r;
             }
 
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
 
             Logger.Log("success: user={0}", username);
 
@@ -232,7 +234,7 @@ namespace Server
                 return new Result<List<Diginote>>(r.Error);
             }
 
-            var rr = new Result<List<Diginote>>(Users[username].Diginotes.ToList());
+            var rr = new Result<List<Diginote>>(r.Value.Diginotes.ToList());
             Logger.Log("success: user={0} diginotes={1}", username, rr.Value.Count());
 
             return rr;
@@ -251,7 +253,7 @@ namespace Server
 
             var user = r.Value;
 
-            var rr = new Result<List<PurchaseOrder>>(PurchaseOrders.Where(p => p.Buyer == user.Username).ToList());
+            var rr = new Result<List<PurchaseOrder>>(_db.PurchaseOrders.Where(order => order.Buyer == r.Value).ToList());
             Logger.Log("success: user={0} orders={1}", username, rr.Value.Count);
 
             return rr;
@@ -270,7 +272,7 @@ namespace Server
 
             var user = r.Value;
 
-            var rr = new Result<List<SalesOrder>>(SalesOrders.Where(s => s.Seller == user.Username).ToList());
+            var rr = new Result<List<SalesOrder>>(_db.SalesOrder.Where(order => order.Seller == r.Value).ToList());
             Logger.Log("success: user={0} orders={1}", username, rr.Value.Count);
 
             return rr;
@@ -288,7 +290,8 @@ namespace Server
             }
 
             var user = r.Value;
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
+            return null;
         }
 
         public bool UpdatePurchaseOrder(string username, string password, int id, decimal value)
@@ -301,7 +304,7 @@ namespace Server
             }
 
             var user = r.Value;
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
             return true;
         }
 
@@ -315,7 +318,7 @@ namespace Server
             }
 
             var user = r.Value;
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
         }
 
         public bool UpdateSaleOrder(string username, string password, int id, decimal value)
@@ -328,7 +331,7 @@ namespace Server
             }
 
             var user = r.Value;
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
             return true;
         }
 
@@ -342,7 +345,7 @@ namespace Server
             }
 
             var user = r.Value;
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
         }
 
         public Result<SalesOrder> CreateSalesOrder(string username, string password, int quantity)
@@ -358,7 +361,13 @@ namespace Server
             }
 
             var user = r.Value;
-            throw new NotImplementedException("TODO");
+            // throw new NotImplementedException("TODO");
+            return null;
+        }
+
+        public void Dispose()
+        {
+            _db.Dispose();
         }
     }
 }
