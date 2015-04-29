@@ -755,5 +755,69 @@ namespace Server
                 return new Result<SalesOrder>(unfulfilledSalesOrder, DigiMarketError.NotFullfilled);
             }
         }
+
+        private bool UpdateOrders()
+        {
+            var updateOcurred = false;
+
+            // match orders
+            var openPurchaseOrders = PurchaseOrders
+                .Where(order => !order.FulFilled && !order.Suspended)
+                .OrderBy(order => order.Date).ToList();
+
+            if (!openPurchaseOrders.Any()) // no orders to match
+            {
+                return false;
+            }
+
+            var openSalesOrders = SalesOrders
+                .Where(order => !order.Fulfilled && !order.Suspended)
+                .OrderBy(order => order.Date).ToList();
+
+            foreach (var openPurchaseOrder in openPurchaseOrders)
+            {
+                var currentQuantity = 0;
+                SalesOrder splitSalesOrder = null;
+                var selectedSalesOrders = openSalesOrders
+                    .TakeWhile(salesOrder =>
+                    {
+                        bool exceeded = currentQuantity > openPurchaseOrder.Count;
+                        currentQuantity += salesOrder.Count;
+
+                        var excess = currentQuantity - openPurchaseOrder.Count;
+
+                        if (excess > 0) // there's an excess, we have to split a sales order
+                        {
+                            var necessaryCount = openPurchaseOrder.Count - (currentQuantity - salesOrder.Count);
+                            var transientDiginotes = salesOrder.Diginotes.Take(salesOrder.Count - necessaryCount).ToList();
+                            transientDiginotes.ForEach(transientDiginote => Users[salesOrder.Seller].AddDiginote(transientDiginote));
+                            if (!_applyingLogs)
+                                _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = transientDiginotes.Count, User = salesOrder.Seller, Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1 });
+
+                            salesOrder.Diginotes.RemoveWhere(diginote => transientDiginotes.Contains(diginote));
+                            splitSalesOrder = new SalesOrder(Users[salesOrder.Seller], salesOrder.Count - necessaryCount, Quotation);
+                            SalesOrders.Add(splitSalesOrder);
+
+                            if (!_applyingLogs)
+                                _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = transientDiginotes.Count, User = salesOrder.Seller, Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1 });
+
+                            salesOrder.Count = necessaryCount;
+                        }
+
+                        return !exceeded;
+                    }).ToList();
+
+                if (splitSalesOrder != null)
+                    selectedSalesOrders.Add(splitSalesOrder);
+
+                if (selectedSalesOrders.Sum(order => order.Count) == openPurchaseOrder.Count)
+                {
+                    updateOcurred = true;
+                    openPurchaseOrder.FulFilled = true;
+                }
+            }
+
+            return updateOcurred;
+        }
     }
 }
