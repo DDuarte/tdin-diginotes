@@ -43,6 +43,7 @@
     <Compile Include="PurchaseOrder.cs" />
     <Compile Include="RemoteNew.cs" />
     <Compile Include="SalesOrder.cs" />
+    <Compile Include="Transaction.cs" />
     <Compile Include="Update.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Utilities.cs" />
