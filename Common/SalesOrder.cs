@@ -9,9 +9,16 @@ namespace Common
     {
         private static int _lastId = 1;
         public int Id { get; set; }
-        public int Count { get; set; }
+
+        public int Count
+        {
+            get
+            {
+                return Diginotes.Count;
+            }
+        }
+
         public string Seller { get; set; }
-        public bool Fulfilled { get; set; }
         public DateTime Date { get; set; }
 
         private bool _valueOverriden;
@@ -43,26 +50,17 @@ namespace Common
             Date = DateTime.Now;
         }
 
-        public SalesOrder(User seller, int count, decimal currentQuotation, bool fulfilled = false)
+        public SalesOrder(User seller, decimal currentQuotation, List<Diginote> diginotes)
         {
             Id = _lastId++;
-            Count = count;
             Seller = seller.Username;
-            Fulfilled = fulfilled;
             Suspended = false;
             Diginotes = new HashSet<Diginote>();
             Date = DateTime.Now;
+            Diginotes = new HashSet<Diginote>(diginotes);
 
             _quotation = currentQuotation;
             _valueOverriden = false;
-
-            if (fulfilled) return;
-
-            Diginotes = new HashSet<Diginote>(seller.Diginotes.Take(count));
-            if (Diginotes.Count < count)
-                throw new Exception("User has insufficient diginotes");
-
-            seller.Diginotes.RemoveWhere(diginote => Diginotes.Contains(diginote));
         }
 
         public override int GetHashCode()

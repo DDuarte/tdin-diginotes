@@ -60,7 +60,6 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
                     <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Fulfilled" Binding="{Binding Fulfilled}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Suspended" Binding="{Binding Suspended}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Date" Binding="{Binding Date}"></DataGridTextColumn>

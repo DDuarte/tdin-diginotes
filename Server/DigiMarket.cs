@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using Common;
 using Remotes;
@@ -25,6 +26,7 @@ namespace Server
 
         public readonly List<PurchaseOrder> PurchaseOrders = new List<PurchaseOrder>();
         public readonly List<SalesOrder> SalesOrders = new List<SalesOrder>();
+        public readonly List<Transaction> Transactions = new List<Transaction>();
 
         public DigiMarket()
         {
@@ -467,120 +469,30 @@ namespace Server
                 return new Result<PurchaseOrder>(DigiMarketError.InsuficientFunds);
 
             requestingUser.AddFunds(-price);
+            var newPurchaseOrder = new PurchaseOrder(requestingUser.Name, quantity, Quotation);
+            PurchaseOrders.Add(newPurchaseOrder);
 
-            // get available offers
-            var numOffers = SalesOrders.Where(order => !order.Fulfilled && !order.Suspended && order.Seller != requestingUser.Username).Sum(order => order.Count);
+            var updated = UpdateOrders();
 
-            if (numOffers == 0)
+            PublishMessage(Update.Balance);
+
+            if (updated)
             {
-                var po = new PurchaseOrder(requestingUser.Username, quantity, Quotation);
-                PurchaseOrders.Add(po); OrdersSnapshot();
-                
-                if (!_applyingLogs)
-                    _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
-
-                PublishMessage(Update.General);
-                PublishMessage(Update.Balance);
-                return new Result<PurchaseOrder>(po, DigiMarketError.NotFullfilled);
-            }
-
-            var surplus = quantity - numOffers;
-            var salesQuantity = 0;
-            var salesOrdersToAdd = new List<SalesOrder>();
-            var selectedSalesOrders =
-                SalesOrders
-                    .Where(salesOrder => !salesOrder.Fulfilled && !salesOrder.Suspended && salesOrder.Seller != requestingUser.Username)
-                    .TakeWhile(salesOrder =>
-                    {
-                        bool exceeded = salesQuantity > quantity;
-                        salesQuantity += salesOrder.Count;
-
-                        var excess = salesQuantity - quantity;
-                        if (excess > 0)
-                        {
-                            var necessaryCount = quantity - (salesQuantity - salesOrder.Count);
-                            var transientDiginotes = salesOrder.Diginotes.Take(salesOrder.Count - necessaryCount).ToList();
-                            transientDiginotes.ForEach(transientDiginote => Users[salesOrder.Seller].AddDiginote(transientDiginote));
-                            if (!_applyingLogs)
-                                _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = transientDiginotes.Count, User = salesOrder.Seller, Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1 });
-
-                            salesOrder.Diginotes.RemoveWhere(diginote => transientDiginotes.Contains(diginote));
-                            salesOrdersToAdd.Add(new SalesOrder(Users[salesOrder.Seller], salesOrder.Count - necessaryCount, Quotation));
-
-                            if (!_applyingLogs)
-                                _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = transientDiginotes.Count, User = salesOrder.Seller, Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1 });
-
-                            salesOrder.Count = necessaryCount;
-                        }
-
-                        return !exceeded;
-                    })
-                    .OrderBy(order => order.Date).ToList();
-
-            SalesOrders.AddRange(salesOrdersToAdd); OrdersSnapshot();
-            // purchase order is totally fulfilled
-            if (surplus <= 0)
-            {
-
-                foreach (var salesOrder in selectedSalesOrders)
-                {
-                    salesOrder.Fulfilled = true;
-                    var selectedDiginotes = salesOrder.Diginotes.ToList();
-                    selectedDiginotes.ForEach(selectedDiginote => requestingUser.AddDiginote(selectedDiginote));
-                    if (!_applyingLogs)
-                        _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = selectedDiginotes.Count, User = requestingUser.Username, Value = selectedDiginotes.Count > 0 ? selectedDiginotes.First().Value : 1 });
-
-                    salesOrder.Diginotes.Clear();
-                    Users[salesOrder.Seller].AddFunds(salesOrder.Value);
-                    if (!_applyingLogs)
-                        _actionLog.LogAction(new UpdateBalanceAction { User = salesOrder.Seller, Balance = Users[salesOrder.Seller].Balance });
-                }
-
-                var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, quantity, Quotation, true);
-                PurchaseOrders.Add(fulfilledPurchaseOrder); OrdersSnapshot();
-                if (!_applyingLogs)
-                    _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
-                //Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
-                /*if (!_applyingLogs)
-                    _actionLog.LogAction(new UpdateBalanceAction { User = fulfilledPurchaseOrder.Buyer, Balance = Users[fulfilledPurchaseOrder.Buyer].Balance });
-                 * */
-                PublishMessage(Update.Balance);
                 PublishMessage(Update.General);
                 PublishMessage(Update.Diginotes);
-                return new Result<PurchaseOrder>(fulfilledPurchaseOrder);
-            }
-            else // the order is partially fulfilled
-            {
-                foreach (var salesOrder in selectedSalesOrders)
+
+                if (PurchaseOrders.Contains(newPurchaseOrder)) // check if purchase order has been partially fulfilled
                 {
-                    salesOrder.Fulfilled = true;
-                    var selectedDiginotes = salesOrder.Diginotes.ToList();
-                    selectedDiginotes.ForEach(selectedDiginote => requestingUser.AddDiginote(selectedDiginote));
-                    if (!_applyingLogs)
-                        _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = selectedDiginotes.Count, User = requestingUser.Username, Value = selectedDiginotes.Count > 0 ? selectedDiginotes.First().Value : 1 });
-
-                    salesOrder.Diginotes.Clear();
-                    Users[salesOrder.Seller].AddFunds(salesOrder.Value);
-                    if (!_applyingLogs)
-                        _actionLog.LogAction(new UpdateBalanceAction { User = salesOrder.Seller, Balance = Users[salesOrder.Seller].Balance });
+                    return new Result<PurchaseOrder>(newPurchaseOrder, DigiMarketError.NotFullfilled);
                 }
-
-                var fulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, numOffers, Quotation, true);
-                var unfulfilledPurchaseOrder = new PurchaseOrder(requestingUser.Username, surplus, Quotation);
-                PurchaseOrders.Add(fulfilledPurchaseOrder); OrdersSnapshot();
-                PurchaseOrders.Add(unfulfilledPurchaseOrder); OrdersSnapshot();
-                if (!_applyingLogs)
-                    _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
-
-               // Users[fulfilledPurchaseOrder.Buyer].AddFunds(fulfilledPurchaseOrder.Value);
-                /*if (!_applyingLogs)
-                    _actionLog.LogAction(new UpdateBalanceAction { User = fulfilledPurchaseOrder.Buyer, Balance = Users[fulfilledPurchaseOrder.Buyer].Balance });
-                 * */
-
-                PublishMessage(Update.Balance);
-                PublishMessage(Update.General);
-                PublishMessage(Update.Diginotes);
-                return new Result<PurchaseOrder>(unfulfilledPurchaseOrder, DigiMarketError.NotFullfilled);
+                else
+                {
+                    return new Result<PurchaseOrder>(newPurchaseOrder);
+                }
+            }
+            else // no updates in the system orders, this one is surely not fulfilled (unless some voodoo mumbo jumbo happened)
+            {
+                return new Result<PurchaseOrder>(newPurchaseOrder, DigiMarketError.NotFullfilled);
             }
         }
 
@@ -623,7 +535,7 @@ namespace Server
                 }
             }
 
-            if (purchaseOrderToDelete == null || purchaseOrderToDelete.FulFilled) return;
+            if (purchaseOrderToDelete == null) return;
 
             Users[purchaseOrderToDelete.Buyer].AddFunds(purchaseOrderToDelete.Value);
             if (!_applyingLogs)
@@ -673,7 +585,7 @@ namespace Server
                 }
             }
 
-            if (saleOrderToDelete == null || saleOrderToDelete.Fulfilled) return;
+            if (saleOrderToDelete == null) return;
 
             saleOrderToDelete.Diginotes.ToList().ForEach(diginote => Users[saleOrderToDelete.Seller].AddDiginote(diginote));
             if (!_applyingLogs)
@@ -700,78 +612,33 @@ namespace Server
             if (requestingUser.Diginotes.Count < quantity)
                 return new Result<SalesOrder>(DigiMarketError.InsuficientFunds);
 
-            // get available offers
-            var availablePurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled && !order.Suspended && order.Buyer != requestingUser.Username).OrderBy(order => order.Date).ToList();
-            var numOffers = availablePurchaseOrders.Sum(order => order.Count);
-            var surplus = quantity - numOffers;
+            var selectedDiginotes = requestingUser.Diginotes.Take(quantity).ToList();
+            var newSalesOrder = new SalesOrder(requestingUser, Quotation, selectedDiginotes);
+            requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));
+            SalesOrders.Add(newSalesOrder);
+            PublishMessage(Update.Diginotes);
+            
+            var updated = UpdateOrders();
 
-            if (numOffers == 0)
-            {
-                var order = new SalesOrder(requestingUser, quantity, Quotation);
-                SalesOrders.Add(order); OrdersSnapshot();
-                PublishMessage(Update.Diginotes);
-                return new Result<SalesOrder>(order, DigiMarketError.NotFullfilled);
-            }
+            PublishMessage(Update.Diginotes);
 
-            // select orders
-            var selectedPurchaseOrders = new List<PurchaseOrder>();
-            for (int i = 0, purchaseQuantity = 0; i < availablePurchaseOrders.Count() && purchaseQuantity < quantity; ++i)
+            if (updated)
             {
-                var availablePurchaseOrder = availablePurchaseOrders.ElementAt(i);
-                var availableOrderCount = availablePurchaseOrder.Count;
-                var excess = (purchaseQuantity + availableOrderCount) - quantity;
-                if (excess <= 0)
+                PublishMessage(Update.Balance);
+                PublishMessage(Update.General);
+
+                if (SalesOrders.Contains(newSalesOrder)) // check if purchase order has been partially fulfilled
                 {
-                    selectedPurchaseOrders.Add(availablePurchaseOrder);
-                    purchaseQuantity += availableOrderCount;
-                    continue;
+                    return new Result<SalesOrder>(newSalesOrder, DigiMarketError.NotFullfilled);
                 }
-
-                // split purchase order
-                var necessaryCount = quantity - purchaseQuantity;
-                availablePurchaseOrder.Value = necessaryCount * availablePurchaseOrder.Value / availablePurchaseOrder.Count;
-                availablePurchaseOrder.Count = necessaryCount;
-                selectedPurchaseOrders.Add(availablePurchaseOrder);
-                PurchaseOrders.Add(new PurchaseOrder(availablePurchaseOrder.Buyer, availableOrderCount - necessaryCount, Quotation));
+                else
+                {
+                    return new Result<SalesOrder>(newSalesOrder);
+                }
             }
-
-            // transfer diginotes
-            foreach (var selectedPurchaseOrder in selectedPurchaseOrders)
+            else // no updates in the system orders, this one is surely not fulfilled (unless some voodoo mumbo jumbo happened)
             {
-                selectedPurchaseOrder.FulFilled = true;
-                requestingUser.AddFunds(selectedPurchaseOrder.Value);
-                if (!_applyingLogs)
-                    _actionLog.LogAction(new UpdateBalanceAction { User = requestingUser.Username, Balance = requestingUser.Balance });
-
-                var selectedDiginotes = requestingUser.Diginotes.Take(selectedPurchaseOrder.Count).ToList();
-                requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));
-                if (!_applyingLogs)
-                    _actionLog.LogAction(new UpdateDiginotesAction { Diginotes = -selectedDiginotes.Count, User = requestingUser.Username, Value = selectedDiginotes.Count > 0 ? selectedDiginotes.First().Value : 1 });
-
-                selectedDiginotes.ForEach(selectedDiginote => Users[selectedPurchaseOrder.Buyer].AddDiginote(selectedDiginote));
-                if (!_applyingLogs)
-                    _actionLog.LogAction(new UpdateDiginotesAction { Diginotes = selectedDiginotes.Count, User = selectedPurchaseOrder.Buyer, Value = selectedDiginotes.Count > 0 ? selectedDiginotes.First().Value : 1 });
-            }
-
-            // SalesOrder is totally fulfilled
-            if (surplus <= 0)
-            {
-                var fulfilledSalesOrder = new SalesOrder(requestingUser, quantity, Quotation, true);
-                SalesOrders.Add(fulfilledSalesOrder); OrdersSnapshot();
-                PublishMessage(Update.Balance);
-                PublishMessage(Update.General);
-                PublishMessage(Update.Diginotes);
-                return new Result<SalesOrder>(fulfilledSalesOrder);
-            }
-            else
-            {
-                var unfulfilledSalesOrder = new SalesOrder(requestingUser, surplus, Quotation);
-                SalesOrders.Add(new SalesOrder(requestingUser, numOffers, Quotation, true));
-                SalesOrders.Add(unfulfilledSalesOrder); OrdersSnapshot();
-                PublishMessage(Update.Balance);
-                PublishMessage(Update.General);
-                PublishMessage(Update.Diginotes);
-                return new Result<SalesOrder>(unfulfilledSalesOrder, DigiMarketError.NotFullfilled);
+                return new Result<SalesOrder>(newSalesOrder, DigiMarketError.NotFullfilled);
             }
         }
 
@@ -781,17 +648,17 @@ namespace Server
 
             // match orders
             var openPurchaseOrders = PurchaseOrders
-                .Where(order => !order.FulFilled && !order.Suspended)
+                .Where(order => !order.Suspended)
                 .OrderBy(order => order.Date).ToList();
 
-            if (!openPurchaseOrders.Any()) // no orders to match
+            var openSalesOrders = SalesOrders
+                .Where(order => !order.Suspended)
+                .OrderBy(order => order.Date).ToList();
+
+            if (!openPurchaseOrders.Any() || !openSalesOrders.Any()) // no orders to match
             {
                 return false;
             }
-
-            var openSalesOrders = SalesOrders
-                .Where(order => !order.Fulfilled && !order.Suspended)
-                .OrderBy(order => order.Date).ToList();
 
             foreach (var openPurchaseOrder in openPurchaseOrders)
             {
@@ -809,18 +676,26 @@ namespace Server
                         {
                             var necessaryCount = openPurchaseOrder.Count - (currentQuantity - salesOrder.Count);
                             var transientDiginotes = salesOrder.Diginotes.Take(salesOrder.Count - necessaryCount).ToList();
-                            transientDiginotes.ForEach(transientDiginote => Users[salesOrder.Seller].AddDiginote(transientDiginote));
-                            if (!_applyingLogs)
-                                _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = transientDiginotes.Count, User = salesOrder.Seller, Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1 });
-
                             salesOrder.Diginotes.RemoveWhere(diginote => transientDiginotes.Contains(diginote));
-                            splitSalesOrder = new SalesOrder(Users[salesOrder.Seller], salesOrder.Count - necessaryCount, Quotation);
+
+                            if (!_applyingLogs)
+                                _actionLog.LogAction(new UpdateDiginotesAction()
+                                {
+                                    Diginotes = transientDiginotes.Count,
+                                    User = salesOrder.Seller,
+                                    Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1
+                                });
+
+                            splitSalesOrder = new SalesOrder(Users[salesOrder.Seller], Quotation, transientDiginotes);
                             SalesOrders.Add(splitSalesOrder);
 
                             if (!_applyingLogs)
-                                _actionLog.LogAction(new UpdateDiginotesAction() { Diginotes = transientDiginotes.Count, User = salesOrder.Seller, Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1 });
-
-                            salesOrder.Count = necessaryCount;
+                                _actionLog.LogAction(new UpdateDiginotesAction()
+                                {
+                                    Diginotes = transientDiginotes.Count,
+                                    User = salesOrder.Seller,
+                                    Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1
+                                });
                         }
 
                         return !exceeded;
@@ -829,10 +704,26 @@ namespace Server
                 if (splitSalesOrder != null)
                     selectedSalesOrders.Add(splitSalesOrder);
 
-                if (selectedSalesOrders.Sum(order => order.Count) == openPurchaseOrder.Count)
+                // partially fulfilled
+                if (selectedSalesOrders.Sum(order => order.Count) < openPurchaseOrder.Count)
+                {
+                    var unfulfilledQuantity = openPurchaseOrder.Count - selectedSalesOrders.Sum(order => order.Count);
+                    PurchaseOrders.Add(new PurchaseOrder(openPurchaseOrder.Buyer, unfulfilledQuantity, Quotation));
+                }
+                
+                PurchaseOrders.Remove(openPurchaseOrder);
+
+                foreach (var selectedSalesOrder in selectedSalesOrders)
                 {
                     updateOcurred = true;
-                    openPurchaseOrder.FulFilled = true;
+                    Transactions.Add(new Transaction(DateTime.Now, openPurchaseOrder.Buyer,
+                        selectedSalesOrder.Seller, selectedSalesOrder.Diginotes.ToList(), selectedSalesOrder.Value));
+                    foreach (var diginote in selectedSalesOrder.Diginotes) // transfer diginotes to buyer
+                    {
+                        Users[openPurchaseOrder.Buyer].Diginotes.Add(diginote);
+                    }
+                    Users[selectedSalesOrder.Seller].AddFunds(selectedSalesOrder.Value); // transfer funds to seller
+                    SalesOrders.Remove(selectedSalesOrder);
                 }
             }
 
