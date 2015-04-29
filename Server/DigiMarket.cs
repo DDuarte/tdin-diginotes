@@ -430,6 +430,25 @@ namespace Server
             return rr;
         }
 
+        public Result<List<Transaction>> GetTransactions(string username, string password)
+        {
+            Logger.Log("attempt: username={0} password={1}", username, password);
+
+            var r = ValidateCredentials(username, password);
+            if (!r)
+            {
+                Logger.Log("fail: user={0} error={1}", username, r.Error);
+                return new Result<List<Transaction>>(r.Error);
+            }
+
+            var user = r.Value;
+
+            var rr = new Result<List<Transaction>>(Transactions.Where(t => t.Seller == user.Username || t.Buyer == user.Username).ToList());
+            Logger.Log("success: user={0} orders={1}", username, rr.Value.Count);
+
+            return rr;
+        }
+
         public Result<PurchaseOrder> CreatePurchaseOrder(string username, string password, int quantity)
         {
             Logger.Log("attempt: username={0} password={1} quantity={2}", username, password, quantity);

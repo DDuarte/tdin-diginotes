@@ -9,8 +9,6 @@
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 */
 
-using Client.Views;
-
 namespace Client.ViewModels
 {
     /// <summary>
@@ -23,10 +21,12 @@ namespace Client.ViewModels
         private static readonly InfoViewModel _info = new InfoViewModel();
         private static readonly SellViewModel _sell = new SellViewModel();
         private static readonly DiginoteChartViewModel _diginoteChart = new DiginoteChartViewModel();
+        private static readonly TransactionsViewModel _transactions = new TransactionsViewModel();
 
         public BuyViewModel Buy { get { return _buy; } }
         public InfoViewModel Info { get { return _info; } }
         public SellViewModel Sell { get { return _sell; } }
         public DiginoteChartViewModel DiginoteChart { get { return _diginoteChart; } }
+        public TransactionsViewModel Transactions { get { return _transactions; } }
     }
 }

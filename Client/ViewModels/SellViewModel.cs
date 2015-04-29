@@ -37,35 +37,6 @@ namespace Client.ViewModels
 
         }
 
-        private IEnumerable<SalesOrder> _openSalesOrders;
-        public IEnumerable<SalesOrder> OpenSalesOrders
-        {
-            get
-            {
-                return _openSalesOrders;
-
-            }
-            set
-            {
-                _openSalesOrders = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private IEnumerable<SalesOrder> _closedSalesOrders;
-        public IEnumerable<SalesOrder> ClosedSalesOrders
-        {
-            get
-            {
-                return _closedSalesOrders;
-            }
-            set
-            {
-                _closedSalesOrders = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private SalesOrder _selectedSalesOrder;
         public SalesOrder SelectedSalesOrder
         {
@@ -197,8 +168,6 @@ namespace Client.ViewModels
                 return;
 
             SalesOrders = result.Value;
-            OpenSalesOrders = SalesOrders.Where(order => order.Fulfilled == false);
-            ClosedSalesOrders = SalesOrders.Where(order => order.Fulfilled);
         }
     }
 }

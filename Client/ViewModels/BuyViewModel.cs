@@ -27,35 +27,6 @@ namespace Client.ViewModels
 
         }
 
-        private IEnumerable<PurchaseOrder> _openPurchaseOrders;
-        public IEnumerable<PurchaseOrder> OpenPurchaseOrders
-        {
-            get
-            {
-                return _openPurchaseOrders;
-                
-            }
-            set
-            {
-                _openPurchaseOrders = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private IEnumerable<PurchaseOrder> _closedPurchaseOrders;
-        public IEnumerable<PurchaseOrder> ClosedPurchaseOrders
-        {
-            get
-            {
-                return _closedPurchaseOrders;
-            }
-            set
-            {
-                _closedPurchaseOrders = value;
-                RaisePropertyChanged();
-            }
-        } 
-
         private PurchaseOrder _selectedPurchaseOrder;
         public PurchaseOrder SelectedPurchaseOrder
         {
@@ -190,8 +161,6 @@ namespace Client.ViewModels
                 return;
 
             PurchaseOrders = result.Value;
-            OpenPurchaseOrders = PurchaseOrders.Where(order => !order.FulFilled);
-            ClosedPurchaseOrders = PurchaseOrders.Where(order => order.FulFilled);
         }
 
         public BuyViewModel()

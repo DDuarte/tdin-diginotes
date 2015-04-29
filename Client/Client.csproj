@@ -76,8 +76,12 @@
     <Compile Include="ViewModels\DiginoteChartViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\TransactionsViewModel.cs" />
     <Compile Include="Views\Sell.xaml.cs">
       <DependentUpon>Sell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Transactions.xaml.cs">
+      <DependentUpon>Transactions.xaml</DependentUpon>
     </Compile>
     <Page Include="Notifications\ButtonStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -152,6 +156,10 @@
     </Page>
     <Page Include="Views\Sell.xaml">
       <SubType>Form</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Transactions.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

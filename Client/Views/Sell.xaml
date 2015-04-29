@@ -56,41 +56,16 @@
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
             <Label FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" Margin="0 8 0 8" Content="My Orders"/>
-            <TabControl>
-                <TabItem Header="All">
-                    <DataGrid SelectedItem="{Binding SelectedSalesOrder}" IsReadOnly="True" ItemsSource="{Binding Path=SalesOrders}" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
-                            <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Fulfilled" Binding="{Binding Fulfilled}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Suspended" Binding="{Binding Suspended}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date}"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-                <TabItem Header="Open">
-                    <DataGrid SelectedItem="{Binding SelectedSalesOrder}" IsReadOnly="True" ItemsSource="{Binding Path=OpenSalesOrders}" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
-                            <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Suspended" Binding="{Binding Suspended}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date}"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-                <TabItem Header="Closed">
-                    <DataGrid SelectedItem="{Binding SelectedSalesOrder}" IsReadOnly="True" ItemsSource="{Binding Path=ClosedSalesOrders}" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
-                            <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date}"></DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </TabItem>
-            </TabControl>
+            <DataGrid SelectedItem="{Binding SelectedSalesOrder}" IsReadOnly="True" ItemsSource="{Binding Path=SalesOrders}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="Count" Binding="{Binding Count}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Fulfilled" Binding="{Binding Fulfilled}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Value" Binding="{Binding Value}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Suspended" Binding="{Binding Suspended}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Date" Binding="{Binding Date}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
         <StackPanel Margin="0 8 0 8" Grid.Row="0" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Top">
             <Button Style="{StaticResource MaterialDesignRaisedAccentButton}" Content="$$ SELL $$" Command="{Binding SellCommand}" />

@@ -46,6 +46,7 @@ namespace Client.Views
             CreateTab("INFO", new Info());
             CreateTab("BUY", new Buy());
             CreateTab("SELL", new Sell());
+            CreateTab("TRANSACTIONS", new Transactions());
             RemoveTab("LOGIN");
             RemoveTab("REGISTER");
             TabablzControl.SelectedIndex = 0;
@@ -59,6 +60,7 @@ namespace Client.Views
             RemoveTab("BUY");
             RemoveTab("SELL");
             RemoveTab("CHARTS");
+            RemoveTab("TRANSACTIONS");
             TabablzControl.SelectedIndex = 0;
         }
 

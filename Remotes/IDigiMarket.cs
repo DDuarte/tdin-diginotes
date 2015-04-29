@@ -29,6 +29,8 @@ namespace Remotes
         bool UpdateSaleOrder(string username, string password, int id, decimal value);
         void DeleteSaleOrder(string username, string password, int id);
 
+        Result<List<Transaction>> GetTransactions(string username, string password);
+
         bool AddFunds(string username, string password, decimal euros, int diginotes);
         Result<decimal> GetBalance(string username, string password);
         Result<List<Diginote>> GetDiginotes(string username, string password);

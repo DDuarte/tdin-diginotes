@@ -15,6 +15,11 @@ namespace Common
         public IList<Diginote> Diginotes { get; private set; }
         public decimal Cost { get; private set; }
 
+        public int DiginotesCount
+        {
+            get { return Diginotes.Count; }
+        }
+
         public Transaction(DateTime date, string buyer, string seller, IList<Diginote> diginotes, decimal cost)
         {
             TransactionId = _lastId++;
