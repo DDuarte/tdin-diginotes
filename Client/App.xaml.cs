@@ -1,4 +1,6 @@
-﻿using System.Runtime.Remoting;
+﻿using System;
+using System.Net.Sockets;
+using System.Runtime.Remoting;
 using System.Windows;
 using Common;
 using GalaSoft.MvvmLight.Messaging;
@@ -32,6 +34,23 @@ namespace Client
             EventProxy = new EventProxy();
             EventProxy.MessageArrived += HandleMessageArrived;
             TheDigiMarket.MessageArrived += EventProxy.LocallyHandleMessageArrived;
+        }
+
+        [System.STAThreadAttribute()]
+        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
+        public static void Main()
+        {
+            try
+            {
+                var app = new App();
+                app.InitializeComponent();
+                app.Run();
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show("Exception ocurred: " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void HandleMessageArrived(Update update)
