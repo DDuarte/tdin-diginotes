@@ -683,6 +683,9 @@ namespace Server
                     .Where(order => !order.Suspended && order.Seller != openPurchaseOrder.Buyer)
                     .OrderBy(order => order.Date).ToList();
 
+                if (!openSalesOrders.Any())
+                    continue;
+
                 var currentQuantity = 0;
                 SalesOrder splitSalesOrder;
                 var selectedSalesOrders = openSalesOrders
