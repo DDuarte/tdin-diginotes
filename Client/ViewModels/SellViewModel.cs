@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Sockets;
 using System.Windows.Input;
 using Common;
 using GalaSoft.MvvmLight.Command;
@@ -84,51 +85,64 @@ namespace Client.ViewModels
 
         private async void SellCommandExecute()
         {
-            var result = await MainWindow.Instance.ShowInputAsync("Sell Diginotes", "How many?",
-                new MetroDialogSettings { ColorScheme = MetroDialogColorScheme.Accented,
-                    AffirmativeButtonText = "Sell",
-                    DefaultText = "1" });
-
-            if (result == null) // user pressed cancel
-                return;
-
-            var session = App.Current.Session;
-            int sellQuantity = int.Parse(result);
-            var ret = App.Current.TheDigiMarket.CreateSalesOrder(session.Username, session.Password, sellQuantity);
-
-            if (ret.Error == DigiMarketError.NotFullfilled)
+            try
             {
-                var quotationResult = App.Current.TheDigiMarket.GetQuotation(session.Username, session.Password);
-                if (!quotationResult)
-                    return;
 
-                result = await MainWindow.Instance.ShowInputAsync("Change quotation",
-                    "Order was not fulfilled, specify new lower quotation value",
+                var result = await MainWindow.Instance.ShowInputAsync("Sell Diginotes", "How many?",
                     new MetroDialogSettings
                     {
                         ColorScheme = MetroDialogColorScheme.Accented,
-                        AffirmativeButtonText = "Change",
-                        DefaultText = quotationResult.Value.ToString(CultureInfo.InvariantCulture)
+                        AffirmativeButtonText = "Sell",
+                        DefaultText = "1"
                     });
 
-                if (result == null)
+                if (result == null) // user pressed cancel
                     return;
 
-                decimal newQuotation;
-                if (!decimal.TryParse(result, NumberStyles.Any, CultureInfo.InvariantCulture, out newQuotation)) return;
+                var session = App.Current.Session;
+                int sellQuantity = int.Parse(result);
+                var ret = App.Current.TheDigiMarket.CreateSalesOrder(session.Username, session.Password, sellQuantity);
 
-                if (App.Current.TheDigiMarket.ChangeQuotation(session.Username, session.Password, newQuotation, ret.Value.Id, false))
+                if (ret.Error == DigiMarketError.NotFullfilled)
                 {
-                    MainWindow.Instance.ShowNotification("Info", "Quotation successfully changed");
+                    var quotationResult = App.Current.TheDigiMarket.GetQuotation(session.Username, session.Password);
+                    if (!quotationResult)
+                        return;
+
+                    result = await MainWindow.Instance.ShowInputAsync("Change quotation",
+                        "Order was not fulfilled, specify new lower quotation value",
+                        new MetroDialogSettings
+                        {
+                            ColorScheme = MetroDialogColorScheme.Accented,
+                            AffirmativeButtonText = "Change",
+                            DefaultText = quotationResult.Value.ToString(CultureInfo.InvariantCulture)
+                        });
+
+                    if (result == null)
+                        return;
+
+                    decimal newQuotation;
+                    if (!decimal.TryParse(result, NumberStyles.Any, CultureInfo.InvariantCulture, out newQuotation))
+                        return;
+
+                    if (App.Current.TheDigiMarket.ChangeQuotation(session.Username, session.Password, newQuotation,
+                        ret.Value.Id, false))
+                    {
+                        MainWindow.Instance.ShowNotification("Info", "Quotation successfully changed");
+                    }
+                    else
+                    {
+                        MainWindow.Instance.ShowNotification("Error", "Error changing quotation");
+                    }
                 }
                 else
                 {
-                    MainWindow.Instance.ShowNotification("Error", "Error changing quotation");
+                    await MainWindow.Instance.ShowMessageAsync("Sell Diginotes", ret.Error.ToString());
                 }
             }
-            else
+            catch (SocketException e)
             {
-                await MainWindow.Instance.ShowMessageAsync("Sell Diginotes", ret.Error.ToString());
+                MainWindow.Instance.ShowNotification("Error", "Lost connection to the server, please restart the client");
             }
         }
 
@@ -136,7 +150,15 @@ namespace Client.ViewModels
         private void DeleteCommandExecute()
         {
             var session = App.Current.Session;
-            App.Current.TheDigiMarket.DeleteSaleOrder(session.Username, session.Password, SelectedSalesOrder.Id);
+
+            try
+            {
+                App.Current.TheDigiMarket.DeleteSaleOrder(session.Username, session.Password, SelectedSalesOrder.Id);
+            }
+            catch (SocketException e)
+            {
+                MainWindow.Instance.ShowNotification("Error", "Lost connection to the server, please restart the client");
+            }
             SelectedSalesOrder = null;
         }
 
@@ -144,7 +166,15 @@ namespace Client.ViewModels
         private void EditCommandExecute()
         {
             var session = App.Current.Session;
-            App.Current.TheDigiMarket.UpdateSaleOrder(session.Username, session.Password, SelectedSalesOrder.Id, SelectedSalesOrder.Value);
+
+            try
+            {
+                App.Current.TheDigiMarket.UpdateSaleOrder(session.Username, session.Password, SelectedSalesOrder.Id, SelectedSalesOrder.Value);
+            }
+            catch (SocketException e)
+            {
+                MainWindow.Instance.ShowNotification("Error", "Lost connection to the server, please restart the client");
+            }
         }
 
         public override void OnUpdate(Update update)
