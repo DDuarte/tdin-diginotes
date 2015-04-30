@@ -680,7 +680,7 @@ namespace Server
             foreach (var openPurchaseOrder in openPurchaseOrders)
             {
                 openSalesOrders = SalesOrders
-                    .Where(order => !order.Suspended)
+                    .Where(order => !order.Suspended && order.Seller != openPurchaseOrder.Buyer)
                     .OrderBy(order => order.Date).ToList();
 
                 var currentQuantity = 0;
