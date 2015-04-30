@@ -152,7 +152,7 @@ namespace Server
                 user.SetBalance(balance);
         }
 
-        public void UpdateDiginotesDirect(string username, int diginotes, int value)
+        public void UpdateDiginotesDirect(string username, int diginotes, decimal value)
         {
             User user;
             if (Users.TryGetValue(username, out user))
@@ -638,6 +638,15 @@ namespace Server
             requestingUser.Diginotes.RemoveWhere(diginote => selectedDiginotes.Contains(diginote));
             SalesOrders.Add(newSalesOrder);
             PublishMessage(Update.Diginotes);
+
+
+            if (_applyingLogs)
+                _actionLog.LogAction(new UpdateDiginotesAction
+                {
+                    Diginotes = requestingUser.Diginotes.Count,
+                    User = requestingUser.Username,
+                    Value = Quotation
+                });
             
             var updated = UpdateOrders();
 

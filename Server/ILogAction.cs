@@ -81,7 +81,7 @@ namespace Server
     {
         public string User { get; set; }
         public int Diginotes { get; set; }
-        public int Value { get; set; }
+        public decimal Value { get; set; }
 
         public void Apply(IDigiMarket digiMarket)
         {

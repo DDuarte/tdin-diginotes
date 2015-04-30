@@ -42,12 +42,12 @@ namespace Common
             Balance = balance;
         }
 
-        public void UpdateDiginotes(int diginotes, int value)
+        public void UpdateDiginotes(int diginotes, decimal value)
         {
             if (diginotes > 0)
             {
                 for (int i = 0; i < diginotes; ++i)
-                    Diginotes.Add(new Diginote() { Value = value });
+                    Diginotes.Add(new Diginote() { Value = (int)value });
             }
         }
     }
