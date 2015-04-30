@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using Common;
 using Remotes;
@@ -158,6 +157,24 @@ namespace Server
             User user;
             if (Users.TryGetValue(username, out user))
                 user.UpdateDiginotes(diginotes, value);
+        }
+
+        public void ApplyTransaction(string buyer, string seller, int diginotes, decimal cost, DateTime date)
+        {
+            var buyerUser = Users[buyer];
+            var sellerUser = Users[seller];
+
+            var dns = sellerUser.Diginotes.Take(diginotes).ToList();
+            foreach (var diginote in dns)
+            {
+                sellerUser.RemoveDiginote(diginote);
+                buyerUser.AddDiginote(diginote);
+            }
+
+            sellerUser.AddFunds(cost);
+            buyerUser.AddFunds(-cost);
+
+            Transactions.Add(new Transaction(date, buyer, seller, dns, cost));
         }
 
         public Result<decimal> GetBalance(string username, string password)
@@ -662,8 +679,12 @@ namespace Server
 
             foreach (var openPurchaseOrder in openPurchaseOrders)
             {
+                openSalesOrders = SalesOrders
+                    .Where(order => !order.Suspended)
+                    .OrderBy(order => order.Date).ToList();
+
                 var currentQuantity = 0;
-                SalesOrder splitSalesOrder = null;
+                SalesOrder splitSalesOrder;
                 var selectedSalesOrders = openSalesOrders
                     .TakeWhile(salesOrder =>
                     {
@@ -678,31 +699,12 @@ namespace Server
                             var transientDiginotes = salesOrder.Diginotes.Take(salesOrder.Count - necessaryCount).ToList();
                             salesOrder.Diginotes.RemoveWhere(diginote => transientDiginotes.Contains(diginote));
 
-                            if (!_applyingLogs)
-                                _actionLog.LogAction(new UpdateDiginotesAction()
-                                {
-                                    Diginotes = transientDiginotes.Count,
-                                    User = salesOrder.Seller,
-                                    Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1
-                                });
-
                             splitSalesOrder = new SalesOrder(Users[salesOrder.Seller], Quotation, transientDiginotes);
                             SalesOrders.Add(splitSalesOrder);
-
-                            if (!_applyingLogs)
-                                _actionLog.LogAction(new UpdateDiginotesAction()
-                                {
-                                    Diginotes = transientDiginotes.Count,
-                                    User = salesOrder.Seller,
-                                    Value = transientDiginotes.Count > 0 ? transientDiginotes.First().Value : 1
-                                });
                         }
 
                         return !exceeded;
                     }).ToList();
-
-                if (splitSalesOrder != null)
-                    selectedSalesOrders.Add(splitSalesOrder);
 
                 // partially fulfilled
                 if (selectedSalesOrders.Sum(order => order.Count) < openPurchaseOrder.Count)
@@ -718,6 +720,18 @@ namespace Server
                     updateOcurred = true;
                     Transactions.Add(new Transaction(DateTime.Now, openPurchaseOrder.Buyer,
                         selectedSalesOrder.Seller, selectedSalesOrder.Diginotes.ToList(), selectedSalesOrder.Value));
+
+
+                    if (!_applyingLogs)
+                        _actionLog.LogAction(new TransactionAction
+                        {
+                            Buyer = openPurchaseOrder.Buyer,
+                            Seller = selectedSalesOrder.Seller,
+                            Cost = selectedSalesOrder.Value,
+                            Date = DateTime.Now,
+                            Diginotes = selectedSalesOrder.Diginotes.Count
+                        });
+
                     foreach (var diginote in selectedSalesOrder.Diginotes) // transfer diginotes to buyer
                     {
                         Users[openPurchaseOrder.Buyer].Diginotes.Add(diginote);
@@ -726,6 +740,8 @@ namespace Server
                     SalesOrders.Remove(selectedSalesOrder);
                 }
             }
+
+            OrdersSnapshot();
 
             return updateOcurred;
         }

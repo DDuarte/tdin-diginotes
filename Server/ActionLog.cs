@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using Common;
 using Newtonsoft.Json;
 using Remotes;
 
@@ -55,6 +56,8 @@ namespace Server
                     return JsonConvert.DeserializeObject<UpdateBalanceAction>(json);
                 case "UpdateDiginotesAction":
                     return JsonConvert.DeserializeObject<UpdateDiginotesAction>(json);
+                case "TransactionAction":
+                    return JsonConvert.DeserializeObject<TransactionAction>(json);
                 default:
                     throw new ArgumentOutOfRangeException("name");
             }

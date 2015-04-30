@@ -49,6 +49,7 @@ namespace Remotes
         void OrdersSnapshot(List<PurchaseOrder> purchaseOrders, List<SalesOrder> salesOrders);
         void SetFundsDirect(string user, decimal balance);
         void UpdateDiginotesDirect(string user, int diginotes, int value);
+        void ApplyTransaction(string buyer, string seller, int diginotes, decimal cost, DateTime date);
 
         #endregion
 

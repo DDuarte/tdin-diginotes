@@ -88,4 +88,18 @@ namespace Server
             digiMarket.UpdateDiginotesDirect(User, Diginotes, Value);
         }
     }
+
+    public class TransactionAction : ILogAction
+    {
+        public string Buyer { get; set; }
+        public string Seller { get; set; }
+        public int Diginotes { get; set; }
+        public decimal Cost { get; set; }
+        public DateTime Date { get; set; }
+
+        public void Apply(IDigiMarket digiMarket)
+        {
+            digiMarket.ApplyTransaction(Buyer, Seller, Diginotes, Cost, Date);
+        }
+    }
 }
