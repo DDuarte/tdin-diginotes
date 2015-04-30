@@ -73,6 +73,7 @@
       <DependentUpon>GrowlNotifications.xaml</DependentUpon>
     </Compile>
     <Compile Include="Notifications\Notification.cs" />
+    <Compile Include="Utils\MessageTypeToColorConverter.cs" />
     <Compile Include="ViewModels\DiginoteChartViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />

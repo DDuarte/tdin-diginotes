@@ -51,6 +51,10 @@ namespace Client
             {
                 MessageBox.Show("Exception ocurred: " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            catch (Exception e)
+            {
+                MessageBox.Show("Exception ocurred: " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void HandleMessageArrived(Update update)

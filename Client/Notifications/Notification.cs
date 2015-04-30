@@ -21,6 +21,18 @@ namespace Client.Notifications
             }
         }
 
+        private string _messageType;
+
+        public string MessageType
+        {
+            get { return _messageType; }
+            set
+            {
+                _messageType = value;
+                OnPropertyChanged("MessageType");
+            }
+        }
+
         private int _id;
         public int Id
         {

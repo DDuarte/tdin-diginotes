@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Net.Sockets;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Client.Notifications;
@@ -32,7 +33,7 @@ namespace Client.Views
         public void ShowNotification(string title, string message)
         {
             var icon = Geometry.Parse("F1 M 38,19C 48.4934,19 57,27.5066 57,38C 57,48.4934 48.4934,57 38,57C 27.5066,57 19,48.4934 19,38C 19,27.5066 27.5066,19 38,19 Z M 51,30L 42,30L 45.0857,33.0858L 39.5754,38.5962L 34.5,33.5208L 24,44.0208L 26.8284,46.8493L 34.5,39.1777L 39.5754,44.2531L 47.9142,35.9142L 51,39L 51,30 Z");
-            _growlNotifications.AddNotification(new Notification { Title = title, IconData = icon, Message = message });
+            _growlNotifications.AddNotification(new Notification { Title = title, IconData = icon, Message = message, MessageType = title });
         }
 
         public void ShowChartTab()
@@ -98,7 +99,14 @@ namespace Client.Views
         {
             var session = App.Current.Session;
             _growlNotifications.Close();
-            App.Current.TheDigiMarket.Logout(session.Username, session.Password);
+            try
+            {
+                App.Current.TheDigiMarket.Logout(session.Username, session.Password);
+            }
+            catch (SocketException ex)
+            {
+                // shhhhhhh
+            }
             base.OnClosed(e);
         }
     }

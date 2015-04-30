@@ -66,7 +66,8 @@ namespace Remotes
         NotLoggedIn,
         UnexistingUser,
         NotFullfilled,
-        InsuficientFunds
+        InsuficientFunds,
+        NetworkError
     }
 
     [Serializable]

@@ -87,6 +87,7 @@
       <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" />
       <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:Client.ViewModels" />
             <utils:NullToBoolValueConverter x:Key="NullToBoolValueConverter"/>
+            <utils:MessageTypeToColorConverter x:Key="msgToColor"/>
         </ResourceDictionary>
   </Application.Resources>
 </Application>

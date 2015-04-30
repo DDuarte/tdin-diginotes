@@ -1,8 +1,11 @@
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Client.Views;
+using Common;
+using Remotes;
 
 namespace Client.ViewModels
 {
@@ -55,7 +58,17 @@ namespace Client.ViewModels
             AuthenticationInProgress = true;
             ErrorMessage = "";
 
-            var result = await Task.Run(() => App.Current.TheDigiMarket.Register(Name, Username, Password));
+            var result = await Task.Run(() =>
+            {
+                try
+                {
+                    return App.Current.TheDigiMarket.Register(Name, Username, Password);
+                }
+                catch (SocketException e)
+                {
+                    return new Result<User>(DigiMarketError.NetworkError);
+                }
+            });
 
             if (result)
             {
@@ -65,6 +78,11 @@ namespace Client.ViewModels
             }
             else
             {
+                if (result.Error == DigiMarketError.NetworkError)
+                {
+                    MainWindow.Instance.ShowNotification("Error", "Lost connection to the server, please restart the client");
+                }
+
                 ErrorMessage = result.Error.ToString();
             }
 

@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using Client.Views;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 ﻿using Common;
 
