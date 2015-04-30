@@ -266,8 +266,10 @@ namespace Server
 
             await Task.Delay(SuspendedTime);
 
-            foreach (var order in PurchaseOrders) // TODO: need update (match orders)
+            foreach (var order in PurchaseOrders)
                 order.Suspended = false;
+
+            UpdateOrders();
 
             PublishMessage(Update.General);
         }
@@ -287,8 +289,10 @@ namespace Server
 
             await Task.Delay(SuspendedTime);
 
-            foreach (var order in SalesOrders) // TODO: need update (match orders)
+            foreach (var order in SalesOrders)
                 order.Suspended = false;
+
+            UpdateOrders();
 
             PublishMessage(Update.General);
         }
