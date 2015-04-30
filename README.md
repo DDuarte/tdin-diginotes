@@ -6,6 +6,12 @@ ei11097 - **Ruben Cordeiro**
 
 *2014/2015 - FEUP*
 
+Pretty Screenshots
+==================
+
+![screenshot1](http://i.imgur.com/5GZ9mkx.png)
+![screenshot2](http://i.imgur.com/8hx422i.png)
+
 Compile
 =======
 
@@ -17,7 +23,7 @@ Execution
 =========
 
 1. Run Server.exe once
-2. Run Client.exe multiple times (one per client)
+2. Run Client.exe multiple times (once per client)
 
 Usage
 =====
