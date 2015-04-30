@@ -490,7 +490,7 @@ namespace Server
                 return new Result<PurchaseOrder>(DigiMarketError.InsuficientFunds);
 
             requestingUser.AddFunds(-price);
-            var newPurchaseOrder = new PurchaseOrder(requestingUser.Name, quantity, Quotation);
+            var newPurchaseOrder = new PurchaseOrder(requestingUser.Username, quantity, Quotation);
             PurchaseOrders.Add(newPurchaseOrder);
 
             var updated = UpdateOrders();
