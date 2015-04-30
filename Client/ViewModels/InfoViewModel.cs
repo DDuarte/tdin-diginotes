@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Input;
 using Common;
@@ -40,13 +41,30 @@ namespace Client.ViewModels
 
         private void LogoutExecute()
         {
-            App.Current.TheDigiMarket.Logout(App.Current.Session.Username, App.Current.Session.Password);
+            try
+            {
+                App.Current.TheDigiMarket.Logout(App.Current.Session.Username, App.Current.Session.Password);
+
+            }
+            catch (SocketException e)
+            {
+                MainWindow.Instance.ShowNotification("Error", "Lost connection to the server, please restart the client");
+            }
+
             MainWindow.Instance.AfterLogout();
         }
 
         private void AddFundsExecute()
         {
-            App.Current.TheDigiMarket.AddFunds(App.Current.Session.Username, App.Current.Session.Password, 10, 10);
+            try
+            {
+                App.Current.TheDigiMarket.AddFunds(App.Current.Session.Username, App.Current.Session.Password, 10, 10);
+
+            }
+            catch (SocketException e)
+            {
+                MainWindow.Instance.ShowNotification("Error", "Lost connection to the server, please restart the client");
+            }
         }
 
         private void ShowQuotationExecute()
